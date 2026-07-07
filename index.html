@@ -51,7 +51,6 @@ html,body{height:100%;overflow:hidden;font-family:var(--sans);font-size:13px;col
 }
 @media (max-width:1100px){
   .t-sep{display:none}
-  #btn-export,#btn-import{display:none}
   .tb-rev{display:none}
 }
 #t-search::placeholder{color:#5E7292}
@@ -83,7 +82,7 @@ html,body{height:100%;overflow:hidden;font-family:var(--sans);font-size:13px;col
 .crew-list label{display:flex;gap:6px;align-items:center;font-size:12px;color:#33415A;cursor:pointer;user-select:none}
 .crew-list input{width:13px;height:13px;accent-color:#CE4242;flex-shrink:0}
 .job-bar.is-ghost{outline:1.5px dashed rgba(255,255,255,.6);outline-offset:-3px;cursor:pointer}
-#sb-foot{flex-shrink:0;display:flex;align-items:center;gap:6px;padding:8px 10px;border-top:1px solid var(--side-line);background:var(--side)}
+#sb-foot{flex-shrink:0;display:flex;align-items:center;gap:6px;padding:8px 10px;border-top:1px solid var(--side-line);background:var(--side);flex-wrap:wrap;}
 .sbf-lbl{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--txt-micro)}
 .sbf-btn{flex:1;background:#fff;border:1px solid var(--side-line);border-radius:6px;padding:5px 0;font-size:11px;font-weight:600;color:#475569;cursor:pointer;font-family:inherit}
 .sbf-btn:hover{background:#E8EEF7;color:#1E293B}
@@ -335,9 +334,6 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
   <button id="btn-new-proj" class="t-btn accent" title="New project (N)">+ New Project</button>
   <button id="btn-staff" class="t-btn">⚙ Staff</button>
   <div class="t-sep"></div>
-  <button id="btn-export" class="t-btn">↓ Export</button>
-  <button id="btn-import" class="t-btn">↑ Import</button>
-  <input type="file" id="import-file" accept=".json,.txt" style="display:none">
   <button id="btn-print" class="t-btn">⎙ Print</button>
   <label class="lock-tog" title="Lock dates — drag only reassigns, never moves dates">
     <input type="checkbox" id="lock-ck">
@@ -361,6 +357,7 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
       <button id="sort-deadline" class="sbf-btn">Due date</button>
       <button id="sort-client" class="sbf-btn">Client</button>
       <button id="sort-pm" class="sbf-btn">PM</button>
+      <button id="sort-status" class="sbf-btn">Status</button>
     </div>
     <div id="sb-resize" title="Drag to resize sidebar"></div>
   </div>
@@ -498,7 +495,7 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 <script src="msal-browser.min.js"></script>
 <script>
 'use strict';
-const APP_REV=28; // bump this ONE number on every release; used everywhere the rev shows up
+const APP_REV=30; // bump this ONE number on every release; used everywhere the rev shows up
 
 /* ===================== CONSTANTS ===================== */
 const DATA_KEY='shopTimeline_v1';
@@ -1081,6 +1078,11 @@ function sortProjectsBy(cmp,label){
 document.getElementById('sort-deadline').addEventListener('click',()=>sortProjectsBy((a,b)=>String(a.deadline||'9999').localeCompare(String(b.deadline||'9999')),'due date'));
 document.getElementById('sort-client').addEventListener('click',()=>sortProjectsBy((a,b)=>String(a.client||'').localeCompare(String(b.client||''))||String(a.deadline||'9999').localeCompare(String(b.deadline||'9999')),'client'));
 document.getElementById('sort-pm').addEventListener('click',()=>sortProjectsBy((a,b)=>String(roleList(a.projectManager)[0]||'').localeCompare(String(roleList(b.projectManager)[0]||''))||String(a.deadline||'9999').localeCompare(String(b.deadline||'9999')),'project manager'));
+document.getElementById('sort-status').addEventListener('click',()=>sortProjectsBy((a,b)=>{
+  const o={'estimating':1,'approved':2,'in-production':3,'installing':4,'complete':5};
+  return (o[projectStatus(a)]||99)-(o[projectStatus(b)]||99)||String(a.deadline||'9999').localeCompare(String(b.deadline||'9999'));
+},'status'));
+
 function reorderProject(dragId,beforeId){
   const order=currentProjOrder().map(p=>p.id);
   const from=order.indexOf(dragId);if(from<0)return;
@@ -2190,37 +2192,6 @@ sideRows.addEventListener('drop',ev=>{
   ev.preventDefault();
   const id=ev.dataTransfer.getData('text/plain');
   if(id)reorderProject(id,null);
-});
-
-/* ===================== EXPORT / IMPORT ===================== */
-document.getElementById('btn-export').addEventListener('click',()=>{
-  const out={projects:ST.projects,tasks:ST.tasks,people:PEOPLE,staff:STAFF,exportedAt:new Date().toISOString()};
-  const blob=new Blob([JSON.stringify(out,null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob),a=document.createElement('a');
-  a.href=url;a.download='shop-timeline-'+fmtDate(today())+'.json';
-  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
-});
-document.getElementById('btn-import').addEventListener('click',()=>{document.getElementById('import-file').value='';document.getElementById('import-file').click();});
-document.getElementById('import-file').addEventListener('change',ev=>{
-  const file=ev.target.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=e=>{
-    try{
-      const d=JSON.parse(e.target.result);
-      if(!Array.isArray(d.projects)||!Array.isArray(d.tasks)){
-        toast('That file isn\'t a Shop Timeline export.','err');return;
-      }
-      if(!confirm('Import "'+file.name+'"?\nThis replaces all current data.'))return;
-      if(d.people)savePeople(d.people);
-      else if(d.staff)saveStaff(d.staff);
-      const m=migrate({projects:d.projects,tasks:d.tasks});
-      EXPANDED=new Set(m.projects.map(p=>p.id));
-      saveState(m);
-      scrollToToday();
-      toast('Imported '+m.projects.length+' projects, '+m.tasks.length+' tasks');
-    }catch(err){toast('Could not read the file.','err');}
-  };
-  reader.readAsText(file);
 });
 
 window.addEventListener('resize',render);
