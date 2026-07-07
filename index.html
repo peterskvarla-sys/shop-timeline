@@ -76,6 +76,17 @@ html,body{height:100%;overflow:hidden;font-family:var(--sans);font-size:13px;col
 #sb-head .sb-lens .t-btn:hover{background:#E8EEF7;color:#1E293B}
 #sb-head .sb-lens .t-btn.active{background:var(--acc);color:#fff}
 .bar-lbl .sum-pill{position:static;transform:none;margin-right:8px}
+.crew-list{display:grid;grid-template-columns:repeat(3,1fr);gap:4px 10px;max-height:180px;overflow:auto;background:#F7FAFD;border:1px solid #D8E2EF;border-radius:8px;padding:10px}
+.crew-list label{display:flex;gap:6px;align-items:center;font-size:12px;color:#33415A;cursor:pointer;user-select:none}
+.crew-list input{width:13px;height:13px;accent-color:#CE4242;flex-shrink:0}
+.job-bar.is-ghost{outline:1.5px dashed rgba(255,255,255,.6);outline-offset:-3px;cursor:pointer}
+#sb-foot{flex-shrink:0;display:flex;align-items:center;gap:6px;padding:8px 10px;border-top:1px solid var(--side-line);background:var(--side)}
+.sbf-lbl{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--txt-micro)}
+.sbf-btn{flex:1;background:#fff;border:1px solid var(--side-line);border-radius:6px;padding:5px 0;font-size:11px;font-weight:600;color:#475569;cursor:pointer;font-family:inherit}
+.sbf-btn:hover{background:#E8EEF7;color:#1E293B}
+.sb-eye{background:none;border:none;cursor:pointer;font-size:12px;line-height:1;padding:0 2px;opacity:.22;flex-shrink:0}
+.sb-eye:hover{opacity:.7}
+.sb-eye.on{opacity:1}
 .role-tag{display:inline-block;font-family:var(--mono);font-size:7.5px;font-weight:800;letter-spacing:.08em;padding:1.5px 4px;border-radius:4px;background:rgba(0,0,0,.28);color:rgba(255,255,255,.92);margin:0 4px 0 10px;vertical-align:1px}
 #sb-head .sbh-lbl{flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 #sb-all{background:none;border:1px solid #CBD6E4;border-radius:5px;color:#7488A3;font-size:10px;font-family:inherit;padding:3px 8px;cursor:pointer;letter-spacing:.05em;flex-shrink:0}
@@ -342,6 +353,12 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
       <button id="sb-all" title="Collapse / expand all">⇕ All</button>
     </div>
     <div id="side-rows"></div>
+    <div id="sb-foot">
+      <span class="sbf-lbl">Sort</span>
+      <button id="sort-deadline" class="sbf-btn">Due date</button>
+      <button id="sort-client" class="sbf-btn">Client</button>
+      <button id="sort-pm" class="sbf-btn">PM</button>
+    </div>
     <div id="sb-resize" title="Drag to resize sidebar"></div>
   </div>
   <div id="gantt-area">
@@ -376,6 +393,7 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
       <div class="fg"><label>Project Manager(s)</label><div id="pm-pm" class="role-list"></div></div>
       <div class="fg"><label>Drafter(s)</label><div id="pm-drafter" class="role-list"></div></div>
       <div class="fg"><label>Lead Fab(s)</label><div id="pm-fab" class="role-list"></div></div>
+      <div class="fg"><label>Fabricator(s)</label><div id="pm-fabs" class="role-list"></div></div>
     </div>
     <div class="fg"><label>Departments &amp; Estimated Working Days</label></div>
     <div class="dept-list" id="pm-depts"></div>
@@ -406,6 +424,7 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
     <div class="fg"><label id="tm-assignee-lbl">Assignee</label>
       <select id="tm-assignee"></select>
       <input id="tm-assignee-txt" type="text" class="hidden" placeholder="Process name (e.g. Vacuum Former)" autocomplete="off">
+      <div id="tm-crew" class="crew-list hidden"></div>
     </div>
     <div class="fg-3">
       <div class="fg"><label>Start Date</label><input id="tm-start" type="date"></div>
@@ -539,7 +558,12 @@ const SECTIONS=[
 ];
 
 const MONTH_HSL=[[214,40,57],[265,36,59],[145,40,46],[177,43,44],[25,66,54],[44,68,49],[11,60,57],[338,50,57],[79,36,43],[34,60,47],[208,26,51],[240,40,53]];
-const PCOLS=['#3B7FD6','#E27035','#2D9C56','#9050C3','#CE4242','#1AA59C','#C09018','#C04485'];
+const PCOLS=['#3B7FD6','#E27035','#2D9C56','#9050C3','#1AA59C','#C09018','#C04485'];
+/* Red is reserved exclusively for installations */
+const INSTALL_RED='#CE4242';
+function isInstall(t){return t.department==='install';}
+function crewOf(t){const a=t.assignee;if(Array.isArray(a))return a;if(typeof a==='string'&&a.trim().startsWith('['))return safeArr(a);return (a&&a!=='Installation')?[a]:[];}
+function assigneeText(t){return isInstall(t)?(crewOf(t).join(', ')||'Crew TBD'):(t.assignee||'');}
 /* Stable identity colors per department for "Team" color mode */
 const DEPT_COLORS={pm:'#5B7C99',td:'#9050C3',othoffice:'#8A98AE',print:'#C04485',cnc:'#E27035',beamsaw:'#C09018','3dprint':'#2D9C56',laser:'#CE4242',other:'#7A8BA3',fab:'#3B7FD6',metal:'#8B5E3C',softgoods:'#C75D8A',electrical:'#D9A21B',othshop:'#93A08F',prefinish:'#3FA9BC',finish:'#1AA59C',othfinish:'#9AA6B5',install:'#6366F1'};
 const TN_TARGETS=['Client Approval','Shop Drawings',...DEPTS.filter(d=>d.id!=='pm').map(d=>d.name)];
@@ -760,10 +784,10 @@ function listUrl(l){return 'https://graph.microsoft.com/v1.0/sites/'+SITE_ID+'/l
 const isoDay=v=>v?String(v).slice(0,10):'';
 function safeArr(s){if(Array.isArray(s))return s;try{const a=JSON.parse(s);return Array.isArray(a)?a:[];}catch(e){return[];}}
 
-function projToFields(p){const f={Title:p.name||'',client:p.client||'',jobCode:p.jobCode||'',deadline:p.deadline||null,status:p.status||'auto',projectManager:p.projectManager||'',drafter:p.drafter||'',leadFab:p.leadFab||'',metalFab:p.metalFab||'',activeDepartments:JSON.stringify(p.activeDepartments||[]),appId:p.id,createdAt:p.createdAt||null};if(p.sortIndex!=null)f.sortIndex=p.sortIndex;return f;}
-function fieldsToProj(f){return{id:f.appId,name:f.Title||'',client:f.client||'',jobCode:f.jobCode||'',deadline:isoDay(f.deadline),status:f.status||'auto',projectManager:f.projectManager||'',drafter:f.drafter||'',leadFab:f.leadFab||'',metalFab:f.metalFab||'',activeDepartments:safeArr(f.activeDepartments),sortIndex:f.sortIndex==null?null:Number(f.sortIndex),createdAt:isoDay(f.createdAt)};}
-function taskToFields(t){const d=deptById(t.department);return{Title:(d?d.name:t.department)||'Task',projectId:t.projectId,department:t.department,assignee:t.assignee||'',startDate:t.startDate||null,endDate:t.endDate||null,estimatedDays:t.estimatedDays||1,ticketNodes:JSON.stringify(t.ticketNodes||[]),notes:t.notes||'',pinned:!!t.pinned,appId:t.id};}
-function fieldsToTask(f){return{id:f.appId,projectId:f.projectId,department:f.department,assignee:f.assignee||'',startDate:isoDay(f.startDate),endDate:isoDay(f.endDate),estimatedDays:Number(f.estimatedDays)||1,ticketNodes:safeArr(f.ticketNodes),notes:f.notes||'',pinned:!!f.pinned};}
+function projToFields(p){const f={Title:p.name||'',client:p.client||'',jobCode:p.jobCode||'',deadline:p.deadline||null,status:p.status||'auto',projectManager:p.projectManager||'',drafter:p.drafter||'',leadFab:p.leadFab||'',fabricators:p.fabricators||'',metalFab:p.metalFab||'',activeDepartments:JSON.stringify(p.activeDepartments||[]),appId:p.id,createdAt:p.createdAt||null};if(p.sortIndex!=null)f.sortIndex=p.sortIndex;return f;}
+function fieldsToProj(f){return{id:f.appId,name:f.Title||'',client:f.client||'',jobCode:f.jobCode||'',deadline:isoDay(f.deadline),status:f.status||'auto',projectManager:f.projectManager||'',drafter:f.drafter||'',leadFab:f.leadFab||'',fabricators:f.fabricators||'',metalFab:f.metalFab||'',activeDepartments:safeArr(f.activeDepartments),sortIndex:f.sortIndex==null?null:Number(f.sortIndex),createdAt:isoDay(f.createdAt)};}
+function taskToFields(t){const d=deptById(t.department);return{Title:(d?d.name:t.department)||'Task',projectId:t.projectId,department:t.department,assignee:Array.isArray(t.assignee)?JSON.stringify(t.assignee):(t.assignee||''),startDate:t.startDate||null,endDate:t.endDate||null,estimatedDays:t.estimatedDays||1,ticketNodes:JSON.stringify(t.ticketNodes||[]),notes:t.notes||'',pinned:!!t.pinned,appId:t.id};}
+function fieldsToTask(f){const a=(f.department==='install'&&typeof f.assignee==='string'&&f.assignee.trim().startsWith('['))?safeArr(f.assignee):(f.assignee||'');return{id:f.appId,projectId:f.projectId,department:f.department,assignee:a,startDate:isoDay(f.startDate),endDate:isoDay(f.endDate),estimatedDays:Number(f.estimatedDays)||1,ticketNodes:safeArr(f.ticketNodes),notes:f.notes||'',pinned:!!f.pinned};}
 function personToFields(p){return{Title:p.name||'',depts:JSON.stringify(p.depts||[]),ooo:JSON.stringify(p.ooo||[]),appId:p.id};}
 function fieldsToPerson(f){return{id:f.appId,name:f.Title||'',depts:safeArr(f.depts),ooo:safeArr(f.ooo)};}
 
@@ -885,24 +909,32 @@ function saveUI(){localStorage.setItem(UI_KEY,JSON.stringify({collapsedDepts:[..
 let FILTER='';
 function projMatch(p){
   if(!FILTER)return true;
-  return (p.name+' '+(p.client||'')+' '+(p.jobCode||'')+' '+(p.projectManager||'')+' '+(p.drafter||'')+' '+(p.leadFab||'')+' '+(p.metalFab||'')).toLowerCase().includes(FILTER);
+  return (p.name+' '+(p.client||'')+' '+(p.jobCode||'')+' '+(p.projectManager||'')+' '+(p.drafter||'')+' '+(p.leadFab||'')+' '+(p.fabricators||'')+' '+(p.metalFab||'')).toLowerCase().includes(FILTER);
 }
 function taskMatch(t){
   if(!FILTER)return true;
   const p=ST.projects.find(x=>x.id===t.projectId);
   if(p&&projMatch(p))return true;
   const dn=deptById(t.department)?.name||'';
-  return ((t.assignee||'')+' '+dn).toLowerCase().includes(FILTER);
+  return (assigneeText(t)+' '+dn).toLowerCase().includes(FILTER);
 }
 /* Dim (don't remove) non-matching rows/bars so layout stays put */
+let SPOT=new Set(); /* spotlighted project ids — everything else dims */
 function applyFilter(){
-  const on=!!FILTER;
+  const spot=SPOT.size>0;
+  const on=!!FILTER||spot;
+  const projOK=p=>(!FILTER||projMatch(p))&&(!spot||SPOT.has(p.id));
+  const taskOK=t=>(!FILTER||taskMatch(t))&&(!spot||SPOT.has(t.projectId));
   document.querySelectorAll('#gantt-canvas .job-bar').forEach(b=>{
-    if(b.classList.contains('is-ghost'))return;
+    if(b.classList.contains('is-ghost')){
+      if(spot&&b.dataset.tid){const t=ST.tasks.find(x=>x.id===b.dataset.tid);b.classList.toggle('dim',t?!SPOT.has(t.projectId):false);}
+      else b.classList.remove('dim');
+      return;
+    }
     let hit=true;
     if(on){
-      if(b.dataset.tid){const t=ST.tasks.find(x=>x.id===b.dataset.tid);hit=t?taskMatch(t):true;}
-      else if(b.dataset.pid){const p=ST.projects.find(x=>x.id===b.dataset.pid);hit=p?projMatch(p):true;}
+      if(b.dataset.tid){const t=ST.tasks.find(x=>x.id===b.dataset.tid);hit=t?taskOK(t):true;}
+      else if(b.dataset.pid){const p=ST.projects.find(x=>x.id===b.dataset.pid);hit=p?projOK(p):true;}
     }
     b.classList.toggle('dim',on&&!hit);
   });
@@ -910,8 +942,8 @@ function applyFilter(){
     let hit=true;
     if(on){
       const k=r.dataset.key||'';
-      if(k[0]==='P'){const p=ST.projects.find(x=>x.id===k.slice(1));hit=p?projMatch(p):true;}
-      else if(k[0]==='T'){const t=ST.tasks.find(x=>x.id===k.slice(1));hit=t?taskMatch(t):true;}
+      if(k[0]==='P'){const p=ST.projects.find(x=>x.id===k.slice(1));hit=p?projOK(p):true;}
+      else if(k[0]==='T'){const t=ST.tasks.find(x=>x.id===k.slice(1));hit=t?taskOK(t):true;}
     }
     r.classList.toggle('dim',on&&!hit);
   });
@@ -923,6 +955,7 @@ function computeConflicts(){
   CONFLICTS=new Set();
   const byName={};
   for(const t of ST.tasks){
+    if(isInstall(t)){for(const n of crewOf(t))(byName[n]=byName[n]||[]).push(t);continue;}
     const d=deptById(t.department);
     if(!d||!d.roster)continue;
     const n=(t.assignee||'').trim();
@@ -951,7 +984,7 @@ function entityColor(t){
   if(LENS==='dept'&&d.roster)return personColor(d.roster,t.assignee);
   return DEPT_COLORS[t.department]||'#9CA3AF';
 }
-function barColor(t){return COLOR_MODE==='entity'?entityColor(t):projColor(t.projectId);}
+function barColor(t){if(isInstall(t))return INSTALL_RED;return COLOR_MODE==='entity'?entityColor(t):projColor(t.projectId);}
 /* Lane identity color for sidebar dots in the dept lens */
 function laneColor(dept,assignee){
   const d=deptById(dept);
@@ -996,7 +1029,10 @@ function laneRowsForSection(sec){
         const names=new Set(STAFF[d.roster]||[]);
         dtasks.forEach(t=>names.add(t.assignee||'—'));
         const ks=[...names];if(!ks.length)ks.push('—');
-        for(const k of ks)mkLane(did,k,k,dtasks.filter(t=>(t.assignee||'—')===k));
+        for(const k of ks){
+          const ghosts=k==='—'?[]:ST.tasks.filter(t2=>isInstall(t2)&&crewOf(t2).includes(k)).map(t2=>({...t2,__ghost:true}));
+          mkLane(did,k,k,[...dtasks.filter(t=>(t.assignee||'—')===k),...ghosts]);
+        }
       } else if(d.freeText){
         const names=[...new Set(dtasks.map(t=>t.assignee||'Other'))];
         if(!names.length)names.push('Other');
@@ -1012,7 +1048,10 @@ function laneRowsForSection(sec){
       const names=new Set(STAFF[d.roster]||[]);
       dtasks.forEach(t=>names.add(t.assignee||'—'));
       const ks=[...names];if(!ks.length)ks.push('—');
-      for(const k of ks)mkLane(sec.id,k,k,dtasks.filter(t=>(t.assignee||'—')===k));
+      for(const k of ks){
+        const ghosts=k==='—'?[]:ST.tasks.filter(t2=>isInstall(t2)&&crewOf(t2).includes(k)).map(t2=>({...t2,__ghost:true}));
+        mkLane(sec.id,k,k,[...dtasks.filter(t=>(t.assignee||'—')===k),...ghosts]);
+      }
     } else {
       mkLane(sec.id,d.name,d.name,dtasks);
     }
@@ -1029,6 +1068,15 @@ function projCompare(a,b){
   return (a.deadline||'').localeCompare(b.deadline||'');
 }
 function currentProjOrder(){return [...ST.projects].sort(projCompare);}
+function sortProjectsBy(cmp,label){
+  const arr=[...ST.projects].sort(cmp);
+  const idx={};arr.forEach((p,i)=>idx[p.id]=i);
+  saveState({projects:ST.projects.map(p=>({...p,sortIndex:idx[p.id]})),tasks:ST.tasks});
+  toast('Sorted by '+label);
+}
+document.getElementById('sort-deadline').addEventListener('click',()=>sortProjectsBy((a,b)=>String(a.deadline||'9999').localeCompare(String(b.deadline||'9999')),'due date'));
+document.getElementById('sort-client').addEventListener('click',()=>sortProjectsBy((a,b)=>String(a.client||'').localeCompare(String(b.client||''))||String(a.deadline||'9999').localeCompare(String(b.deadline||'9999')),'client'));
+document.getElementById('sort-pm').addEventListener('click',()=>sortProjectsBy((a,b)=>String(roleList(a.projectManager)[0]||'').localeCompare(String(roleList(b.projectManager)[0]||''))||String(a.deadline||'9999').localeCompare(String(b.deadline||'9999')),'project manager'));
 function reorderProject(dragId,beforeId){
   const order=currentProjOrder().map(p=>p.id);
   const from=order.indexOf(dragId);if(from<0)return;
@@ -1130,6 +1178,9 @@ function renderSidebar(){
       const nm=document.createElement('span');nm.className='sb-name';nm.textContent=p.name;row.appendChild(nm);
       const sub=document.createElement('span');sub.className='sb-sub';
       sub.textContent=(p.jobCode?p.jobCode+' · ':'')+(p.deadline?fmtNice(p.deadline):'');row.appendChild(sub);
+      const eye=document.createElement('button');eye.className='sb-eye'+(SPOT.has(p.id)?' on':'');eye.textContent='👁';eye.title='Spotlight this project (dims all others)';
+      eye.addEventListener('click',ev=>{ev.stopPropagation();if(SPOT.has(p.id))SPOT.delete(p.id);else SPOT.add(p.id);render();});
+      row.appendChild(eye);
       if(p.deadline&&projectStatus(p)!=='complete'){
         const dl=diffDays(today(),parseDate(p.deadline));
         if(dl<0){const c=document.createElement('span');c.className='sb-chip late';c.textContent='LATE '+Math.abs(dl)+'d';row.appendChild(c);}
@@ -1146,7 +1197,7 @@ function renderSidebar(){
       const nm=document.createElement('span');nm.className='sb-name';
       nm.textContent=(dd&&dd.freeText)?(t.assignee||'Other'):(dd?.name||t.department);
       row.appendChild(nm);
-      const a=t.assignee||'';
+      const a=assigneeText(t);
       if(a&&a!=='—'&&a!==nm.textContent&&!(dd&&dd.freeText)){
         const sub=document.createElement('span');sub.className='sb-sub';sub.textContent=a;row.appendChild(sub);
       }
@@ -1391,7 +1442,9 @@ function makeTaskBar(t,row,lane,labelMode){
   const lbl=document.createElement('div');lbl.className='bar-lbl';
   lbl.style.left=((st==='in-production'||st==='installing')?11:8)+'px';
   lbl.style.right=(t.pinned?18:7)+'px';
-  if(labelMode==='proj')lbl.textContent=p?p.name+(p.jobCode?' · '+p.jobCode:''):'?';
+  if(t.__ghost){bar.classList.add('is-ghost');lbl.textContent='Install · '+(p?p.name:'?');}
+  else if(labelMode==='proj')lbl.textContent=p?p.name+(p.jobCode?' · '+p.jobCode:''):'?';
+  else if(isInstall(t))lbl.textContent='Install — '+assigneeText(t);
   else{const dd=deptById(t.department);lbl.textContent=(dd&&dd.freeText)?(t.assignee||'Other'):(dd?.name||t.department);}
   bar.appendChild(lbl);
   if(t.pinned){const pin=document.createElement('div');pin.className='bar-pin';pin.textContent='📌';bar.appendChild(pin);}
@@ -1417,9 +1470,11 @@ function makeTaskBar(t,row,lane,labelMode){
     tn.addEventListener('mouseleave',ev=>{if(!DRAG)showTooltipTask(t,ev);});
     bar.appendChild(tn);
   }
-  const lh=document.createElement('div');lh.className='bar-handle bh-l';bar.appendChild(lh);
-  const rh=document.createElement('div');rh.className='bar-handle bh-r';bar.appendChild(rh);
-  bar.addEventListener('mousedown',ev=>{if(ev.button!==0)return;ev.stopPropagation();hideTooltip();startDrag(ev,t.id,bar,row);});
+  if(!t.__ghost){
+    const lh=document.createElement('div');lh.className='bar-handle bh-l';bar.appendChild(lh);
+    const rh=document.createElement('div');rh.className='bar-handle bh-r';bar.appendChild(rh);
+    bar.addEventListener('mousedown',ev=>{if(ev.button!==0)return;ev.stopPropagation();hideTooltip();startDrag(ev,t.id,bar,row);});
+  }
   bar.addEventListener('click',ev=>{ev.stopPropagation();if(!SUPPRESS_CLICK)openTaskModal(t.id);});
   bar.addEventListener('mouseenter',ev=>{if(!DRAG)showTooltipTask(t,ev);});
   bar.addEventListener('mousemove',ev=>{if(!DRAG)posTooltip(ev);});
@@ -1500,7 +1555,7 @@ document.addEventListener('mouseup',ev=>{
       updated.startDate=fmtDate(addDays(parseDate(oStart),dd));
       updated.endDate=fmtDate(addDays(parseDate(oEnd),dd));
     }
-    if(LENS==='dept'&&targetRow&&targetRow.kind==='deptLane'&&targetRow.key!==row.key){
+    if(LENS==='dept'&&targetRow&&targetRow.kind==='deptLane'&&targetRow.key!==row.key&&!isInstall(t)&&targetRow.dept!=='install'){
       updated.department=targetRow.dept;
       updated.assignee=targetRow.assignee;
     }
@@ -1529,10 +1584,10 @@ function showTooltipTask(t,ev,hiNode){
     }).join('')+'</div>';
   }
   el.innerHTML='<div class="tt-title">'+esc(p?p.name:'?')+' — '+esc(deptName)+'</div>'
-    +'<div class="tt-dim">'+esc(t.assignee||'')+'</div>'
+    +'<div class="tt-dim">'+esc(assigneeText(t))+'</div>'
     +'<div class="tt-dim">'+fmtNice(t.startDate)+' → '+fmtNice(t.endDate)+' · '+days+'d</div>'
     +(t.notes?'<div class="tt-notes">'+esc(t.notes)+'</div>':'')
-    +(CONFLICTS.has(t.id)?'<div class="tt-warn">⚠ '+esc(t.assignee||'')+' is on another job during this window</div>':'')
+    +(CONFLICTS.has(t.id)?'<div class="tt-warn">⚠ '+esc(assigneeText(t))+' is on another job during this window</div>':'')
     +(deptById(t.department)?.roster?oooOverlaps(t.assignee,t.startDate,t.endDate).map(o=>'<div class="tt-warn">✈ '+esc(t.assignee||'')+' is out '+fmtNice(o.start)+' → '+fmtNice(o.end)+(o.note?' ('+esc(o.note)+')':'')+'</div>').join(''):'')
     +tn
     +'<div><span class="tt-badge">'+esc(STATUS_LBL[p?projectStatus(p):'estimating'])+'</span></div>';
@@ -1543,7 +1598,7 @@ function showTooltipProj(p,s,e,ev){
   el.innerHTML='<div class="tt-title">'+esc(p.name)+'</div>'
     +'<div class="tt-dim">'+esc(p.client||'')+(p.jobCode?' · '+esc(p.jobCode):'')+'</div>'
     +'<div class="tt-dim">'+fmtNice(fmtDate(s))+' → '+fmtNice(fmtDate(e))+' · deadline '+fmtNice(p.deadline)+(projectStatus(p)!=='complete'?' ('+(diffDays(today(),parseDate(p.deadline))>=0?diffDays(today(),parseDate(p.deadline))+'d left':Math.abs(diffDays(today(),parseDate(p.deadline)))+'d over')+')':'')+'</div>'
-    +'<div class="tt-dim">PM '+esc(p.projectManager||'—')+' · D '+esc(p.drafter||'—')+' · F '+esc(p.leadFab||'—')+'</div>'
+    +'<div class="tt-dim">PM '+esc(p.projectManager||'—')+' · D '+esc(p.drafter||'—')+' · F '+esc(p.leadFab||'—')+(p.fabricators?' · Crew '+esc(p.fabricators):'')+'</div>'
     +'<div><span class="tt-badge">'+esc(STATUS_LBL[projectStatus(p)])+'</span></div>';
   el.classList.remove('hidden');posTooltip(ev);
 }
@@ -1636,6 +1691,7 @@ function openProjModal(projId){
   fillRoleChecks('pm-pm',STAFF.projectManagers||[],p?p.projectManager:'');
   fillRoleChecks('pm-drafter',STAFF.drafters||[],p?p.drafter:'');
   fillRoleChecks('pm-fab',STAFF.leadFabs||[],p?p.leadFab:'');
+  fillRoleChecks('pm-fabs',STAFF.leadFabs||[],p?p.fabricators:'');
   buildDeptChecklist(p);
   const regenRow=document.getElementById('pm-regen-row');
   const regen=document.getElementById('pm-regen');
@@ -1675,6 +1731,7 @@ document.getElementById('pm-save').addEventListener('click',()=>{
     projectManager:roleChecked('pm-pm'),
     drafter:roleChecked('pm-drafter'),
     leadFab:roleChecked('pm-fab'),
+    fabricators:roleChecked('pm-fabs'),
     activeDepartments
   };
   const regen=document.getElementById('pm-regen').checked;
@@ -1716,11 +1773,34 @@ document.getElementById('pm-del').addEventListener('click',()=>{
 });
 
 /* ===================== TASK MODAL ===================== */
+function buildCrewList(checked){
+  const box=document.getElementById('tm-crew');box.innerHTML='';
+  const names=[...new Set([...PEOPLE.map(p=>p.name),...checked])].sort((a,b)=>a.localeCompare(b));
+  if(!names.length){box.innerHTML='<div class="tn-empty">No staff yet — add people in ⚙ Staff.</div>';return;}
+  for(const n of names){
+    const l=document.createElement('label');
+    const c=document.createElement('input');c.type='checkbox';c.value=n;c.checked=checked.includes(n);
+    l.appendChild(c);l.appendChild(document.createTextNode(n));box.appendChild(l);
+  }
+}
 function tmAssigneeUI(deptId,current){
   const d=deptById(deptId);
   const sel=document.getElementById('tm-assignee');
   const txt=document.getElementById('tm-assignee-txt');
   const lbl=document.getElementById('tm-assignee-lbl');
+  const crew=document.getElementById('tm-crew');
+  if(deptId==='install'){
+    sel.classList.add('hidden');txt.classList.add('hidden');crew.classList.remove('hidden');
+    lbl.textContent='Install Crew — pick from full staff';
+    let checked=Array.isArray(current)?current:((current&&current!=='Installation')?[current]:[]);
+    if(!checked.length){
+      const p=ST.projects.find(x=>x.id===document.getElementById('tm-project').value);
+      if(p)checked=[p.projectManager,p.leadFab].filter(Boolean);
+    }
+    buildCrewList(checked);
+    return;
+  }
+  crew.classList.add('hidden');
   if(d&&d.freeText){
     sel.classList.add('hidden');txt.classList.remove('hidden');
     txt.value=current||'';lbl.textContent='Process Name';
@@ -1734,6 +1814,7 @@ function tmAssigneeUI(deptId,current){
 function tmAssigneeValue(){
   const dept=document.getElementById('tm-dept').value;
   const d=deptById(dept);
+  if(dept==='install')return [...document.querySelectorAll('#tm-crew input:checked')].map(c=>c.value);
   if(d&&d.freeText)return document.getElementById('tm-assignee-txt').value.trim()||'Other';
   return document.getElementById('tm-assignee').value;
 }
@@ -1779,6 +1860,7 @@ function openTaskModal(taskId,prefill){
   dsel.value=t?t.department:(prefill&&prefill.department)||'td';
   tmAssigneeUI(dsel.value,t?t.assignee:(prefill&&prefill.assignee)||'');
   dsel.onchange=()=>tmAssigneeUI(dsel.value,'');
+  psel.onchange=()=>{if(dsel.value==='install'&&!EDIT_TASK_ID)tmAssigneeUI('install','');};
   const start=t?t.startDate:fmtDate(prefill&&prefill.start?prefill.start:today());
   document.getElementById('tm-start').value=start;
   document.getElementById('tm-end').value=t?t.endDate:fmtDate(addDays(parseDate(start),4));
