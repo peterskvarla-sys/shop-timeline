@@ -71,6 +71,12 @@ html,body{height:100%;overflow:hidden;font-family:var(--sans);font-size:13px;col
 @media (max-width:560px){.fg-2{grid-template-columns:1fr}.fg-3{grid-template-columns:1fr}}
 #sidebar{position:relative;width:232px;flex-shrink:0;display:flex;flex-direction:column;background:var(--side);border-right:1.5px solid var(--side-line);z-index:10}
 #sb-head{height:64px;flex-shrink:0;display:flex;align-items:center;gap:8px;padding:0 10px 0 14px;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.16em;color:var(--txt-micro);border-bottom:1px solid var(--side-line)}
+#sb-head .sb-lens{flex:1;border-color:var(--side-line);background:#fff;text-transform:none;letter-spacing:0}
+#sb-head .sb-lens .t-btn{flex:1;background:#fff;color:#475569;border-right:1px solid var(--side-line);font-weight:600}
+#sb-head .sb-lens .t-btn:hover{background:#E8EEF7;color:#1E293B}
+#sb-head .sb-lens .t-btn.active{background:var(--acc);color:#fff}
+.bar-lbl .sum-pill{position:static;transform:none;margin-right:8px}
+.role-tag{display:inline-block;font-family:var(--mono);font-size:7.5px;font-weight:800;letter-spacing:.08em;padding:1.5px 4px;border-radius:4px;background:rgba(0,0,0,.28);color:rgba(255,255,255,.92);margin:0 4px 0 10px;vertical-align:1px}
 #sb-head .sbh-lbl{flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 #sb-all{background:none;border:1px solid #CBD6E4;border-radius:5px;color:#7488A3;font-size:10px;font-family:inherit;padding:3px 8px;cursor:pointer;letter-spacing:.05em;flex-shrink:0}
 #sb-all:hover{border-color:var(--acc);color:var(--acc)}
@@ -303,10 +309,6 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
     <button id="btn-weeks" class="t-btn" title="Week scale (W)">Weeks</button>
   </div>
   <div class="t-sep"></div>
-  <div class="tog-grp">
-    <button id="btn-lens-proj" class="t-btn active">Projects</button>
-    <button id="btn-lens-dept" class="t-btn">Departments</button>
-  </div>
   <span class="t-mini">Color</span>
   <div class="tog-grp">
     <button id="btn-col-proj" class="t-btn active">Project</button>
@@ -332,7 +334,13 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 
 <div id="main">
   <div id="sidebar">
-    <div id="sb-head"><span class="sbh-lbl">Shop Schedule</span><button id="sb-all" title="Collapse / expand all">⇕ All</button></div>
+    <div id="sb-head">
+      <div class="tog-grp sb-lens">
+        <button id="btn-lens-proj" class="t-btn active">Projects</button>
+        <button id="btn-lens-dept" class="t-btn">Departments</button>
+      </div>
+      <button id="sb-all" title="Collapse / expand all">⇕ All</button>
+    </div>
     <div id="side-rows"></div>
     <div id="sb-resize" title="Drag to resize sidebar"></div>
   </div>
@@ -723,7 +731,7 @@ let SP_IDS={proj:{},task:{},staff:{}};   /* our appId -> SharePoint item id */
 
 async function spInit(){
   PCA=new msal.PublicClientApplication({
-    auth:{clientId:CLIENT_ID,authority:'https://login.microsoftonline.com/'+TENANT_ID,redirectUri:window.location.href.split('#')[0].split('?')[0]},
+    auth:{clientId:CLIENT_ID,authority:'https://login.microsoftonline.com/'+TENANT_ID,redirectUri:window.location.origin},
     cache:{cacheLocation:'sessionStorage'}
   });
   const accts=PCA.getAllAccounts();
@@ -1349,11 +1357,15 @@ function makeSummaryBar(p,s,e,row){
   if(st==='estimating'){const ov=document.createElement('div');ov.className='bar-stripe';bar.appendChild(ov);}
   if(st==='in-production'||st==='installing'){const ed=document.createElement('div');ed.className='bar-edge';bar.appendChild(ed);}
   const lbl=document.createElement('div');lbl.className='bar-lbl';
-  lbl.style.left='10px';lbl.style.right='86px';
-  const who=[p.projectManager&&('PM '+p.projectManager),p.drafter&&('D '+p.drafter),p.leadFab&&('F '+p.leadFab)].filter(Boolean).join(' · ');
-  lbl.textContent=p.name+(p.jobCode?' · '+p.jobCode:'')+(who?' — '+who:'');
+  lbl.style.left='10px';lbl.style.right='10px';
+  const who=[
+    p.projectManager&&('<span class="role-tag">PM</span>'+esc(p.projectManager)),
+    p.drafter&&('<span class="role-tag">D</span>'+esc(p.drafter)),
+    p.leadFab&&('<span class="role-tag">F</span>'+esc(p.leadFab))
+  ].filter(Boolean).join('');
+  lbl.innerHTML='<span class="sum-pill">'+esc(STATUS_LBL[st])+'</span>'
+    +esc(p.name)+(p.jobCode?' · '+esc(p.jobCode):'')+who;
   bar.appendChild(lbl);
-  const pill=document.createElement('span');pill.className='sum-pill';pill.textContent=STATUS_LBL[st];bar.appendChild(pill);
   bar.addEventListener('click',ev=>{ev.stopPropagation();if(!SUPPRESS_CLICK)openProjModal(p.id);});
   bar.addEventListener('mouseenter',ev=>{if(!DRAG)showTooltipProj(p,s,e,ev);});
   bar.addEventListener('mousemove',ev=>{if(!DRAG)posTooltip(ev);});
