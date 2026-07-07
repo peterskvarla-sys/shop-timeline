@@ -498,7 +498,7 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 <script src="msal-browser.min.js"></script>
 <script>
 'use strict';
-const APP_REV=27; // bump this ONE number on every release; used everywhere the rev shows up
+const APP_REV=28; // bump this ONE number on every release; used everywhere the rev shows up
 
 /* ===================== CONSTANTS ===================== */
 const DATA_KEY='shopTimeline_v1';
@@ -1478,13 +1478,14 @@ function makeTaskBar(t,row,lane,labelMode){
     const lh=document.createElement('div');lh.className='bar-handle bh-l';bar.appendChild(lh);
     const rh=document.createElement('div');rh.className='bar-handle bh-r';bar.appendChild(rh);
     bar.addEventListener('mousedown',ev=>{if(ev.button!==0)return;ev.stopPropagation();hideTooltip();startDrag(ev,t.id,bar,row);});
+    lh.addEventListener('click',ev=>ev.stopPropagation());
+    rh.addEventListener('click',ev=>ev.stopPropagation());
   }
   bar.addEventListener('click',ev=>{ev.stopPropagation();if(!SUPPRESS_CLICK)openTaskModal(t.id);});
   bar.addEventListener('mouseenter',ev=>{if(!DRAG)showTooltipTask(t,ev);});
   bar.addEventListener('mousemove',ev=>{if(!DRAG)posTooltip(ev);});
   bar.addEventListener('mouseleave',hideTooltip);
-  lh.addEventListener('click',ev=>ev.stopPropagation());
-  rh.addEventListener('click',ev=>ev.stopPropagation());
+  
   return bar;
 }
 
