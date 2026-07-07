@@ -1,8 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Timeline — Shop Dashboard</title>
 <style>
@@ -313,7 +315,7 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
   <div class="t-brand">
     <span class="tb-co">TWOSEVEN</span>
     <span class="tb-app">Shop Timeline</span>
-    <span class="tb-rev">REV 25</span>
+    <span class="tb-rev">REV <span id="tb-rev-num"></span></span>
   </div>
   <button id="btn-today" class="t-btn" title="Jump to today (T)">Today</button>
   <div class="tog-grp">
@@ -496,6 +498,7 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 <script src="msal-browser.min.js"></script>
 <script>
 'use strict';
+const APP_REV=27; // bump this ONE number on every release; used everywhere the rev shows up
 
 /* ===================== CONSTANTS ===================== */
 const DATA_KEY='shopTimeline_v1';
@@ -2002,7 +2005,7 @@ function buildPrintSheet(sIso,eIso){
   const tm=document.createElement('span');tm.className='pt-main';
   tm.textContent='TWOSEVEN — Shop Timeline · '+(LENS==='project'?'Projects':'Departments');
   const ts=document.createElement('span');ts.className='pt-sub';
-  ts.textContent='REV 24 · '+fmtNice(sIso)+' → '+fmtNice(eIso)+' · printed '+today().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  ts.textContent='REV '+APP_REV+' · '+fmtNice(sIso)+' → '+fmtNice(eIso)+' · printed '+today().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
   title.appendChild(tm);title.appendChild(ts);
   sheet.appendChild(title);
   /* Grid */
@@ -2222,6 +2225,7 @@ document.getElementById('import-file').addEventListener('change',ev=>{
 window.addEventListener('resize',render);
 
 /* ===================== INIT ===================== */
+document.getElementById('tb-rev-num').textContent=APP_REV;
 loadLocalPrefs();
 ST={projects:[],tasks:[]};
 (async()=>{
