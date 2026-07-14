@@ -573,7 +573,7 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 <script src="msal-browser.min.js"></script>
 <script>
 'use strict';
-const APP_REV=31; // bump this ONE number on every release; used everywhere the rev shows up
+const APP_REV=32; // bump this ONE number on every release; used everywhere the rev shows up
 
 /* ===================== CONSTANTS ===================== */
 const DATA_KEY='shopTimeline_v1';
@@ -762,6 +762,63 @@ function generateSchedule(p,est,otherLabels){
     (ppl.length?ppl:['—']).forEach(w=>mk('pm',minStart,parseDate(p.deadline),w));
   }
   return tasks;
+}
+
+/* Add tasks for newly-checked departments only, without touching any existing task's dates.
+   Mirrors generateSchedule's phase-chain (same phase = same shared end date), but anchors each
+   phase's end to whatever is already on the schedule (sibling tasks in that phase, or the
+   nearest later phase) instead of recalculating backward from the deadline. Keep this PHASES
+   list in sync with the one inside generateSchedule if that ever changes. */
+function scheduleNewDepts(p,newDeptIds,est,otherLabels,existingTasks){
+  if(!newDeptIds.length)return [];
+  const PHASES=[
+    ['install'],
+    grpDepts('finish'),
+    [...grpDepts('shop'),...grpDepts('metal'),...grpDepts('electrical')],
+    grpDepts('dfab'),
+    grpDepts('tdg'),
+  ];
+  const byPhase=PHASES.map(members=>existingTasks.filter(t=>members.includes(t.department)));
+  const added=[];
+  const mk=(deptId,start,end,who)=>({
+    id:genId(),projectId:p.id,department:deptId,
+    assignee:who!==undefined?who:assigneeFor(p,deptId,otherLabels),
+    startDate:fmtDate(start),endDate:fmtDate(end),
+    estimatedDays:est[deptId]||deptById(deptId).est||1,ticketNodes:[],notes:'',pinned:false
+  });
+  const mkDept=(deptId,start,end)=>{
+    const d=deptById(deptId);
+    if(d.roster){const ppl=roleListFor(p,deptId);(ppl.length?ppl:['—']).forEach(w=>added.push(mk(deptId,start,end,w)));}
+    else added.push(mk(deptId,start,end));
+  };
+  PHASES.forEach((members,i)=>{
+    const newHere=newDeptIds.filter(id=>members.includes(id));
+    if(!newHere.length)return;
+    let end=null;
+    if(byPhase[i].length){
+      end=parseDate(byPhase[i][0].endDate); /* siblings in this phase already share one end */
+    }else{
+      for(let j=i-1;j>=0;j--){
+        if(byPhase[j].length){
+          const minStart=Math.min(...byPhase[j].map(t=>parseDate(t.startDate).getTime()));
+          end=prevWorkingBefore(new Date(minStart));
+          break;
+        }
+      }
+      if(!end)end=parseDate(p.deadline); /* nothing scheduled later either — anchor to deadline */
+    }
+    for(const id of newHere)mkDept(id,backN(end,est[id]||deptById(id).est||1),end);
+    byPhase[i]=byPhase[i].concat(added.filter(t=>members.includes(t.department)));
+  });
+  /* Defensive: pm should always exist already (checkbox is locked on), but if it's truly
+     missing, give it a bar spanning earliest task -> deadline rather than leaving it blank. */
+  if(newDeptIds.includes('pm')&&!existingTasks.some(t=>t.department==='pm')){
+    const all=[...existingTasks,...added];
+    const minStart=all.length?new Date(Math.min(...all.map(t=>parseDate(t.startDate).getTime()))):parseDate(p.deadline);
+    const ppl=roleListFor(p,'pm');
+    (ppl.length?ppl:['—']).forEach(w=>added.push(mk('pm',minStart,parseDate(p.deadline),w)));
+  }
+  return added;
 }
 
 /* ===================== STATUS ===================== */
@@ -1786,7 +1843,7 @@ function openProjModal(projId){
   const regenRow=document.getElementById('pm-regen-row');
   const regen=document.getElementById('pm-regen');
   if(p){regenRow.classList.remove('hidden');regen.checked=false;
-    document.getElementById('pm-hint').textContent='Check Regenerate to rebuild all task bars backward from the deadline (replaces current dates). Department changes apply on regenerate.';
+    document.getElementById('pm-hint').textContent="Newly checked departments are scheduled automatically on Save — other tasks keep their current dates. Check Regenerate only if you want every date rebuilt backward from the deadline.";
   }else{regenRow.classList.add('hidden');regen.checked=true;
     document.getElementById('pm-hint').textContent='Tasks are scheduled backward from the deadline, skipping weekends and major holidays.';
   }
@@ -1827,6 +1884,7 @@ document.getElementById('pm-save').addEventListener('click',()=>{
   const regen=document.getElementById('pm-regen').checked;
   if(EDIT_PROJ_ID){
     const p={...ST.projects.find(x=>x.id===EDIT_PROJ_ID),...base};
+    const oldTasksForProj=ST.tasks.filter(t=>t.projectId===p.id);
     let tasks=ST.tasks;
     if(regen){
       tasks=tasks.filter(t=>t.projectId!==p.id).concat(generateSchedule(p,est,otherLabels));
@@ -1842,6 +1900,13 @@ document.getElementById('pm-save').addEventListener('click',()=>{
         }
         return t;
       });
+      const haveDept=new Set(oldTasksForProj.map(t=>t.department));
+      const newDeptIds=activeDepartments.filter(id=>!haveDept.has(id));
+      if(newDeptIds.length){
+        const addedTasks=scheduleNewDepts(p,newDeptIds,est,otherLabels,oldTasksForProj);
+        tasks=tasks.concat(addedTasks);
+        if(addedTasks.length)toast('Added '+addedTasks.length+' new task'+(addedTasks.length>1?'s':'')+' — other dates unchanged');
+      }
     }
     saveState({projects:ST.projects.map(x=>x.id===p.id?p:x),tasks});
   }else{
