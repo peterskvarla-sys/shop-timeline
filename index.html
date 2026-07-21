@@ -207,6 +207,7 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 .tt-dim{color:rgba(255,255,255,.5);font-size:11px}
 .tt-dim .mono,.tt-mono{font-family:var(--mono);font-size:10.5px}
 .tt-badge{display:inline-block;margin-top:5px;background:rgba(255,255,255,.1);border-radius:3px;padding:1px 7px;font-size:10px;text-transform:capitalize}
+.tt-upd{margin-top:4px;padding-top:4px;border-top:1px solid rgba(255,255,255,.1);font-size:10.5px;opacity:.85}
 .tt-warn{color:#FFCE6B;font-size:11px;margin-top:5px}
 .tt-notes{color:rgba(255,255,255,.45);font-size:11px;margin-top:5px;padding-top:5px;border-top:1px solid rgba(255,255,255,.08)}
 
@@ -573,7 +574,7 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 <script src="msal-browser.min.js"></script>
 <script>
 'use strict';
-const APP_REV=32; // bump this ONE number on every release; used everywhere the rev shows up
+const APP_REV=33; // bump this ONE number on every release; used everywhere the rev shows up
 
 /* ===================== CONSTANTS ===================== */
 const DATA_KEY='shopTimeline_v1';
@@ -687,6 +688,20 @@ function dw(){return DW[VIEW];}
 function d2x(d){return diffDays(TL_S,d)*dw();}
 function x2d(x){return addDays(TL_S,Math.round(x/dw()));}
 function fmtNice(s){return parseDate(s).toLocaleDateString('en-US',{month:'short',day:'numeric'});}
+/* Relative "time ago" for the last-updated tooltip line. Falls back to a short date past a week. */
+function timeAgo(iso){
+  if(!iso)return '';
+  const d=new Date(iso);
+  if(isNaN(d.getTime()))return '';
+  const mins=Math.floor((Date.now()-d.getTime())/60000);
+  if(mins<1)return 'just now';
+  if(mins<60)return mins+'m ago';
+  const hrs=Math.floor(mins/60);
+  if(hrs<24)return hrs+'h ago';
+  const days=Math.floor(hrs/24);
+  if(days<7)return days+'d ago';
+  return d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+}
 
 /* ===================== HOLIDAYS / WORKING DAYS ===================== */
 const HOL_CACHE={};
@@ -955,8 +970,11 @@ async function spLoad(){
   ]);
   SP_IDS.proj={};SP_IDS.task={};
   const projects=[],tasks=[];
-  for(const it of pr.value){if(!it.fields.appId)continue;SP_IDS.proj[it.fields.appId]=it.id;projects.push(fieldsToProj(it.fields));}
-  for(const it of tr.value){if(!it.fields.appId)continue;SP_IDS.task[it.fields.appId]=it.id;tasks.push(fieldsToTask(it.fields));}
+  /* SharePoint/Graph tracks this on every item automatically — no custom column required */
+  const graphWho=it=>it.lastModifiedBy&&it.lastModifiedBy.user?(it.lastModifiedBy.user.displayName||it.lastModifiedBy.user.email||''):'';
+  const graphWhen=it=>it.lastModifiedDateTime||'';
+  for(const it of pr.value){if(!it.fields.appId)continue;SP_IDS.proj[it.fields.appId]=it.id;const pr2=fieldsToProj(it.fields);pr2.updatedBy=graphWho(it);pr2.updatedAt=graphWhen(it);projects.push(pr2);}
+  for(const it of tr.value){if(!it.fields.appId)continue;SP_IDS.task[it.fields.appId]=it.id;const tk=fieldsToTask(it.fields);tk.updatedBy=graphWho(it);tk.updatedAt=graphWhen(it);tasks.push(tk);}
   return migrate({projects,tasks});
 }
 
@@ -995,10 +1013,25 @@ function stamp(){return new Date().toLocaleTimeString([],{hour:'numeric',minute:
 /* ===================== UNDO ===================== */
 const UNDO_STACK=[];
 function pushUndo(s){UNDO_STACK.push(s);if(UNDO_STACK.length>20)UNDO_STACK.shift();}
+/* Stamp whoever's signed in + right now onto anything new or changed, so the tooltip is
+   accurate immediately rather than waiting on the next 45s poll. SharePoint's own real
+   value (from graphWho/graphWhen above) overwrites this the next time spLoad() runs. */
+function stampUpdated(newList,oldList){
+  const om=new Map(oldList.map(x=>[x.id,x]));
+  const who=(typeof ACCOUNT!=='undefined'&&ACCOUNT&&(ACCOUNT.name||ACCOUNT.username))||'You';
+  const when=new Date().toISOString();
+  return newList.map(n=>{
+    const o=om.get(n.id);
+    if(!o||JSON.stringify(o)!==JSON.stringify(n))return{...n,updatedBy:who,updatedAt:when};
+    return n;
+  });
+}
 function undo(){
   if(!UNDO_STACK.length){toast('Nothing to undo');return;}
   const prev=UNDO_STACK.pop();
-  const old=ST;ST=prev;render();
+  const old=ST;
+  ST={projects:stampUpdated(prev.projects,old.projects),tasks:stampUpdated(prev.tasks,old.tasks)};
+  render();
   syncNow(old,ST);
   toast('Undone');
 }
@@ -1024,7 +1057,9 @@ document.getElementById('sync-pill').addEventListener('click',()=>{
 
 /* Optimistic save: update screen instantly, sync to SharePoint in background */
 function saveState(s){
-  const old=ST;pushUndo(old);ST=s;render();
+  const old=ST;pushUndo(old);
+  ST={projects:stampUpdated(s.projects,old.projects),tasks:stampUpdated(s.tasks,old.tasks)};
+  render();
   syncNow(old,ST);
 }
 /* Save people: instant locally, cached in this browser, synced to the ShopTimeline_Staff list */
@@ -1737,15 +1772,18 @@ function showTooltipTask(t,ev,hiNode){
     +(CONFLICTS.has(t.id)?'<div class="tt-warn">⚠ '+esc(assigneeText(t))+' is on another job during this window</div>':'')
     +(deptById(t.department)?.roster?oooOverlaps(t.assignee,t.startDate,t.endDate).map(o=>'<div class="tt-warn">✈ '+esc(t.assignee||'')+' is out '+fmtNice(o.start)+' → '+fmtNice(o.end)+(o.note?' ('+esc(o.note)+')':'')+'</div>').join(''):'')
     +tn
+    +((t.updatedBy||t.updatedAt)?'<div class="tt-dim tt-upd">Updated by '+esc(t.updatedBy||'—')+(t.updatedAt?' · '+esc(timeAgo(t.updatedAt)):'')+'</div>':'')
     +'<div><span class="tt-badge">'+esc(STATUS_LBL[p?projectStatus(p):'estimating'])+'</span></div>';
   el.classList.remove('hidden');posTooltip(ev);
 }
 function showTooltipProj(p,s,e,ev){
   const el=document.getElementById('tooltip');
+  const upd=(p.updatedBy||p.updatedAt)?'<div class="tt-dim tt-upd">Updated by '+esc(p.updatedBy||'—')+(p.updatedAt?' · '+esc(timeAgo(p.updatedAt)):'')+'</div>':'';
   el.innerHTML='<div class="tt-title">'+esc(p.name)+'</div>'
     +'<div class="tt-dim">'+esc(p.client||'')+(p.jobCode?' · '+esc(p.jobCode):'')+'</div>'
     +'<div class="tt-dim">'+fmtNice(fmtDate(s))+' → '+fmtNice(fmtDate(e))+' · deadline '+fmtNice(p.deadline)+(projectStatus(p)!=='complete'?' ('+(diffDays(today(),parseDate(p.deadline))>=0?diffDays(today(),parseDate(p.deadline))+'d left':Math.abs(diffDays(today(),parseDate(p.deadline)))+'d over')+')':'')+'</div>'
     +'<div class="tt-dim">PM '+esc(p.projectManager||'—')+' · D '+esc(p.drafter||'—')+' · F '+esc(p.leadFab||'—')+(p.fabricators?' · Crew '+esc(p.fabricators):'')+'</div>'
+    +upd
     +'<div><span class="tt-badge">'+esc(STATUS_LBL[projectStatus(p)])+'</span></div>';
   el.classList.remove('hidden');posTooltip(ev);
 }
