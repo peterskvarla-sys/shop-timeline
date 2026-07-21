@@ -221,9 +221,11 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 /* ============ MODALS ============ */
 .overlay{position:fixed;inset:0;background:rgba(8,15,26,.5);z-index:200;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(3px);overflow:auto;padding:20px 0}
 .overlay.hidden{display:none}
-.modal{background:#fff;border-radius:var(--r-l);padding:22px 24px 20px;width:470px;max-width:94vw;box-shadow:0 28px 90px rgba(5,15,30,.3);max-height:90vh;overflow:auto;animation:modal-in .18s ease-out}
+.modal{background:#fff;border-radius:var(--r-l);width:470px;max-width:94vw;box-shadow:0 28px 90px rgba(5,15,30,.3);max-height:90vh;animation:modal-in .18s ease-out;display:flex;flex-direction:column;overflow:hidden}
+.modal-lg{width:720px}
+.modal-body{flex:1 1 auto;overflow-y:auto;min-height:0;padding:3px 24px 4px}
 @keyframes modal-in{from{opacity:0;transform:translateY(8px) scale(.985)}to{opacity:1;transform:none}}
-.modal h3{font-size:15px;font-weight:700;color:#101A29;margin-bottom:14px}
+.modal h3{font-size:15px;font-weight:700;color:#101A29;padding:22px 24px 12px;flex-shrink:0}
 .fg{margin-bottom:11px}
 .fg label{display:block;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#64748B;margin-bottom:4px}
 .fg input,.fg select,.fg textarea{width:100%;border:1.5px solid #E2E8F0;border-radius:7px;padding:7px 9px;font-size:13px;color:#101A29;background:#FAFBFC;outline:none;font-family:inherit;resize:vertical;transition:border-color .14s}
@@ -232,14 +234,15 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 .fg input.err{border-color:#F87171}
 .fg-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .fg-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-.role-list{border:1.5px solid #E2E8F0;border-radius:7px;background:#FAFBFC;max-height:92px;overflow:auto;padding:5px 9px}
+.role-list{border:1.5px solid #E2E8F0;border-radius:7px;background:#FAFBFC;max-height:100px;overflow:auto;padding:5px 9px}
 .role-list label{display:flex;align-items:center;gap:7px;font-size:12.5px;color:#101A29;padding:2px 0;cursor:pointer;user-select:none}
 .role-list input[type=checkbox]{width:13px;height:13px;flex-shrink:0;accent-color:var(--acc)}
-.dept-list{border:1.5px solid #E2E8F0;border-radius:8px;overflow:hidden;margin-bottom:11px}
+.dept-list{border:1.5px solid #E2E8F0;border-radius:8px;overflow:hidden;margin-bottom:11px;display:grid;grid-template-columns:1fr 1fr}
 .dept-item{display:flex;align-items:center;gap:9px;padding:6px 10px;border-bottom:1px solid #F1F5F9;font-size:12.5px}
 .dept-item:last-child{border-bottom:none}
-.dept-item.grp-lbl{background:#F4F7FB;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:#7A8BA3;padding:4px 10px}
+.dept-item.grp-lbl{background:#F4F7FB;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:#7A8BA3;padding:4px 10px;grid-column:1/-1}
 .dept-item.indent{padding-left:24px}
+.dept-item.dept-full{grid-column:1/-1}
 .dept-item input[type=checkbox]{width:14px;height:14px;flex-shrink:0;accent-color:var(--acc)}
 .dept-item .dname{flex:1}
 .dept-item .ddays{width:58px;border:1px solid #E2E8F0;border-radius:5px;padding:3px 6px;font-size:12px;text-align:center;font-family:var(--mono)}
@@ -263,7 +266,7 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 .tn-add{background:#F1F5F9;border:none;border-radius:6px;padding:5px 10px;font-size:11.5px;color:#475569;cursor:pointer;font-family:inherit}
 .tn-add:hover{background:#E2E8F0}
 .tn-empty{font-size:11.5px;color:#94A3B8;padding:2px 4px}
-.m-actions{display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding-top:14px;border-top:1px solid #F1F5F9}
+.m-actions{display:flex;justify-content:space-between;align-items:center;padding:14px 24px;border-top:1px solid #F1F5F9;flex-shrink:0}
 .m-right{display:flex;gap:8px}
 .btn{padding:8px 16px;font-size:13px;font-weight:600;border-radius:7px;border:none;cursor:pointer;font-family:inherit;transition:background .12s}
 .btn-primary{background:var(--acc);color:#fff}
@@ -427,8 +430,9 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 
 <!-- PROJECT MODAL -->
 <div id="proj-overlay" class="overlay hidden">
-  <div class="modal">
+  <div class="modal modal-lg">
     <h3 id="pm-head">New Project</h3>
+    <div class="modal-body">
     <div class="fg"><label>Project Name *</label><input id="pm-name" type="text" autocomplete="off"></div>
     <div class="fg-2">
       <div class="fg"><label>Client</label><input id="pm-client" type="text" autocomplete="off"></div>
@@ -464,6 +468,7 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
       <span class="pin-lbl">Regenerate schedule backward from deadline</span>
     </label>
     <div class="hint" id="pm-hint"></div>
+    </div>
     <div class="m-actions">
       <button id="pm-del" class="btn btn-del hidden">Delete Project</button>
       <div class="m-right">
@@ -478,6 +483,7 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 <div id="task-overlay" class="overlay hidden">
   <div class="modal">
     <h3 id="tm-head">Edit Task</h3>
+    <div class="modal-body">
     <div class="fg-2">
       <div class="fg"><label>Project *</label><select id="tm-project"></select></div>
       <div class="fg"><label>Department</label><select id="tm-dept"></select></div>
@@ -502,6 +508,7 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
       <button class="tn-add" id="tm-tnadd" type="button">+ Add checkpoint</button>
     </div>
     <div class="fg"><label>Notes</label><textarea id="tm-notes" rows="2"></textarea></div>
+    </div>
     <div class="m-actions">
       <button id="tm-del" class="btn btn-del hidden">Delete Task</button>
       <div class="m-right">
@@ -516,9 +523,11 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 <div id="staff-overlay" class="overlay hidden">
   <div class="modal" id="staff-modal">
     <h3>Staff</h3>
+    <div class="modal-body">
     <div class="hint">People are shared through SharePoint — every browser and teammate sees the same list. Check the departments each person works in, and add out-of-office ranges to flag their bars.</div>
     <div id="st-list"></div>
     <button id="st-add" class="tn-add">+ Add person</button>
+    </div>
     <div class="m-actions">
       <span></span>
       <div class="m-right">
@@ -533,12 +542,14 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 <div id="print-overlay" class="overlay hidden">
   <div class="modal">
     <h3>Print Preview</h3>
+    <div class="modal-body">
     <div class="pp-controls">
       <div class="fg"><label>From</label><input id="pp-start" type="date"></div>
       <div class="fg"><label>To</label><input id="pp-end" type="date"></div>
       <div class="pp-note">Prints the current lens exactly as arranged on screen — collapse projects or departments first to control what's included. Tip: Weeks view fits longer ranges on a page.</div>
     </div>
     <div id="pp-zoom"><div id="pp-zoom-inner"></div></div>
+    </div>
     <div class="m-actions">
       <span></span>
       <div class="m-right">
@@ -553,10 +564,12 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 <div id="meet-overlay" class="overlay hidden">
   <div class="modal meet-modal">
     <h3>Meeting Sheet</h3>
+    <div class="modal-body">
     <div class="pp-controls">
       <div class="pp-note">One row per project, grouped by PM and sorted by deadline. Respects the Status filter — set it first to control what prints. The Notes column stays blank for handwriting. Print on 11×17 landscape; the header repeats on every page.</div>
     </div>
     <div id="meet-zoom"></div>
+    </div>
     <div class="m-actions">
       <span></span>
       <div class="m-right">
@@ -574,7 +587,7 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 <script src="msal-browser.min.js"></script>
 <script>
 'use strict';
-const APP_REV=33; // bump this ONE number on every release; used everywhere the rev shows up
+const APP_REV=34; // bump this ONE number on every release; used everywhere the rev shows up
 
 /* ===================== CONSTANTS ===================== */
 const DATA_KEY='shopTimeline_v1';
@@ -1823,8 +1836,8 @@ function fillSelect(sel,options,current){
 function buildDeptChecklist(p){
   const box=document.getElementById('pm-depts');
   box.innerHTML='';
-  const addItem=(d,indent)=>{
-    const item=document.createElement('div');item.className='dept-item'+(indent?' indent':'');
+  const addItem=(d,indent,full)=>{
+    const item=document.createElement('div');item.className='dept-item'+(indent?' indent':'')+(full?' dept-full':'');
     const ck=document.createElement('input');ck.type='checkbox';ck.dataset.dept=d.id;
     const active=p?(p.activeDepartments||[]).includes(d.id):['pm','td','fab','finish','install'].includes(d.id);
     ck.checked=active;
@@ -1858,7 +1871,8 @@ function buildDeptChecklist(p){
   };
   GROUPS.forEach((g,gi)=>{
     const grp=document.createElement('div');grp.className='dept-item grp-lbl';grp.textContent=(gi+1)+' · '+g.label;box.appendChild(grp);
-    for(const id of grpDepts(g.id))addItem(deptById(id),true);
+    const ids=grpDepts(g.id);
+    for(const id of ids){const d=deptById(id);addItem(d,true,ids.length===1||!!d.freeText);}
   });
 }
 
