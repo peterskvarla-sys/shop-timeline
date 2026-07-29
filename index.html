@@ -403,7 +403,7 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 /* ============ REV37: SPLIT CREATE PAGE + LIVE SCHEDULE PREVIEW ============ */
 .pg.split{max-width:1420px}
 .pg-cols{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:26px;align-items:start}
-.pg-right{position:sticky;top:16px}
+.pg-right{position:sticky;top:16px;max-height:calc(100vh - 84px);overflow-y:auto;overflow-x:hidden;padding-right:3px}
 .npv{background:#fff;border:1px solid #E2E8F0;border-radius:11px;overflow:hidden}
 .npv-hd{display:flex;align-items:center;gap:9px;padding:9px 12px;border-bottom:1px solid #E2E8F0;background:#F7FAFD}
 .npv-ttl{flex:1;font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#7488A3}
@@ -445,6 +445,88 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 .npv-drop{position:absolute;left:0;right:0;height:2px;background:var(--acc);z-index:7;pointer-events:none}
 .npv-gut .npv-grip{color:#C3CEDC;margin-right:5px;font-size:9px;letter-spacing:-1px;flex-shrink:0}
 .npv-gut:hover .npv-grip{color:var(--acc)}
+
+
+/* ============ REV39 ============ */
+.sm-btns{display:flex;gap:6px;margin-top:6px}
+.sm-btns .sm-all{flex:1;margin-top:0}
+.gantt-empty{position:absolute;left:0;top:0;right:0;display:flex;flex-direction:column;align-items:center;gap:9px;padding:60px 20px}
+.gantt-empty b{font-size:14.5px;color:#33415A}
+.gantt-empty span{font-size:12.5px;color:#94A3B8}
+
+/* --- configurator uses the whole frame --- */
+.pg.split{max-width:none;padding:22px 30px 90px}
+.pg-cols{grid-template-columns:minmax(430px,600px) minmax(0,1fr);gap:30px}
+.pg-left{min-width:0}
+.pg-rbox{max-height:160px}   /* 132px was slicing the last name in half */
+.pg.split .pg-roles{grid-template-columns:repeat(2,1fr);gap:14px}
+
+/* --- preview: bigger, wider gutter --- */
+.npv-row{height:28px}
+.npv-gut{width:150px;font-size:11px}
+.npv-bar{height:19px;top:4.5px;font-size:10px}
+.npv-axis{height:36px}
+.npv-body{min-height:56px}
+.npv-modes{display:flex;border:1px solid #CBD6E4;border-radius:6px;overflow:hidden}
+.npv-modes button{background:#fff;border:none;padding:3px 11px;font-size:10.5px;font-weight:600;color:#7488A3;cursor:pointer;font-family:inherit}
+.npv-modes button.on{background:var(--acc);color:#fff}
+
+
+/* ============ REV39: EVENTS, TASKS, CALENDAR ============ */
+.npv-ev,.npv-tk{position:absolute;z-index:5}
+.npv-ev{width:9px;height:9px;top:9.5px;margin-left:-4.5px;background:#3F4E66;transform:rotate(45deg);box-shadow:0 0 0 1px #fff}
+.npv-tk{width:10px;height:10px;top:9px;margin-left:-5px;border-radius:50%;background:#fff;border:2px solid #3B7FD6;box-sizing:border-box}
+.npv-tk.hi{border-color:#CE4242}
+.npv-tk.done{background:#3B7FD6}
+.npv-row.extra .npv-gut{color:#94A3B8;font-style:italic}
+
+.npv-cal{padding:11px 13px}
+.npv-mblk{margin-bottom:15px}
+.npv-mblk:last-child{margin-bottom:0}
+.npv-mttl{font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#7488A3;margin-bottom:6px}
+.npv-cgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px}
+.npv-cdow{font-size:8.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#B4C0D0;text-align:center;padding-bottom:2px}
+.npv-cell{min-height:56px;border:1px solid #EDF2F7;border-radius:5px;padding:3px 4px;background:#fff;overflow:hidden}
+.npv-cell.out{background:#FBFDFE;opacity:.4}
+.npv-cell.we{background:#F7FAFD}
+.npv-cell.tod{border-color:#CE4242;background:#FFFBFB}
+.npv-cell.dl{border-color:#E8A8A8;background:#FFF6F6}
+.npv-cn{font-size:9.5px;font-weight:600;color:#94A3B8;line-height:1.25}
+.npv-cell.tod .npv-cn{color:#CE4242}
+.npv-cell.dl .npv-cn{color:#CE4242}
+.npv-chip{height:3.5px;border-radius:2px;margin-top:2.5px}
+.npv-cmk{display:flex;gap:3px;margin-top:3px;flex-wrap:wrap}
+.npv-cmk i{display:block;width:7px;height:7px;flex-shrink:0}
+.npv-cmk i.ev{background:#3F4E66;transform:rotate(45deg)}
+.npv-cmk i.tk{border-radius:50%;border:1.5px solid #3B7FD6}
+.npv-more{font-size:8px;color:#B4C0D0;margin-top:1px}
+
+.dr-add{background:#fff;border:1px dashed #CBD6E4;border-radius:7px;padding:7px 11px;font-size:12px;font-weight:600;color:#5B6B85;cursor:pointer;font-family:inherit;width:100%;text-align:left;margin-top:8px}
+.dr-add:hover{border-color:var(--acc);color:var(--acc)}
+.dr-row,.dr-hd{display:grid;gap:7px;align-items:center}
+.dr-row{padding:5px 4px;border-bottom:1px solid #EDF2F7}
+.dr-row.ev,.dr-hd.ev{grid-template-columns:minmax(0,1fr) 122px 120px 24px}
+.dr-row.tk,.dr-hd.tk{grid-template-columns:minmax(0,1fr) 108px 122px 78px 24px}
+.dr-hd{font-size:9px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#94A3B8;padding:0 4px 5px}
+.dr-row input,.dr-row select{border:1px solid #E2E8F0;border-radius:5px;padding:5px 6px;font-size:11.5px;font-family:inherit;background:#fff;color:#33415A;outline:none;width:100%;min-width:0}
+.dr-row input:focus,.dr-row select:focus{border-color:var(--acc)}
+.dr-row input.err{border-color:#CE4242}
+.dr-del{background:none;border:none;color:#B4C0D0;font-size:15px;cursor:pointer;padding:0}
+.dr-del:hover{color:#CE4242}
+.dr-none{font-size:12px;color:#B4C0D0;font-style:italic;padding:8px 4px}
+
+.npv-side{margin-top:13px;background:#fff;border:1px solid #E2E8F0;border-radius:11px;overflow:hidden}
+.npv-side-hd{padding:9px 12px;border-bottom:1px solid #E2E8F0;background:#F7FAFD;font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#7488A3}
+.npv-side-body{max-height:300px;overflow-y:auto}
+.npv-item{display:flex;align-items:center;gap:9px;padding:7px 12px;border-bottom:1px solid #F1F5F9;font-size:12px}
+.npv-item:last-child{border-bottom:none}
+.npv-item .ic{width:9px;height:9px;flex-shrink:0}
+.npv-item .ic.ev{background:#3F4E66;transform:rotate(45deg)}
+.npv-item .ic.tk{border-radius:50%;border:2px solid #3B7FD6;box-sizing:border-box}
+.npv-item .nm{flex:1;color:#1E293B;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.npv-item .mt{font-size:10.5px;color:#94A3B8;white-space:nowrap}
+.npv-item .dt{font-size:10.5px;color:#33415A;white-space:nowrap;font-weight:700}
+.npv-side-empty{padding:20px 14px;text-align:center;font-size:12px;color:#B4C0D0;font-style:italic}
 
 /* ============ PRINT ============ */
 @media print{
@@ -685,7 +767,7 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 <script src="msal-browser.min.js"></script>
 <script>
 'use strict';
-const APP_REV=38; // bump this ONE number on every release; used everywhere the rev shows up
+const APP_REV=39; // bump this ONE number on every release; used everywhere the rev shows up
 
 /* ===================== CONSTANTS ===================== */
 const DATA_KEY='shopTimeline_v1';
@@ -982,6 +1064,7 @@ function seed(){
 }
 
 function migrate(d){
+  d.todos=d.todos||[];
   /* vacuum dept removed → folds into 'other' with its name preserved */
   d.tasks=d.tasks.map(t=>t.department==='vacuum'?{...t,department:'other',assignee:'Vacuum Former'}:t);
   d.projects=d.projects.map(p=>({...p,activeDepartments:(p.activeDepartments||[]).map(x=>x==='vacuum'?'other':x)}));
@@ -1012,9 +1095,14 @@ const SITE_PATH='/sites/TWOSEVENINC';
 const LIST_PROJECTS='ShopTimeline_Projects';
 const LIST_TASKS='ShopTimeline_Tasks';
 const LIST_STAFF='ShopTimeline_Staff';
+/* Tasks live in their own list. Deliberately not 'ShopTimeline_Tasks', which already holds
+   the Gantt phases. If this list doesn't exist yet the app runs fine and simply keeps
+   tasks in the session, with one warning, the same way staff degrades. */
+const LIST_TODOS='ShopTimeline_Tasks2';
 const SCOPES=['User.Read','Sites.ReadWrite.All'];
 let PCA=null,ACCOUNT=null,SITE_ID=null;
-let SP_IDS={proj:{},task:{},staff:{}};   /* our appId -> SharePoint item id */
+let SP_IDS={proj:{},task:{},staff:{},todo:{}};   /* our appId -> SharePoint item id */
+let TODOS_OK=false;          /* true once the ShopTimeline_Tasks2 list loads */
 
 async function spInit(){
   PCA=new msal.PublicClientApplication({
@@ -1045,6 +1133,18 @@ async function spSite(){
 }
 function listUrl(l){return 'https://graph.microsoft.com/v1.0/sites/'+SITE_ID+'/lists/'+l;}
 const isoDay=v=>v?String(v).slice(0,10):'';
+const PRIOS=['low','medium','high','urgent'];
+const PRIO_LBL={low:'Low',medium:'Medium',high:'High',urgent:'Urgent'};
+function todoToFields(t){return{Title:t.title||'Task',appId:t.id,projectId:t.projectId||'',
+  department:t.dept||'',assignees:JSON.stringify(t.who||[]),dueDate:t.due||null,
+  startDate:t.start||null,progress:t.progress||'notstarted',priority:t.priority||'medium',
+  notes:t.notes||'',labels:'[]',checklist:'[]',createdBy:t.createdBy||'',
+  completedOn:t.completedOn||null,completedBy:t.completedBy||'',sortIndex:t.sortIndex||0};}
+function fieldsToTodo(f){return{id:f.appId,projectId:f.projectId||'',dept:f.department||'',
+  title:f.Title||'',who:safeArr(f.assignees),due:isoDay(f.dueDate),start:isoDay(f.startDate),
+  progress:f.progress||'notstarted',priority:f.priority||'medium',notes:f.notes||'',
+  createdBy:f.createdBy||'',completedOn:isoDay(f.completedOn),completedBy:f.completedBy||'',
+  sortIndex:Number(f.sortIndex)||0};}
 function safeArr(s){if(Array.isArray(s))return s;try{const a=JSON.parse(s);return Array.isArray(a)?a:[];}catch(e){return[];}}
 
 function projToFields(p){const f={Title:p.name||'',client:p.client||'',jobCode:p.jobCode||'',deadline:p.deadline||null,status:p.status||'auto',projectManager:p.projectManager||'',drafter:p.drafter||'',leadFab:p.leadFab||'',fabricators:p.fabricators||'',metalFab:p.metalFab||'',activeDepartments:JSON.stringify(p.activeDepartments||[]),appId:p.id,createdAt:p.createdAt||null};if(p.sortIndex!=null)f.sortIndex=p.sortIndex;return f;}
@@ -1086,7 +1186,15 @@ async function spLoad(){
   const graphWhen=it=>it.lastModifiedDateTime||'';
   for(const it of pr.value){if(!it.fields.appId)continue;SP_IDS.proj[it.fields.appId]=it.id;const pr2=fieldsToProj(it.fields);pr2.updatedBy=graphWho(it);pr2.updatedAt=graphWhen(it);projects.push(pr2);}
   for(const it of tr.value){if(!it.fields.appId)continue;SP_IDS.task[it.fields.appId]=it.id;const tk=fieldsToTask(it.fields);tk.updatedBy=graphWho(it);tk.updatedAt=graphWhen(it);tasks.push(tk);}
-  return migrate({projects,tasks});
+  /* Tasks are optional: the list may not have been created yet. */
+  const todos=[];SP_IDS.todo={};
+  try{
+    const dr=await gfetch(listUrl(LIST_TODOS)+'/items?expand=fields&$top=2000');
+    for(const it of dr.value){if(!it.fields.appId)continue;SP_IDS.todo[it.fields.appId]=it.id;
+      const td=fieldsToTodo(it.fields);td.updatedBy=graphWho(it);td.updatedAt=graphWhen(it);todos.push(td);}
+    TODOS_OK=true;
+  }catch(e){TODOS_OK=false;console.warn('ShopTimeline_Tasks2 not reachable — tasks stay local.');}
+  return migrate({projects,tasks,todos});
 }
 
 /* Diff old vs new state -> per-record create/update/delete on SharePoint */
@@ -1104,6 +1212,7 @@ async function spSync(oldST,newST){
   };
   plan('proj',LIST_PROJECTS,projToFields,oldST.projects,newST.projects);
   plan('task',LIST_TASKS,taskToFields,oldST.tasks,newST.tasks);
+  if(TODOS_OK)plan('todo',LIST_TODOS,todoToFields,oldST.todos||[],newST.todos||[]);
   for(const j of jobs)await j();
 }
 
@@ -1141,7 +1250,8 @@ function undo(){
   if(!UNDO_STACK.length){toast('Nothing to undo');return;}
   const prev=UNDO_STACK.pop();
   const old=ST;
-  ST={projects:stampUpdated(prev.projects,old.projects),tasks:stampUpdated(prev.tasks,old.tasks)};
+  ST={projects:stampUpdated(prev.projects,old.projects),tasks:stampUpdated(prev.tasks,old.tasks),
+      todos:prev.todos!==undefined?prev.todos:(old.todos||[])};
   render();
   syncNow(old,ST);
   toast('Undone');
@@ -1169,7 +1279,8 @@ document.getElementById('sync-pill').addEventListener('click',()=>{
 /* Optimistic save: update screen instantly, sync to SharePoint in background */
 function saveState(s){
   const old=ST;pushUndo(old);
-  ST={projects:stampUpdated(s.projects,old.projects),tasks:stampUpdated(s.tasks,old.tasks)};
+  ST={projects:stampUpdated(s.projects,old.projects),tasks:stampUpdated(s.tasks,old.tasks),
+      todos:s.todos!==undefined?s.todos:(old.todos||[])};
   render();
   syncNow(old,ST);
 }
@@ -1563,6 +1674,22 @@ function renderGantt(){
     rowFrag.appendChild(rd);
   }
   canvas.appendChild(rowFrag);
+  /* A cleared status filter matches nothing. Say so, with a way back, instead of
+     handing the user a blank grid and no explanation. */
+  if(!ROWS.length){
+    const em=document.createElement('div');em.className='gantt-empty';
+    em.innerHTML=(SHOW_STATUS.size===0)
+      ? '<b>No statuses selected</b><span>Every project is filtered out right now.</span>'
+      : '<b>Nothing to show</b><span>No projects match the current filter or search.</span>';
+    const b=document.createElement('button');b.className='npv-btn';
+    b.textContent=(SHOW_STATUS.size===0)?'Show all statuses':'Reset the view';
+    b.addEventListener('click',()=>{
+      SHOW_STATUS=new Set(ALL_STATUSES);FILTER='';
+      const sf=document.getElementById('t-search');if(sf)sf.value='';
+      saveUI();buildStatusMenu();updateFilterBadges();render();
+    });
+    em.appendChild(b);canvas.appendChild(em);
+  }
 
   const td2=today();
   if(td2>=TL_S&&td2<=TL_E){
@@ -2524,6 +2651,13 @@ function renderProjectPage(){
 
   h+='<div class="pg-sec">Departments</div><div class="pg-depts" id="pp-depts"></div>';
 
+  if(isNew){
+    h+='<div class="pg-sec">Events</div><div id="pp-events"></div>'
+     + '<button class="dr-add" id="pp-add-ev">+ Add an event</button>'
+     + '<div class="pg-sec">Tasks</div><div id="pp-todos"></div>'
+     + '<button class="dr-add" id="pp-add-tk">+ Add a task</button>';
+  }
+
   if(!isNew){
     h+='<div class="pg-sec">Phases</div>'
      + '<div class="ph-hd"><span>Department</span><span>Assignee</span><span>Start</span><span>End</span><span>Days</span><span></span></div>'
@@ -2533,11 +2667,15 @@ function renderProjectPage(){
   if(isNew){
     h+='</div><div class="pg-right"><div class="npv">'
      + '<div class="npv-hd"><span class="npv-ttl">Schedule preview</span>'
+     + '<div class="npv-modes"><button id="npv-m-g">Gantt</button>'
+     + '<button id="npv-m-c">Calendar</button></div>'
      + '<button class="npv-btn" id="npv-reset" disabled>Reset</button></div>'
      + '<div class="npv-scroll" id="npv-scroll"><div class="npv-in">'
      + '<div class="npv-axis" id="npv-axis"></div>'
      + '<div class="npv-body" id="npv-body"></div>'
      + '</div></div><div class="npv-foot" id="npv-foot"></div></div>'
+     + '<div class="npv-side"><div class="npv-side-hd" id="npv-side-hd">Events &amp; tasks</div>'
+     + '<div class="npv-side-body" id="npv-side"></div></div>'
      + '<div class="npv-tip">Drag a bar\'s left edge to change how long it takes, or its body '
      + 'to pin it somewhere specific. Drag a department name to reorder the rows.</div>'
      + '</div></div>';
@@ -2572,10 +2710,25 @@ function renderProjectPage(){
   });
   if(isNew){
     NPV_MANUAL={};NPV_TASKS=[];NPV_ORDER=[];NPV_ORDER_DIRTY=false;
+    NPV_EVENTS=[];NPV_TODOS=[];NPV_MODE='gantt';
     const left=document.querySelector('#page .pg-left');
     if(left){left.addEventListener('change',npvQueue);left.addEventListener('input',npvQueue);}
     const rst=document.getElementById('npv-reset');
     if(rst)rst.addEventListener('click',()=>{NPV_MANUAL={};NPV_ORDER=[];NPV_ORDER_DIRTY=false;npvRebuild();});
+    const mg=document.getElementById('npv-m-g'),mc=document.getElementById('npv-m-c');
+    if(mg)mg.addEventListener('click',()=>{NPV_MODE='gantt';npvRender();});
+    if(mc)mc.addEventListener('click',()=>{NPV_MODE='calendar';npvRender();});
+    const ae=document.getElementById('pp-add-ev');
+    if(ae)ae.addEventListener('click',()=>{
+      NPV_EVENTS.push({id:genId(),name:'',date:'',dept:(NPV_ORDER[0]||'')});
+      renderDraftEvents();npvRender();
+    });
+    const at=document.getElementById('pp-add-tk');
+    if(at)at.addEventListener('click',()=>{
+      NPV_TODOS.push({id:genId(),title:'',who:[],due:'',priority:'medium',dept:(NPV_ORDER[0]||'')});
+      renderDraftTodos();npvRender();
+    });
+    renderDraftEvents();renderDraftTodos();
     if(!NPV_RESIZE_BOUND){window.addEventListener('resize',()=>{if(ROUTE.creating)npvQueue();});NPV_RESIZE_BOUND=true;}
     npvRebuild();
     setTimeout(()=>{const n=document.getElementById('pp-name');if(n)n.focus();},40);
@@ -2676,11 +2829,14 @@ let NPV_RESIZE_BOUND=false;
 let NPV_TASKS=[];
 let NPV_MANUAL={};
 let NPV_ORDER=[];        /* department ids, top-to-bottom display order */
+let NPV_EVENTS=[];       /* draft events  {id,name,date,dept} */
+let NPV_TODOS=[];        /* draft tasks   {id,title,who,due,priority,dept} */
+let NPV_MODE='gantt';    /* 'gantt' | 'calendar' */
 let NPV_ORDER_DIRTY=false;
-const NPV_ROWH=25;      /* must match .npv-row height in the stylesheet */
+const NPV_ROWH=28;      /* must match .npv-row height in the stylesheet */
 let NPV_GEO=null;
 let NPV_RAF=null;
-const NPV_GUT=104, NPV_PADL=3, NPV_PADR=6;
+const NPV_GUT=150, NPV_PADL=3, NPV_PADR=6;   /* must match .npv-gut width in the stylesheet */
 
 function npvKey(t){return t.department+'::'+(Array.isArray(t.assignee)?t.assignee.join(','):(t.assignee||''));}
 function wdCount(a,b){let n=0,c=new Date(a);while(c<=b){if(isWorking(c))n++;c=addDays(c,1);}return Math.max(1,n);}
@@ -2766,9 +2922,15 @@ function npvRender(){
   const rst=document.getElementById('npv-reset');
   if(rst)rst.disabled=!Object.keys(NPV_MANUAL).length&&!NPV_ORDER_DIRTY;
 
+  const mg=document.getElementById('npv-m-g'),mc=document.getElementById('npv-m-c');
+  if(mg)mg.classList.toggle('on',NPV_MODE==='gantt');
+  if(mc)mc.classList.toggle('on',NPV_MODE==='calendar');
+  renderSideList();
+
   if(!NPV_TASKS.length){
     host.innerHTML='<div class="npv-empty">Pick an install date and tick a department to see the schedule.</div>';
     if(foot)foot.innerHTML='';
+    const ax0=document.getElementById('npv-axis');if(ax0)ax0.innerHTML='';
     NPV_GEO=null;return;
   }
 
@@ -2781,7 +2943,11 @@ function npvRender(){
   const td=today();
   if(td<lo)lo=td;
   if(td>hi)hi=td;
-  lo=addDays(lo,-2);hi=addDays(hi,2);
+  /* Generous headroom on BOTH sides. With only two days past the deadline there was
+     effectively no canvas right of installation, so bars could only be dragged left.
+     Pad by 15% of the span, never less than 10 days. */
+  const pad=Math.max(10,Math.round((diffDays(lo,hi)+1)*0.15));
+  lo=addDays(lo,-pad);hi=addDays(hi,pad);
   const span=Math.max(1,diffDays(lo,hi)+1);
   const scroll=document.getElementById('npv-scroll');
   const avail=Math.max(240,(scroll?scroll.clientWidth:560)-NPV_GUT-8);
@@ -2790,13 +2956,29 @@ function npvRender(){
   const x=dt=>NPV_GUT+diffDays(lo,dt)*dwv;
   const innerW=NPV_GUT+span*dwv;
 
+  const axHost=document.getElementById('npv-axis');
+  if(NPV_MODE==='calendar'){
+    axHost.innerHTML='';axHost.style.display='none';
+    npvPaintCalendar(lo,hi,dl);
+    npvPaintFooter(dl);
+    return;
+  }
+  axHost.style.display='';
+
   /* axis */
   let ax='';
   let cur=new Date(lo);
   while(cur<=hi){
     if(!isWorking(cur))ax+='<div class="npv-we" style="left:'+x(cur)+'px;width:'+dwv+'px"></div>';
+    /* Only label a month if there's room before the next one starts, otherwise the
+       first-of-month label lands on top of the range-start label and you get "A G". */
     if(cur.getDate()===1||cur.getTime()===lo.getTime()){
-      ax+='<div class="npv-mon" style="left:'+x(cur)+'px">'+cur.toLocaleDateString('en-US',{month:'short'})+'</div>';
+      const nxt=new Date(cur.getFullYear(),cur.getMonth()+1,1);
+      const room=(Math.min(diffDays(cur,nxt),diffDays(cur,hi)+1))*dwv;
+      if(room>=30){
+        ax+='<div class="npv-mon" style="left:'+x(cur)+'px;max-width:'+Math.round(room-3)+'px">'
+          + cur.toLocaleDateString('en-US',{month:'short'})+'</div>';
+      }
     }
     if(dwv>=13||cur.getDay()===1){
       ax+='<div class="npv-dnum" style="left:'+(x(cur))+'px;width:'+dwv+'px">'+cur.getDate()+'</div>';
@@ -2826,12 +3008,184 @@ function npvRender(){
      + '<span style="margin-left:5px">'+esc(nm)+'</span></div>'
      + '</div>';
   });
+  /* Events and tasks ride the row of their phase. Anything pointing at a department that
+     isn't on this job gets one extra row at the bottom so it can never silently vanish. */
+  const marks=npvMarkers();
+  const rowOf={};
+  NPV_TASKS.forEach((t,i)=>{if(rowOf[t.department]===undefined)rowOf[t.department]=i;});
+  const orphans=marks.filter(mk=>rowOf[mk.dept]===undefined);
+  if(orphans.length){
+    h+='<div class="npv-row extra" style="width:'+innerW+'px">'
+     + '<div class="npv-gut" title="Events and tasks pointing at a department this job '
+     + 'doesn\'t use">Not on a phase</div></div>';
+  }
+  const orphanRow=NPV_TASKS.length;
+  for(const mk of marks){
+    const d=parseDate(mk.date);
+    if(d<lo||d>hi)continue;
+    const ri=(rowOf[mk.dept]===undefined)?orphanRow:rowOf[mk.dept];
+    const left=x(d)+Math.floor(dwv/2);
+    const top=ri*NPV_ROWH+(mk.k==='ev'?9.5:9);
+    const cls=mk.k==='ev'?'npv-ev':('npv-tk'+(mk.pr==='high'||mk.pr==='urgent'?' hi':''));
+    h+='<div class="'+cls+'" style="left:'+left+'px;top:'+top+'px" title="'+esc(mk.nm+' · '+fmtNice(mk.date))+'"></div>';
+  }
   h+='<div class="npv-today" style="left:'+(x(td)+Math.floor(dwv/2))+'px"></div>';
   h+='<div class="npv-dl" style="left:'+(x(dl)+dwv)+'px"></div>';
   host.innerHTML=h;
   host.style.width=innerW+'px';
 
-  /* footer numbers */
+  npvPaintFooter(dl);
+  npvBindDrag();
+  npvBindReorder();
+}
+
+
+
+/* ---------- draft event / task editors on the left ---------- */
+function deptOptions(sel){
+  return '<option value="">No phase</option>'+DEPTS.map(d=>
+    '<option value="'+d.id+'"'+(d.id===sel?' selected':'')+'>'+esc(d.name)+'</option>').join('');
+}
+function allPeople(){return PEOPLE.map(p=>p.name).sort((a,b)=>a.localeCompare(b));}
+
+function renderDraftEvents(){
+  const box=document.getElementById('pp-events');
+  if(!box)return;
+  if(!NPV_EVENTS.length){box.innerHTML='<div class="dr-none">No events yet. Kickoffs, client reviews, sample approvals.</div>';return;}
+  let h='<div class="dr-hd ev"><span>Event</span><span>Date</span><span>Phase</span><span></span></div>';
+  for(const e of NPV_EVENTS){
+    h+='<div class="dr-row ev" data-id="'+esc(e.id)+'">'
+     + '<input data-f="name" value="'+esc(e.name||'')+'" placeholder="Client review">'
+     + '<input data-f="date" type="date" value="'+esc(e.date||'')+'">'
+     + '<select data-f="dept">'+deptOptions(e.dept)+'</select>'
+     + '<button class="dr-del" title="Remove">&times;</button></div>';
+  }
+  box.innerHTML=h;
+  box.querySelectorAll('.dr-row').forEach(r=>{
+    const e=NPV_EVENTS.find(x=>x.id===r.dataset.id);
+    r.querySelectorAll('[data-f]').forEach(i=>i.addEventListener('change',()=>{
+      e[i.dataset.f]=i.value;npvRender();
+    }));
+    r.querySelector('.dr-del').addEventListener('click',()=>{
+      NPV_EVENTS=NPV_EVENTS.filter(x=>x.id!==e.id);renderDraftEvents();npvRender();
+    });
+  });
+}
+
+function renderDraftTodos(){
+  const box=document.getElementById('pp-todos');
+  if(!box)return;
+  if(!NPV_TODOS.length){box.innerHTML='<div class="dr-none">No tasks yet. Drawings due, order acrylic, confirm dock time.</div>';return;}
+  const ppl=allPeople();
+  let h='<div class="dr-hd tk"><span>Task</span><span>Assigned</span><span>Due</span><span>Priority</span><span></span></div>';
+  for(const t of NPV_TODOS){
+    const who=(t.who&&t.who[0])||'';
+    h+='<div class="dr-row tk" data-id="'+esc(t.id)+'">'
+     + '<input data-f="title" value="'+esc(t.title||'')+'" placeholder="Drawings due">'
+     + '<select data-f="who"><option value="">&mdash;</option>'
+     +   ppl.map(n=>'<option'+(n===who?' selected':'')+'>'+esc(n)+'</option>').join('')
+     + '</select>'
+     + '<input data-f="due" type="date" value="'+esc(t.due||'')+'">'
+     + '<select data-f="priority">'+PRIOS.map(p=>
+         '<option value="'+p+'"'+(p===(t.priority||'medium')?' selected':'')+'>'+PRIO_LBL[p]+'</option>').join('')
+     + '</select>'
+     + '<button class="dr-del" title="Remove">&times;</button></div>';
+  }
+  box.innerHTML=h;
+  box.querySelectorAll('.dr-row').forEach(r=>{
+    const t=NPV_TODOS.find(x=>x.id===r.dataset.id);
+    r.querySelectorAll('[data-f]').forEach(i=>i.addEventListener('change',()=>{
+      if(i.dataset.f==='who')t.who=i.value?[i.value]:[];
+      else t[i.dataset.f]=i.value;
+      npvRender();
+    }));
+    r.querySelector('.dr-del').addEventListener('click',()=>{
+      NPV_TODOS=NPV_TODOS.filter(x=>x.id!==t.id);renderDraftTodos();npvRender();
+    });
+  });
+}
+
+/* ---------- the combined list under the preview ---------- */
+function renderSideList(){
+  const box=document.getElementById('npv-side');
+  if(!box)return;
+  const rows=[];
+  for(const e of NPV_EVENTS)if(e.name||e.date)rows.push({k:'ev',d:e.date,nm:e.name||'Untitled event',
+    mt:e.dept?(deptById(e.dept)||{}).name||'':''});
+  for(const t of NPV_TODOS)if(t.title||t.due)rows.push({k:'tk',d:t.due,nm:t.title||'Untitled task',
+    mt:[(t.who&&t.who[0])||'',t.priority&&t.priority!=='medium'?PRIO_LBL[t.priority]:''].filter(Boolean).join(' · ')});
+  rows.sort((a,b)=>String(a.d||'9999').localeCompare(String(b.d||'9999')));
+  const hd=document.getElementById('npv-side-hd');
+  if(hd)hd.textContent='Events & tasks'+(rows.length?' ('+rows.length+')':'');
+  if(!rows.length){box.innerHTML='<div class="npv-side-empty">Nothing added yet.</div>';return;}
+  box.innerHTML=rows.map(r=>'<div class="npv-item"><span class="ic '+r.k+'"></span>'
+    + '<span class="nm">'+esc(r.nm)+'</span>'
+    + (r.mt?'<span class="mt">'+esc(r.mt)+'</span>':'')
+    + '<span class="dt">'+(r.d?esc(fmtNice(r.d)):'No date')+'</span></div>').join('');
+}
+
+/* ---------- markers on the gantt preview ---------- */
+function npvMarkers(){
+  const out=[];
+  for(const e of NPV_EVENTS)if(e.date)out.push({k:'ev',date:e.date,dept:e.dept||'',nm:e.name||'Event',pr:''});
+  for(const t of NPV_TODOS)if(t.due)out.push({k:'tk',date:t.due,dept:t.dept||'',nm:t.title||'Task',pr:t.priority||'medium'});
+  return out;
+}
+
+/* ---------- calendar mode ---------- */
+const DOW=['S','M','T','W','T','F','S'];
+function npvPaintCalendar(lo,hi,dl){
+  const host=document.getElementById('npv-body');
+  const td=today();
+  const marks=npvMarkers();
+  let h='<div class="npv-cal">';
+  const first=new Date(lo.getFullYear(),lo.getMonth(),1);
+  const lastM=new Date(hi.getFullYear(),hi.getMonth(),1);
+  let m=new Date(first);
+  while(m<=lastM){
+    h+='<div class="npv-mblk"><div class="npv-mttl">'
+     + m.toLocaleDateString('en-US',{month:'long',year:'numeric'})+'</div><div class="npv-cgrid">';
+    for(const d of DOW)h+='<div class="npv-cdow">'+d+'</div>';
+    const gridStart=addDays(new Date(m.getFullYear(),m.getMonth(),1),-new Date(m.getFullYear(),m.getMonth(),1).getDay());
+    const monthEnd=new Date(m.getFullYear(),m.getMonth()+1,0);
+    let c=new Date(gridStart);
+    const total=Math.ceil((diffDays(gridStart,monthEnd)+1)/7)*7;
+    for(let i=0;i<total;i++){
+      const iso=fmtDate(c);
+      const out=c.getMonth()!==m.getMonth()||c<lo||c>hi;
+      const cls=['npv-cell'];
+      if(out)cls.push('out');
+      else{
+        if(!isWorking(c))cls.push('we');
+        if(c.getTime()===td.getTime())cls.push('tod');
+        else if(dl&&c.getTime()===dl.getTime())cls.push('dl');
+      }
+      h+='<div class="'+cls.join(' ')+'"><div class="npv-cn">'+c.getDate()+'</div>';
+      if(!out){
+        const on=NPV_TASKS.filter(t=>t.startDate<=iso&&iso<=t.endDate);
+        const shown=on.slice(0,3);
+        for(const t of shown)h+='<div class="npv-chip" style="background:'+(DEPT_COLORS[t.department]||'#8A98AE')+'"></div>';
+        if(on.length>shown.length)h+='<div class="npv-more">+'+(on.length-shown.length)+'</div>';
+        const md=marks.filter(x=>x.date===iso);
+        if(md.length){
+          h+='<div class="npv-cmk">'+md.slice(0,6).map(x=>'<i class="'+x.k+'" title="'+esc(x.nm)+'"></i>').join('')+'</div>';
+        }
+      }
+      h+='</div>';
+      c=addDays(c,1);
+    }
+    h+='</div></div>';
+    m=new Date(m.getFullYear(),m.getMonth()+1,1);
+  }
+  h+='</div>';
+  host.innerHTML=h;
+  host.style.width='auto';
+}
+
+
+function npvPaintFooter(dl){
+  const foot=document.getElementById('npv-foot');
+  if(!foot||!NPV_TASKS.length)return;
   const starts=NPV_TASKS.map(t=>parseDate(t.startDate));
   const kick=new Date(Math.min(...starts.map(d2=>d2.getTime())));
   const lead=wdCount(kick,dl);
@@ -2841,11 +3195,7 @@ function npvRender(){
    + '<span class="'+(slack<0?'warn':'')+'">'+(slack<0
       ? 'Starts '+Math.abs(slack)+' workdays ago'
       : 'Starts in <b>'+slack+'</b> workdays')+'</span>';
-
-  npvBindDrag();
-  npvBindReorder();
 }
-
 
 function npvBindReorder(){
   const host=document.getElementById('npv-body');
@@ -2915,8 +3265,8 @@ function npvBindDrag(){
       const mv=e2=>{
         days=Math.round((e2.clientX-x0)/dwv);
         if(resize){
-          const ns=addDays(s0,days);
-          if(ns>e0)return;
+          let ns=addDays(s0,days);
+          if(ns>e0)ns=new Date(e0);
           bar.style.left=(NPV_GUT+diffDays(NPV_GEO.lo,ns)*dwv+NPV_PADL)+'px';
           bar.style.width=Math.max(dwv,(diffDays(ns,e0)+1)*dwv-NPV_PADR)+'px';
         }else{
@@ -2929,8 +3279,8 @@ function npvBindDrag(){
         bar.classList.remove('dragging');
         if(!days){npvRender();return;}
         if(resize){
-          const ns=addDays(s0,days);
-          if(ns>e0){npvRender();return;}
+          let ns=addDays(s0,days);
+          if(ns>e0)ns=new Date(e0);
           const n=wdCount(ns,e0);
           const inp=document.querySelector('#pp-depts input[data-dept="'+t.department+'"]');
           const dd=inp?inp.parentElement.querySelector('.ddays'):null;
@@ -2992,12 +3342,36 @@ function savePageProject(){
     /* Save exactly the bars shown in the preview, drags included, rather than
        re-running the scheduler and silently discarding manual placements. */
     const tasks=(NPV_TASKS&&NPV_TASKS.length)
-      ? NPV_TASKS.map(t=>{const n={...t,id:genId(),projectId:p.id};delete n.__manual;return n;})
+      ? NPV_TASKS.map(t=>{const n={...t,id:genId(),projectId:p.id,ticketNodes:[]};delete n.__manual;return n;})
       : generateSchedule(p,est,otherLabels);
+    /* Events become ticket nodes on the phase they point at, which is the store the app
+       already syncs. A draft event names a department; phases only get real ids here, so
+       the binding has to happen now rather than while editing. */
+    let nEv=0;
+    for(const e of NPV_EVENTS){
+      if(!e.date||!(e.name||'').trim())continue;
+      const host=tasks.find(t=>t.department===e.dept)||tasks[0];
+      if(!host)continue;
+      host.ticketNodes=[...(host.ticketNodes||[]),
+        {id:genId(),date:e.date,target:e.name.trim(),notes:e.notes||''}];
+      nEv++;
+    }
+    const newTodos=NPV_TODOS.filter(t=>(t.title||'').trim()&&t.due).map(t=>({
+      id:genId(),projectId:p.id,dept:t.dept||'',title:t.title.trim(),
+      who:t.who||[],due:t.due,start:'',progress:'notstarted',
+      priority:t.priority||'medium',notes:'',
+      createdBy:(ACCOUNT&&(ACCOUNT.name||ACCOUNT.username))||'',
+      completedOn:'',completedBy:'',sortIndex:0}));
     EXPANDED.add(p.id);
     PP_QUIET=true;
-    try{saveState({projects:[...ST.projects,p],tasks:[...ST.tasks,...tasks]});}finally{PP_QUIET=false;}
-    toast('Created "'+p.name+'" with '+tasks.length+' phases');
+    try{saveState({projects:[...ST.projects,p],tasks:[...ST.tasks,...tasks],
+      todos:[...(ST.todos||[]),...newTodos]});}finally{PP_QUIET=false;}
+    const bits=[tasks.length+' phases'];
+    if(nEv)bits.push(nEv+' event'+(nEv>1?'s':''));
+    if(newTodos.length)bits.push(newTodos.length+' task'+(newTodos.length>1?'s':''));
+    toast('Created "'+p.name+'" with '+bits.join(', '));
+    if(newTodos.length&&!TODOS_OK)
+      toast('Tasks are saved in this session only — the ShopTimeline_Tasks2 list isn\'t reachable.','err');
     goProject(p.id);
     return;
   }
@@ -3073,7 +3447,14 @@ function scrollToToday(){
   const sc=document.getElementById('gantt-scroll');
   sc.scrollLeft=Math.max(0,d2x(today())-sc.clientWidth/2+dw()/2);
 }
-document.getElementById('btn-today').addEventListener('click',scrollToToday);
+/* Park today just inside the left edge so the view reads forward into the work ahead
+   instead of centring on history. Roughly a day and a half of past is kept as context. */
+function scrollTodayLeft(){
+  const sc=document.getElementById('gantt-scroll');
+  if(!sc)return;
+  sc.scrollLeft=Math.max(0,d2x(today())-dw()*1.5);
+}
+document.getElementById('btn-today').addEventListener('click',scrollTodayLeft);
 document.getElementById('btn-days').addEventListener('click',()=>{if(VIEW==='days')return;VIEW='days';
   document.getElementById('btn-days').classList.add('active');document.getElementById('btn-weeks').classList.remove('active');
   render();scrollToToday();});
@@ -3169,9 +3550,13 @@ function buildStatusMenu(){
     l.appendChild(c);l.appendChild(document.createTextNode(' '+STATUS_LBL[st]));
     m.appendChild(l);
   }
+  const row=document.createElement('div');row.className='sm-btns';
   const all=document.createElement('button');all.className='sm-all';all.textContent='Show all';
   all.addEventListener('click',()=>{SHOW_STATUS=new Set(ALL_STATUSES);saveUI();buildStatusMenu();updateFilterBadges();render();});
-  m.appendChild(all);
+  const none=document.createElement('button');none.className='sm-all';none.textContent='Clear all';
+  none.addEventListener('click',()=>{SHOW_STATUS=new Set();saveUI();buildStatusMenu();updateFilterBadges();render();});
+  row.appendChild(all);row.appendChild(none);
+  m.appendChild(row);
 }
 document.getElementById('btn-status').addEventListener('click',ev=>{ev.stopPropagation();document.getElementById('status-menu').classList.toggle('hidden');});
 document.getElementById('status-menu').addEventListener('click',ev=>ev.stopPropagation());
@@ -3268,7 +3653,7 @@ document.getElementById('meet-print').addEventListener('click',()=>{
 document.getElementById('tb-rev-num').textContent=APP_REV;
 loadLocalPrefs();
 buildStatusMenu();updateFilterBadges();
-ST={projects:[],tasks:[]};
+ST={projects:[],tasks:[],todos:[]};
 (async()=>{
   try{
     setSync('busy','signing in…');
@@ -3299,9 +3684,9 @@ ST={projects:[],tasks:[]};
     toast('ShopTimeline_Staff list not found — staff is local to this browser until it\'s created.','err');
   }
   rebuildStaff();
-  EXPANDED=new Set(ST.projects.map(p=>p.id));
+  EXPANDED=new Set();   /* open collapsed — one tidy row per job */
   applyRoute();
-  setTimeout(scrollToToday,80);
+  setTimeout(scrollTodayLeft,80);
   /* Poll every 45s so other people's changes appear (skips while dragging or editing) */
   setInterval(async()=>{
     if(DRAG||PENDING_SYNC)return;
