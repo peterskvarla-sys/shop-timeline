@@ -350,12 +350,108 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 
 #print-root{display:none}
 
+
+/* ============ REV35: PROJECT PAGE ============ */
+#page{position:fixed;top:50px;bottom:0;left:0;right:0;overflow:auto;background:var(--paper);z-index:9}
+.pg{max-width:1060px;margin:0 auto;padding:22px 26px 80px}
+.pg-top{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.pg-back{background:#fff;border:1px solid #CBD6E4;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:600;color:#475569;cursor:pointer;font-family:inherit}
+.pg-back:hover{border-color:var(--acc);color:var(--acc)}
+.pg-crumb{flex:1;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#94A3B8;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.pg-title{width:100%;border:none;border-bottom:2px solid transparent;background:transparent;font-family:inherit;font-size:27px;font-weight:700;color:#16202E;padding:2px 0 6px;outline:none;margin-bottom:16px}
+.pg-title:hover{border-bottom-color:#DCE5F0}
+.pg-title:focus{border-bottom-color:var(--acc)}
+.pg-title.err{border-bottom-color:#CE4242}
+.pg-sec{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#94A3B8;margin:26px 0 10px;padding-bottom:6px;border-bottom:1px solid #E2E8F0}
+.pg-f4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.pg-f4 label{display:flex;flex-direction:column;gap:4px;font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#7488A3}
+.pg-f4 input,.pg-f4 select{border:1.5px solid #E2E8F0;border-radius:6px;padding:7px 9px;font-size:13px;font-family:inherit;background:#fff;color:#1E293B;outline:none}
+.pg-f4 input:focus,.pg-f4 select:focus{border-color:var(--acc)}
+.pg-f4 input.err{border-color:#CE4242}
+.pg-met{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:18px}
+.pg-met div{background:#fff;border:1px solid #E2E8F0;border-radius:9px;padding:12px 14px}
+.pg-met .mk{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94A3B8}
+.pg-met .mv{font-size:22px;font-weight:700;color:#16202E;margin-top:3px;line-height:1.15}
+.pg-met .mv.warn{color:#CE4242}
+.pg-roles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.pg-roles>div{display:flex;flex-direction:column;gap:5px}
+.pg-roles .rl{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#7488A3}
+.pg-rbox{background:#F7FAFD;border:1px solid #D8E2EF;border-radius:8px;padding:8px 10px;max-height:132px;overflow:auto}
+.pg-rbox label{display:flex;gap:6px;align-items:center;font-size:12px;color:#33415A;cursor:pointer;user-select:none;padding:1.5px 0}
+.pg-rbox input{width:13px;height:13px;flex-shrink:0;accent-color:#3B7FD6}
+.pg-depts{background:#F7FAFD;border:1px solid #D8E2EF;border-radius:8px;padding:10px 12px;column-count:2;column-gap:26px}
+.ph-hd,.ph-row{display:grid;grid-template-columns:1fr 150px 132px 132px 62px 30px;gap:9px;align-items:center}
+.ph-hd{font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94A3B8;padding:0 4px 7px}
+.ph-row{padding:5px 4px;border-bottom:1px solid #EDF2F7}
+.ph-row:hover{background:#F7FAFD}
+.ph-dept{font-size:12.5px;font-weight:600;color:#1E293B;display:flex;align-items:center;gap:7px;overflow:hidden}
+.ph-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+.ph-row input,.ph-row select{border:1px solid transparent;border-radius:5px;padding:5px 7px;font-size:12px;font-family:inherit;background:transparent;color:#33415A;outline:none;width:100%}
+.ph-row input:hover,.ph-row select:hover{border-color:#DCE5F0;background:#fff}
+.ph-row input:focus,.ph-row select:focus{border-color:var(--acc);background:#fff}
+.ph-del{background:none;border:none;color:#B4C0D0;font-size:16px;line-height:1;cursor:pointer;padding:2px 4px}
+.ph-del:hover{color:#CE4242}
+.pg-empty{font-size:12.5px;color:#94A3B8;padding:16px 4px;font-style:italic}
+.pg-foot{display:flex;align-items:center;gap:10px;margin-top:30px;padding-top:18px;border-top:1px solid #E2E8F0}
+.pg-foot .sp{flex:1}
+.pg-regen{display:flex;align-items:center;gap:6px;font-size:12px;color:#5B6B85;cursor:pointer;user-select:none}
+.pg-hint{font-size:11.5px;color:#94A3B8;margin-top:9px;line-height:1.5}
+@media(max-width:820px){.pg-f4,.pg-met,.pg-roles{grid-template-columns:repeat(2,1fr)}.pg-depts{column-count:1}
+  .ph-hd,.ph-row{grid-template-columns:1fr 116px 116px 54px 26px}.ph-hd span:nth-child(4),.ph-row .ph-e{display:none}}
+
+
+/* ============ REV37: SPLIT CREATE PAGE + LIVE SCHEDULE PREVIEW ============ */
+.pg.split{max-width:1420px}
+.pg-cols{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:26px;align-items:start}
+.pg-right{position:sticky;top:16px}
+.npv{background:#fff;border:1px solid #E2E8F0;border-radius:11px;overflow:hidden}
+.npv-hd{display:flex;align-items:center;gap:9px;padding:9px 12px;border-bottom:1px solid #E2E8F0;background:#F7FAFD}
+.npv-ttl{flex:1;font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#7488A3}
+.npv-btn{background:#fff;border:1px solid #CBD6E4;border-radius:5px;padding:3px 9px;font-size:10.5px;font-weight:600;color:#5B6B85;cursor:pointer;font-family:inherit}
+.npv-btn:hover{border-color:var(--acc);color:var(--acc)}
+.npv-btn[disabled]{opacity:.4;cursor:default}
+.npv-scroll{overflow-x:auto;overflow-y:hidden;scrollbar-width:thin}
+.npv-in{position:relative;min-width:100%}
+.npv-axis{position:relative;height:34px;border-bottom:1px solid #E2E8F0;background:#FBFDFF}
+.npv-mon{position:absolute;top:2px;height:14px;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#94A3B8;padding-left:4px;white-space:nowrap;overflow:hidden}
+.npv-dnum{position:absolute;top:18px;height:14px;font-size:8.5px;color:#B4C0D0;text-align:center}
+.npv-we{position:absolute;top:0;bottom:0;background:#F1F5F9;pointer-events:none}
+.npv-body{position:relative}
+.npv-row{position:relative;height:25px}
+.npv-row:nth-child(odd){background:#FCFDFE}
+.npv-gut{position:sticky;left:0;z-index:3;width:104px;height:100%;display:flex;align-items:center;padding:0 8px;font-size:10.5px;font-weight:600;color:#475569;background:#fff;border-right:1px solid #EDF2F7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.npv-row:nth-child(odd) .npv-gut{background:#FCFDFE}
+.npv-bar{position:absolute;height:17px;top:4px;border-radius:4px;cursor:grab;display:flex;align-items:center;padding:0 6px;font-size:9.5px;font-weight:600;color:rgba(255,255,255,.97);white-space:nowrap;overflow:hidden;z-index:2;user-select:none}
+.npv-bar.dragging{cursor:grabbing;opacity:.85;z-index:6}
+.npv-bar.manual{box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.85)}
+.npv-hdl{position:absolute;left:0;top:0;bottom:0;width:7px;cursor:ew-resize;border-radius:4px 0 0 4px;background:rgba(255,255,255,.28)}
+.npv-hdl:hover{background:rgba(255,255,255,.55)}
+.npv-today{position:absolute;top:0;bottom:0;width:2px;background:rgba(220,38,38,.75);z-index:4;pointer-events:none}
+.npv-dl{position:absolute;top:0;bottom:0;width:0;border-left:2px dashed #CE4242;z-index:4;pointer-events:none}
+.npv-foot{display:flex;align-items:center;gap:14px;padding:9px 12px;border-top:1px solid #E2E8F0;background:#FBFDFF;font-size:11px;color:#5B6B85;flex-wrap:wrap}
+.npv-foot b{font-weight:700;color:#16202E}
+.npv-foot .warn{color:#CE4242;font-weight:700}
+.npv-empty{padding:36px 18px;text-align:center;font-size:12.5px;color:#94A3B8;font-style:italic}
+.npv-tip{font-size:11px;color:#94A3B8;margin-top:8px;line-height:1.5}
+@media(max-width:1080px){.pg-cols{grid-template-columns:1fr}.pg-right{position:static}}
+
+
+/* ============ REV38: DEPARTMENT REORDERING ============ */
+.npv-gut{cursor:grab}
+.npv-gut:hover{background:#EEF4FB!important;color:var(--acc)}
+.npv-row.grabbed{opacity:.45}
+.npv-row.grabbed .npv-gut{cursor:grabbing}
+.npv-body.reordering .npv-bar{pointer-events:none}
+.npv-drop{position:absolute;left:0;right:0;height:2px;background:var(--acc);z-index:7;pointer-events:none}
+.npv-gut .npv-grip{color:#C3CEDC;margin-right:5px;font-size:9px;letter-spacing:-1px;flex-shrink:0}
+.npv-gut:hover .npv-grip{color:var(--acc)}
+
 /* ============ PRINT ============ */
 @media print{
   @page{size:landscape;margin:7mm 9mm}
   *,*::before,*::after{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
   body{overflow:visible!important}
-  #toolbar,#main,#tooltip,.overlay,#toasts{display:none!important}
+  #toolbar,#main,#page,#tooltip,.overlay,#toasts{display:none!important}
   #print-root{display:block!important}
   .p-sheet{box-shadow:none}
   .meet-sheet{box-shadow:none;width:100%}
@@ -429,6 +525,8 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 </div>
 
 <!-- PROJECT MODAL -->
+<div id="page" class="hidden"></div>
+
 <div id="proj-overlay" class="overlay hidden">
   <div class="modal modal-lg">
     <h3 id="pm-head">New Project</h3>
@@ -587,7 +685,7 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 <script src="msal-browser.min.js"></script>
 <script>
 'use strict';
-const APP_REV=34; // bump this ONE number on every release; used everywhere the rev shows up
+const APP_REV=38; // bump this ONE number on every release; used everywhere the rev shows up
 
 /* ===================== CONSTANTS ===================== */
 const DATA_KEY='shopTimeline_v1';
@@ -1199,8 +1297,17 @@ function laneAssign(tasks){
 function rowH(n){return BAR_PAD*2+n*BAR_H+Math.max(0,n-1)*LANE_G;}
 
 function tasksOf(pid){
+  /* Order by the project's own department order when it has one, so a schedule the PM
+     rearranged on the create page keeps that arrangement. Falls back to the standard
+     DEPTS order for anything not listed. */
+  const p=ST.projects.find(x=>x.id===pid);
+  const ord=(p&&Array.isArray(p.activeDepartments)&&p.activeDepartments.length)?p.activeDepartments:null;
+  const ix=d=>{
+    if(ord){const i=ord.indexOf(d);if(i>=0)return i;}
+    return 1000+(DEPT_IDX[d]??99);
+  };
   return ST.tasks.filter(t=>t.projectId===pid)
-    .sort((a,b)=>(DEPT_IDX[a.department]??99)-(DEPT_IDX[b.department]??99)||a.startDate.localeCompare(b.startDate));
+    .sort((a,b)=>ix(a.department)-ix(b.department)||a.startDate.localeCompare(b.startDate));
 }
 
 function laneRowsForSection(sec){
@@ -1328,7 +1435,9 @@ function computeRange(){
 }
 
 function render(){
+  if(typeof ROUTE!=='undefined'&&ROUTE&&ROUTE.view==='project'){if(!PP_QUIET)renderProjectPage();return;}
   const{s,e}=computeRange();TL_S=s;TL_E=e;
+  {const td=today();TODAY_X=(td>=TL_S&&td<=TL_E)?d2x(td):null;}
   computeConflicts();
   const rm=buildRows();ROWS=rm.rows;TOTAL_H=rm.totalH;
   renderSidebar();renderGantt();
@@ -1590,6 +1699,40 @@ function buildCanvasBgInto(canvas,totalW,DW_){
   canvas.appendChild(bgFrag);
 }
 
+
+/* ===================== REV36: PROJECT LABEL PARKS AT TODAY ===================== */
+/* The project name used to sit at the bar's left edge, so it scrolled out of view on
+   any job that started before today. It now parks just right of the today line, giving
+   one readable column down the whole list. It never leaves its own bar: a job that
+   finished before today keeps its label at its right end, and a job that hasn't started
+   keeps it at its left end. Scrolling past today carries the labels along the left edge
+   so they stay readable out in the future. */
+let TODAY_X=null;
+const LBL_MIN=170;   /* keep at least this much label visible before giving up */
+
+function labelLeftFor(barX,barW){
+  if(TODAY_X==null||barW<LBL_MIN+24)return 10;
+  const sc=document.getElementById('gantt-scroll');
+  const anchor=Math.max(TODAY_X,(sc?sc.scrollLeft:0)+8);
+  return Math.max(10,Math.min(Math.round(anchor-barX+6),Math.round(barW-LBL_MIN)));
+}
+
+function repositionSummaryLabels(){
+  const bars=document.querySelectorAll('#gantt-canvas .job-bar.summary');
+  for(const bar of bars){
+    const lbl=bar.querySelector('.bar-lbl');
+    if(!lbl)continue;
+    const bx=parseFloat(bar.style.left)||0,bw=parseFloat(bar.style.width)||0;
+    lbl.style.left=labelLeftFor(bx,bw)+'px';
+  }
+}
+
+let LBL_RAF=null;
+function queueLabelReposition(){
+  if(LBL_RAF)return;
+  LBL_RAF=requestAnimationFrame(()=>{LBL_RAF=null;repositionSummaryLabels();});
+}
+
 function makeSummaryBar(p,s,e,row){
   const DW_=dw();
   const x=d2x(s),w=Math.max(DW_,(diffDays(s,e)+1)*DW_-Math.round(DW_*.15));
@@ -1602,7 +1745,7 @@ function makeSummaryBar(p,s,e,row){
   if(st==='estimating'){const ov=document.createElement('div');ov.className='bar-stripe';bar.appendChild(ov);}
   if(st==='in-production'||st==='installing'){const ed=document.createElement('div');ed.className='bar-edge';bar.appendChild(ed);}
   const lbl=document.createElement('div');lbl.className='bar-lbl';
-  lbl.style.left='10px';lbl.style.right='10px';
+  lbl.style.left=labelLeftFor(x,w)+'px';lbl.style.right='10px';
   const who=[
     p.projectManager&&('<span class="role-tag">PM</span>'+esc(p.projectManager)),
     p.drafter&&('<span class="role-tag">D</span>'+esc(p.drafter)),
@@ -1833,8 +1976,8 @@ function fillSelect(sel,options,current){
   sel.value=current||'';
 }
 
-function buildDeptChecklist(p){
-  const box=document.getElementById('pm-depts');
+function buildDeptChecklist(p,boxId){
+  const box=document.getElementById(boxId||'pm-depts');
   box.innerHTML='';
   const addItem=(d,indent,full)=>{
     const item=document.createElement('div');item.className='dept-item'+(indent?' indent':'')+(full?' dept-full':'');
@@ -1877,6 +2020,9 @@ function buildDeptChecklist(p){
 }
 
 function openProjModal(projId){
+  goProject(projId||null);return;
+}
+function openProjModalLegacy(projId){
   EDIT_PROJ_ID=projId||null;
   const p=projId?ST.projects.find(x=>x.id===projId):null;
   document.getElementById('pm-head').textContent=p?'Edit Project':'New Project';
@@ -2291,6 +2437,611 @@ document.getElementById('pp-print').addEventListener('click',()=>{
   if(typeof window.print==='function'){try{window.print();}catch(e){}}
 });
 
+
+/* ===================== REV35: ROUTER + PROJECT PAGE ===================== */
+let ROUTE={view:'timeline',id:null,creating:false};
+let PP_QUIET=false;
+
+function parseHash(){
+  const h=String(location.hash||'').replace(/^#\/?/,'');
+  if(h.indexOf('project/')===0){
+    const id=decodeURIComponent(h.slice(8));
+    if(id==='new')return{view:'project',id:null,creating:true};
+    return{view:'project',id:id,creating:false};
+  }
+  return{view:'timeline',id:null,creating:false};
+}
+function goProject(id){location.hash='#/project/'+(id?encodeURIComponent(id):'new');}
+function goTimeline(){location.hash='#/';}
+
+function applyRoute(){
+  const r=parseHash();
+  const pg=document.getElementById('page'),mn=document.getElementById('main');
+  const exists=r.creating||(r.id&&ST.projects.some(p=>p.id===r.id));
+  if(r.view==='project'&&exists){
+    ROUTE=r;
+    mn.classList.add('hidden');pg.classList.remove('hidden');
+    renderProjectPage();
+  }else{
+    if(r.view==='project'&&!exists&&ST.projects.length)toast('That project no longer exists.','err');
+    ROUTE={view:'timeline',id:null,creating:false};
+    pg.classList.add('hidden');pg.innerHTML='';mn.classList.remove('hidden');
+    render();
+  }
+}
+window.addEventListener('hashchange',applyRoute);
+
+function ppProject(){
+  if(ROUTE.creating)return{id:null,name:'',client:'',jobCode:'',
+    deadline:fmtDate(addDays(today(),42)),status:'auto',
+    projectManager:'',drafter:'',leadFab:'',fabricators:'',metalFab:'',
+    activeDepartments:['pm','td','fab','finish','install']};
+  return ST.projects.find(p=>p.id===ROUTE.id)||null;
+}
+
+const PP_ROLES=[['pp-r-pm','Project manager','projectManagers','projectManager'],
+                ['pp-r-dr','Drafter','drafters','drafter'],
+                ['pp-r-lf','Lead fabricator','leadFabs','leadFab'],
+                ['pp-r-fb','Fabricators','leadFabs','fabricators']];
+
+function renderProjectPage(){
+  const p=ppProject();
+  if(!p){goTimeline();return;}
+  const isNew=ROUTE.creating;
+  const st=isNew?'estimating':projectStatus(p);
+  const wd=isNew?null:workdaysUntil(p.deadline);
+  const nPh=isNew?0:tasksOf(p.id).filter(t=>!t.__ghost&&t.department!=='pm').length;
+  const crumb=isNew?'New project':[p.jobCode,p.client].filter(Boolean).join(' · ')||'No job code';
+
+  let h='<div class="pg'+(isNew?' split':'')+'">';
+  h+='<div class="pg-top"><button class="pg-back" id="pp-back">&larr; Timeline</button>'
+   + '<span class="pg-crumb">'+esc(crumb)+'</span>'
+   + (isNew?'':'<span class="sum-pill" data-st="'+esc(st)+'">'+esc(STATUS_LBL[st]||st)+'</span>')
+   + '</div>';
+  h+='<input class="pg-title" id="pp-name" placeholder="Project name" value="'+esc(p.name||'')+'">';
+
+  if(isNew)h+='<div class="pg-cols"><div class="pg-left">';
+  h+='<div class="pg-f4">'
+   + '<label>Client<input id="pp-client" value="'+esc(p.client||'')+'"></label>'
+   + '<label>Job code<input id="pp-code" value="'+esc(p.jobCode||'')+'"></label>'
+   + '<label>Install date<input id="pp-deadline" type="date" value="'+esc(p.deadline||'')+'"></label>'
+   + '<label>Status<select id="pp-status"><option value="auto">Auto</option>'
+   + ALL_STATUSES.map(v=>'<option value="'+v+'"'+((p.status||'auto')===v?' selected':'')+'>'+esc(STATUS_LBL[v])+'</option>').join('')
+   + '</select></label></div>';
+
+  if(!isNew){
+    h+='<div class="pg-met">'
+     + '<div><div class="mk">Installs</div><div class="mv">'+(p.deadline?esc(fmtNice(p.deadline)):'&mdash;')+'</div></div>'
+     + '<div><div class="mk">Workdays left</div><div class="mv'+(wd!=null&&wd<0?' warn':'')+'">'+(wd==null?'&mdash;':wd)+'</div></div>'
+     + '<div><div class="mk">Phases</div><div class="mv">'+nPh+'</div></div>'
+     + '<div><div class="mk">Phase now</div><div class="mv" style="font-size:14px;font-weight:600;padding-top:4px">'+esc(phaseNow(p))+'</div></div>'
+     + '</div>';
+  }
+
+  h+='<div class="pg-sec">Team</div><div class="pg-roles">'
+   + PP_ROLES.map(r=>'<div><span class="rl">'+esc(r[1])+'</span><div class="pg-rbox" id="'+r[0]+'"></div></div>').join('')
+   + '</div>';
+
+  h+='<div class="pg-sec">Departments</div><div class="pg-depts" id="pp-depts"></div>';
+
+  if(!isNew){
+    h+='<div class="pg-sec">Phases</div>'
+     + '<div class="ph-hd"><span>Department</span><span>Assignee</span><span>Start</span><span>End</span><span>Days</span><span></span></div>'
+     + '<div id="pp-phases"></div>';
+  }
+
+  if(isNew){
+    h+='</div><div class="pg-right"><div class="npv">'
+     + '<div class="npv-hd"><span class="npv-ttl">Schedule preview</span>'
+     + '<button class="npv-btn" id="npv-reset" disabled>Reset</button></div>'
+     + '<div class="npv-scroll" id="npv-scroll"><div class="npv-in">'
+     + '<div class="npv-axis" id="npv-axis"></div>'
+     + '<div class="npv-body" id="npv-body"></div>'
+     + '</div></div><div class="npv-foot" id="npv-foot"></div></div>'
+     + '<div class="npv-tip">Drag a bar\'s left edge to change how long it takes, or its body '
+     + 'to pin it somewhere specific. Drag a department name to reorder the rows.</div>'
+     + '</div></div>';
+  }
+  h+='<div class="pg-foot">'
+   + (isNew?'':'<label class="pg-regen"><input type="checkbox" id="pp-regen"> Regenerate every date from the install date</label>')
+   + '<span class="sp"></span>'
+   + (isNew?'':'<button class="btn btn-danger" id="pp-del">Delete project</button>')
+   + '<button class="btn btn-ghost" id="pp-cancel">Cancel</button>'
+   + '<button class="btn btn-primary" id="pp-save">'+(isNew?'Create project':'Save changes')+'</button>'
+   + '</div>'
+   + '<div class="pg-hint" id="pp-hint"></div>';
+
+  h+='</div>';
+  document.getElementById('page').innerHTML=h;
+
+  for(const r of PP_ROLES)fillRoleChecks(r[0],STAFF[r[2]]||[],p[r[3]]||'');
+  buildDeptChecklist(isNew?null:p,'pp-depts');
+  document.getElementById('pp-hint').textContent=isNew
+    ? 'Phases are scheduled backward from the install date, skipping weekends and major holidays.'
+    : 'Edit a phase row and it saves as soon as you leave the field. Newly ticked departments are scheduled around the dates you already have.';
+  if(!isNew)renderPhaseRows(p);
+
+  document.getElementById('pp-back').addEventListener('click',goTimeline);
+  document.getElementById('pp-cancel').addEventListener('click',goTimeline);
+  document.getElementById('pp-save').addEventListener('click',savePageProject);
+  const del=document.getElementById('pp-del');
+  if(del)del.addEventListener('click',()=>{
+    if(!confirm('Delete "'+(p.name||'')+'" and all its phases?'))return;
+    saveState({projects:ST.projects.filter(x=>x.id!==p.id),tasks:ST.tasks.filter(t=>t.projectId!==p.id)});
+    goTimeline();
+  });
+  if(isNew){
+    NPV_MANUAL={};NPV_TASKS=[];NPV_ORDER=[];NPV_ORDER_DIRTY=false;
+    const left=document.querySelector('#page .pg-left');
+    if(left){left.addEventListener('change',npvQueue);left.addEventListener('input',npvQueue);}
+    const rst=document.getElementById('npv-reset');
+    if(rst)rst.addEventListener('click',()=>{NPV_MANUAL={};NPV_ORDER=[];NPV_ORDER_DIRTY=false;npvRebuild();});
+    if(!NPV_RESIZE_BOUND){window.addEventListener('resize',()=>{if(ROUTE.creating)npvQueue();});NPV_RESIZE_BOUND=true;}
+    npvRebuild();
+    setTimeout(()=>{const n=document.getElementById('pp-name');if(n)n.focus();},40);
+  }
+}
+
+function renderPhaseRows(p){
+  const box=document.getElementById('pp-phases');
+  if(!box)return;
+  const ts=tasksOf(p.id).filter(t=>!t.__ghost);
+  if(!ts.length){box.innerHTML='<div class="pg-empty">No phases yet &mdash; tick departments above and save.</div>';return;}
+  let h='';
+  for(const t of ts){
+    const d=deptById(t.department);
+    const nm=d?(d.freeText?(t.assignee||d.name):d.name):t.department;
+    const col=DEPT_COLORS[t.department]||'#8A98AE';
+    const roster=d&&d.roster?(STAFF[d.roster]||[]):null;
+    let asHtml;
+    if(t.department==='install'){
+      asHtml='<input class="ph-as" data-f="assignee" value="'+esc(crewOf(t).join(', '))+'" placeholder="Crew">';
+    }else if(roster&&roster.length){
+      asHtml='<select class="ph-as" data-f="assignee"><option value="">&mdash;</option>'
+        +[...new Set([...roster,...(t.assignee?[t.assignee]:[])])].map(n=>'<option'+(n===t.assignee?' selected':'')+'>'+esc(n)+'</option>').join('')
+        +'</select>';
+    }else{
+      asHtml='<input class="ph-as" data-f="assignee" value="'+esc(t.assignee||'')+'" placeholder="&mdash;">';
+    }
+    h+='<div class="ph-row" data-id="'+esc(t.id)+'">'
+     + '<span class="ph-dept"><span class="ph-dot" style="background:'+col+'"></span>'+esc(nm)+'</span>'
+     + asHtml
+     + '<input type="date" class="ph-s" data-f="startDate" value="'+esc(t.startDate||'')+'">'
+     + '<input type="date" class="ph-e" data-f="endDate" value="'+esc(t.endDate||'')+'">'
+     + '<input type="number" min="1" class="ph-d" data-f="estimatedDays" value="'+(t.estimatedDays||1)+'">'
+     + '<button class="ph-del" title="Delete phase">&times;</button>'
+     + '</div>';
+  }
+  box.innerHTML=h;
+  box.querySelectorAll('.ph-row').forEach(row=>{
+    const id=row.dataset.id;
+    row.querySelectorAll('[data-f]').forEach(inp=>{
+      inp.addEventListener('change',()=>commitPhase(id,inp.dataset.f,inp.value));
+    });
+    row.querySelector('.ph-del').addEventListener('click',()=>{
+      const t=ST.tasks.find(x=>x.id===id);
+      if(!t)return;
+      const d=deptById(t.department);
+      if(!confirm('Delete the '+((d?d.name:t.department))+' phase?'))return;
+      const proj=ppProject();
+      saveState({projects:ST.projects,tasks:ST.tasks.filter(x=>x.id!==id)});
+      if(proj)renderPhaseRows(proj);
+    });
+  });
+}
+
+function commitPhase(id,field,val){
+  const tasks=ST.tasks.map(t=>{
+    if(t.id!==id)return t;
+    const n={...t};
+    if(field==='assignee'){
+      n.assignee=(t.department==='install')?String(val||'').split(',').map(x=>x.trim()).filter(Boolean):val;
+    }else if(field==='startDate'){
+      if(!val)return t;
+      n.startDate=val;if(n.endDate&&n.endDate<val)n.endDate=val;
+    }else if(field==='endDate'){
+      if(!val)return t;
+      n.endDate=val;if(n.startDate&&val<n.startDate)n.startDate=val;
+    }else if(field==='estimatedDays'){
+      n.estimatedDays=Math.max(1,parseInt(val,10)||1);
+    }
+    return n;
+  });
+  PP_QUIET=true;
+  try{saveState({projects:ST.projects,tasks});}finally{PP_QUIET=false;}
+  const p=ppProject();
+  if(p)ppRefreshMetrics(p);
+}
+
+function ppRefreshMetrics(p){
+  const met=document.querySelectorAll('#page .pg-met .mv');
+  if(met.length<4)return;
+  const wd=workdaysUntil(p.deadline);
+  met[0].innerHTML=p.deadline?esc(fmtNice(p.deadline)):'&mdash;';
+  met[1].textContent=(wd==null?'—':wd);
+  met[1].classList.toggle('warn',wd!=null&&wd<0);
+  met[2].textContent=tasksOf(p.id).filter(t=>!t.__ghost&&t.department!=='pm').length;
+  met[3].textContent=phaseNow(p);
+}
+
+
+/* ===================== REV37: LIVE SCHEDULE PREVIEW ===================== */
+/* The create page runs the real backward scheduler against whatever is currently typed
+   into the form, so the PM sees the schedule build itself. Dragging a bar's left edge
+   changes that department's estimated days and re-chains everything. Dragging a bar's
+   body pins it where you dropped it; pinned bars keep their dates through later rebuilds
+   and are marked with an inset outline. Save uses exactly these bars, so what you see
+   on screen is what lands in SharePoint. */
+let NPV_RESIZE_BOUND=false;
+let NPV_TASKS=[];
+let NPV_MANUAL={};
+let NPV_ORDER=[];        /* department ids, top-to-bottom display order */
+let NPV_ORDER_DIRTY=false;
+const NPV_ROWH=25;      /* must match .npv-row height in the stylesheet */
+let NPV_GEO=null;
+let NPV_RAF=null;
+const NPV_GUT=104, NPV_PADL=3, NPV_PADR=6;
+
+function npvKey(t){return t.department+'::'+(Array.isArray(t.assignee)?t.assignee.join(','):(t.assignee||''));}
+function wdCount(a,b){let n=0,c=new Date(a);while(c<=b){if(isWorking(c))n++;c=addDays(c,1);}return Math.max(1,n);}
+
+/* Read the left-hand form without saving anything. */
+function readPageDraft(){
+  const activeDepartments=[],est={};
+  document.querySelectorAll('#pp-depts input[type=checkbox]').forEach(ck=>{
+    if(!ck.checked)return;
+    activeDepartments.push(ck.dataset.dept);
+    const dd=ck.parentElement.querySelector('.ddays');
+    if(dd)est[ck.dataset.dept]=Math.max(1,parseInt(dd.value,10)||1);
+  });
+  const otherLabels={};
+  document.querySelectorAll('#pp-depts .dother').forEach(i=>{otherLabels[i.dataset.dept]=i.value.trim();});
+  const g=id=>{const el=document.getElementById(id);return el?el.value:'';};
+  return{base:{id:'__preview__',name:g('pp-name').trim(),client:g('pp-client').trim(),
+    jobCode:g('pp-code').trim(),deadline:g('pp-deadline'),status:g('pp-status'),
+    projectManager:roleChecked('pp-r-pm'),drafter:roleChecked('pp-r-dr'),
+    leadFab:roleChecked('pp-r-lf'),fabricators:roleChecked('pp-r-fb'),
+    activeDepartments},est,otherLabels};
+}
+
+
+/* Department display order. Defaults to the same top-to-bottom order the rest of the app
+   uses (DEPTS order), NOT the order the scheduler happens to emit — that one runs backward
+   from installation and would show the job upside down. Dragging a department name
+   rearranges it; the chosen order is saved onto the project so the timeline and the phase
+   table match what the PM laid out. */
+function npvNaturalOrder(tasks){
+  return [...new Set(tasks.map(t=>t.department))]
+    .sort((a,b)=>(DEPT_IDX[a]??999)-(DEPT_IDX[b]??999));
+}
+function npvSyncOrder(tasks){
+  const present=npvNaturalOrder(tasks);
+  const kept=NPV_ORDER.filter(d=>present.indexOf(d)>=0);
+  for(const d of present){
+    if(kept.indexOf(d)>=0)continue;
+    /* Land after the last department that naturally precedes this one, rather than before
+       the first that follows it — otherwise a manually-moved row drags the insertion
+       point along with it and new departments appear in the wrong place. */
+    let at=0;
+    for(let i=0;i<kept.length;i++){
+      if((DEPT_IDX[kept[i]]??999)<(DEPT_IDX[d]??999))at=i+1;
+    }
+    kept.splice(at,0,d);
+  }
+  NPV_ORDER=kept;
+}
+function npvSortTasks(tasks){
+  const ix=d=>{const i=NPV_ORDER.indexOf(d);return i>=0?i:1000+(DEPT_IDX[d]??999);};
+  return tasks.slice().sort((a,b)=>
+    ix(a.department)-ix(b.department)
+    || String(assigneeText(a)).localeCompare(String(assigneeText(b))));
+}
+function npvMoveDept(dept,targetDept){
+  const from=NPV_ORDER.indexOf(dept),to=NPV_ORDER.indexOf(targetDept);
+  if(from<0||to<0||from===to)return false;
+  NPV_ORDER.splice(from,1);
+  NPV_ORDER.splice(to,0,dept);
+  NPV_ORDER_DIRTY=true;
+  return true;
+}
+
+function npvRebuild(){
+  const d=readPageDraft();
+  if(!d.base.deadline||!d.base.activeDepartments.length){NPV_TASKS=[];npvRender();return;}
+  let tasks=generateSchedule(d.base,d.est,d.otherLabels);
+  tasks=tasks.map(t=>{
+    const m=NPV_MANUAL[npvKey(t)];
+    return m?{...t,startDate:m.startDate,endDate:m.endDate,__manual:true}:t;
+  });
+  npvSyncOrder(tasks);
+  NPV_TASKS=npvSortTasks(tasks);
+  npvRender();
+}
+function npvQueue(){if(NPV_RAF)return;NPV_RAF=requestAnimationFrame(()=>{NPV_RAF=null;npvRebuild();});}
+
+function npvRender(){
+  const host=document.getElementById('npv-body');
+  if(!host)return;
+  const foot=document.getElementById('npv-foot');
+  const rst=document.getElementById('npv-reset');
+  if(rst)rst.disabled=!Object.keys(NPV_MANUAL).length&&!NPV_ORDER_DIRTY;
+
+  if(!NPV_TASKS.length){
+    host.innerHTML='<div class="npv-empty">Pick an install date and tick a department to see the schedule.</div>';
+    if(foot)foot.innerHTML='';
+    NPV_GEO=null;return;
+  }
+
+  const dl=parseDate(readPageDraft().base.deadline);
+  let lo=parseDate(NPV_TASKS[0].startDate),hi=dl;
+  for(const t of NPV_TASKS){
+    const a=parseDate(t.startDate),b=parseDate(t.endDate);
+    if(a<lo)lo=a;if(b>hi)hi=b;
+  }
+  const td=today();
+  if(td<lo)lo=td;
+  if(td>hi)hi=td;
+  lo=addDays(lo,-2);hi=addDays(hi,2);
+  const span=Math.max(1,diffDays(lo,hi)+1);
+  const scroll=document.getElementById('npv-scroll');
+  const avail=Math.max(240,(scroll?scroll.clientWidth:560)-NPV_GUT-8);
+  const dwv=Math.max(7,Math.floor(avail/span));
+  NPV_GEO={lo,hi,span,dw:dwv};
+  const x=dt=>NPV_GUT+diffDays(lo,dt)*dwv;
+  const innerW=NPV_GUT+span*dwv;
+
+  /* axis */
+  let ax='';
+  let cur=new Date(lo);
+  while(cur<=hi){
+    if(!isWorking(cur))ax+='<div class="npv-we" style="left:'+x(cur)+'px;width:'+dwv+'px"></div>';
+    if(cur.getDate()===1||cur.getTime()===lo.getTime()){
+      ax+='<div class="npv-mon" style="left:'+x(cur)+'px">'+cur.toLocaleDateString('en-US',{month:'short'})+'</div>';
+    }
+    if(dwv>=13||cur.getDay()===1){
+      ax+='<div class="npv-dnum" style="left:'+(x(cur))+'px;width:'+dwv+'px">'+cur.getDate()+'</div>';
+    }
+    cur=addDays(cur,1);
+  }
+  const axEl=document.getElementById('npv-axis');
+  axEl.innerHTML=ax;axEl.style.width=innerW+'px';
+
+  /* rows */
+  let h='';
+  NPV_TASKS.forEach((t,i)=>{
+    const d=deptById(t.department);
+    const nm=d?(d.freeText?(t.assignee||d.name):d.name):t.department;
+    const who=Array.isArray(t.assignee)?t.assignee.join(', '):(t.assignee||'');
+    const gut=(d&&d.roster&&who&&who!=='—')?nm+' · '+who:nm;
+    const a=parseDate(t.startDate),b=parseDate(t.endDate);
+    const bx=x(a)+NPV_PADL,bw=Math.max(dwv,(diffDays(a,b)+1)*dwv-NPV_PADR);
+    const col=DEPT_COLORS[t.department]||'#8A98AE';
+    h+='<div class="npv-row" style="width:'+innerW+'px">'
+     + '<div class="npv-gut" data-dept="'+esc(t.department)+'" title="'+esc(gut)+' — drag to reorder">'
+     + '<span class="npv-grip">&#9679;&#9679;</span>'+esc(gut)+'</div>'
+     + '<div class="npv-bar'+(t.__manual?' manual':'')+'" data-i="'+i+'" '
+     + 'style="left:'+bx+'px;width:'+bw+'px;background:'+col+'" '
+     + 'title="'+esc(nm+' · '+fmtNice(t.startDate)+' → '+fmtNice(t.endDate)+' · '+(t.estimatedDays||1)+'d')+'">'
+     + '<div class="npv-hdl" data-i="'+i+'"></div>'
+     + '<span style="margin-left:5px">'+esc(nm)+'</span></div>'
+     + '</div>';
+  });
+  h+='<div class="npv-today" style="left:'+(x(td)+Math.floor(dwv/2))+'px"></div>';
+  h+='<div class="npv-dl" style="left:'+(x(dl)+dwv)+'px"></div>';
+  host.innerHTML=h;
+  host.style.width=innerW+'px';
+
+  /* footer numbers */
+  const starts=NPV_TASKS.map(t=>parseDate(t.startDate));
+  const kick=new Date(Math.min(...starts.map(d2=>d2.getTime())));
+  const lead=wdCount(kick,dl);
+  const slack=workdaysUntil(fmtDate(kick));
+  foot.innerHTML='<span>Kickoff <b>'+esc(fmtNice(fmtDate(kick)))+'</b></span>'
+   + '<span>Lead time <b>'+lead+'</b> workdays</span>'
+   + '<span class="'+(slack<0?'warn':'')+'">'+(slack<0
+      ? 'Starts '+Math.abs(slack)+' workdays ago'
+      : 'Starts in <b>'+slack+'</b> workdays')+'</span>';
+
+  npvBindDrag();
+  npvBindReorder();
+}
+
+
+function npvBindReorder(){
+  const host=document.getElementById('npv-body');
+  if(!host)return;
+  host.querySelectorAll('.npv-gut').forEach(g=>{
+    g.addEventListener('mousedown',ev=>{
+      ev.preventDefault();ev.stopPropagation();
+      if(NPV_ORDER.length<2)return;
+      const dept=g.dataset.dept;
+      if(!dept)return;
+      host.classList.add('reordering');
+      const mine=[...host.querySelectorAll('.npv-row')]
+        .filter(r=>{const gg=r.querySelector('.npv-gut');return gg&&gg.dataset.dept===dept;});
+      mine.forEach(r=>r.classList.add('grabbed'));
+      const drop=document.createElement('div');
+      drop.className='npv-drop';drop.style.display='none';
+      host.appendChild(drop);
+      let target=null;
+
+      const rowUnder=cy=>{
+        const r=host.getBoundingClientRect();
+        const i=Math.floor((cy-r.top)/NPV_ROWH);
+        return Math.max(0,Math.min(NPV_TASKS.length-1,i));
+      };
+      const mv=e2=>{
+        const i=rowUnder(e2.clientY);
+        const over=NPV_TASKS[i]&&NPV_TASKS[i].department;
+        if(!over||over===dept){drop.style.display='none';target=null;return;}
+        target=over;
+        const firstRow=NPV_TASKS.findIndex(t=>t.department===over);
+        const lastRow=NPV_TASKS.length-1-[...NPV_TASKS].reverse().findIndex(t=>t.department===over);
+        const below=NPV_ORDER.indexOf(over)>NPV_ORDER.indexOf(dept);
+        drop.style.display='block';
+        drop.style.top=((below?lastRow+1:firstRow)*NPV_ROWH-1)+'px';
+      };
+      const up=()=>{
+        document.removeEventListener('mousemove',mv);
+        document.removeEventListener('mouseup',up);
+        host.classList.remove('reordering');
+        mine.forEach(r=>r.classList.remove('grabbed'));
+        if(drop.parentNode)drop.remove();
+        if(target&&npvMoveDept(dept,target)){
+          NPV_TASKS=npvSortTasks(NPV_TASKS);
+          npvRender();
+        }
+      };
+      document.addEventListener('mousemove',mv);
+      document.addEventListener('mouseup',up);
+    });
+  });
+}
+
+function npvBindDrag(){
+  const host=document.getElementById('npv-body');
+  host.querySelectorAll('.npv-bar').forEach(bar=>{
+    bar.addEventListener('mousedown',ev=>{
+      if(!NPV_GEO)return;
+      ev.preventDefault();
+      const i=+bar.dataset.i,t=NPV_TASKS[i];
+      if(!t)return;
+      const resize=ev.target.classList.contains('npv-hdl');
+      const x0=ev.clientX;
+      const s0=parseDate(t.startDate),e0=parseDate(t.endDate);
+      const dwv=NPV_GEO.dw;
+      bar.classList.add('dragging');
+      let days=0;
+      const mv=e2=>{
+        days=Math.round((e2.clientX-x0)/dwv);
+        if(resize){
+          const ns=addDays(s0,days);
+          if(ns>e0)return;
+          bar.style.left=(NPV_GUT+diffDays(NPV_GEO.lo,ns)*dwv+NPV_PADL)+'px';
+          bar.style.width=Math.max(dwv,(diffDays(ns,e0)+1)*dwv-NPV_PADR)+'px';
+        }else{
+          bar.style.left=(NPV_GUT+diffDays(NPV_GEO.lo,addDays(s0,days))*dwv+NPV_PADL)+'px';
+        }
+      };
+      const up=()=>{
+        document.removeEventListener('mousemove',mv);
+        document.removeEventListener('mouseup',up);
+        bar.classList.remove('dragging');
+        if(!days){npvRender();return;}
+        if(resize){
+          const ns=addDays(s0,days);
+          if(ns>e0){npvRender();return;}
+          const n=wdCount(ns,e0);
+          const inp=document.querySelector('#pp-depts input[data-dept="'+t.department+'"]');
+          const dd=inp?inp.parentElement.querySelector('.ddays'):null;
+          if(dd){dd.value=n;npvRebuild();}
+          else npvRender();
+        }else{
+          NPV_MANUAL[npvKey(t)]={startDate:fmtDate(addDays(s0,days)),endDate:fmtDate(addDays(e0,days))};
+          npvRebuild();
+        }
+      };
+      document.addEventListener('mousemove',mv);
+      document.addEventListener('mouseup',up);
+    });
+  });
+}
+
+function savePageProject(){
+  const nameEl=document.getElementById('pp-name'),name=nameEl.value.trim();
+  const dlEl=document.getElementById('pp-deadline'),deadline=dlEl.value;
+  let ok=true;
+  nameEl.classList.remove('err');dlEl.classList.remove('err');
+  if(!name){nameEl.classList.add('err');ok=false;}
+  if(!deadline){dlEl.classList.add('err');ok=false;}
+  if(!ok){toast('Give it a name and an install date.','err');return;}
+
+  const activeDepartments=[],est={};
+  document.querySelectorAll('#pp-depts input[type=checkbox]').forEach(ck=>{
+    if(!ck.checked)return;
+    activeDepartments.push(ck.dataset.dept);
+    const dd=ck.parentElement.querySelector('.ddays');
+    if(dd)est[ck.dataset.dept]=Math.max(1,parseInt(dd.value,10)||1);
+  });
+  const otherLabels={};
+  document.querySelectorAll('#pp-depts .dother').forEach(inp=>{otherLabels[inp.dataset.dept]=inp.value.trim();});
+
+  const base={name,
+    client:document.getElementById('pp-client').value.trim(),
+    jobCode:document.getElementById('pp-code').value.trim(),
+    deadline,status:document.getElementById('pp-status').value,
+    projectManager:roleChecked('pp-r-pm'),
+    drafter:roleChecked('pp-r-dr'),
+    leadFab:roleChecked('pp-r-lf'),
+    fabricators:roleChecked('pp-r-fb'),
+    activeDepartments};
+
+  if(ROUTE.creating){
+    /* Flush the preview synchronously. The rebuild is normally queued on rAF, so a PM who
+       edits a field and hits Save in the same frame would otherwise file the previous
+       schedule. Manual placements live in NPV_MANUAL and survive the rebuild. */
+    npvRebuild();
+    /* Save departments in the order the PM arranged them, so the timeline and the phase
+       table read the same way the preview did. */
+    if(NPV_ORDER.length){
+      const ranked=NPV_ORDER.filter(d=>base.activeDepartments.indexOf(d)>=0);
+      base.activeDepartments=ranked.concat(base.activeDepartments.filter(d=>ranked.indexOf(d)<0));
+    }
+    const p={id:genId(),...base,createdAt:fmtDate(today())};
+    const si=sortIndexForNew(p.deadline);if(si!=null)p.sortIndex=si;
+    /* Save exactly the bars shown in the preview, drags included, rather than
+       re-running the scheduler and silently discarding manual placements. */
+    const tasks=(NPV_TASKS&&NPV_TASKS.length)
+      ? NPV_TASKS.map(t=>{const n={...t,id:genId(),projectId:p.id};delete n.__manual;return n;})
+      : generateSchedule(p,est,otherLabels);
+    EXPANDED.add(p.id);
+    PP_QUIET=true;
+    try{saveState({projects:[...ST.projects,p],tasks:[...ST.tasks,...tasks]});}finally{PP_QUIET=false;}
+    toast('Created "'+p.name+'" with '+tasks.length+' phases');
+    goProject(p.id);
+    return;
+  }
+
+  const cur=ST.projects.find(x=>x.id===ROUTE.id);
+  if(!cur){goTimeline();return;}
+  const p={...cur,...base};
+  const regenEl=document.getElementById('pp-regen');
+  const regen=regenEl&&regenEl.checked;
+  const oldTasksForProj=ST.tasks.filter(t=>t.projectId===p.id);
+  let tasks=ST.tasks;
+  if(regen){
+    tasks=tasks.filter(t=>t.projectId!==p.id).concat(generateSchedule(p,est,otherLabels));
+  }else{
+    tasks=tasks.map(t=>{
+      if(t.projectId!==p.id)return t;
+      const d=deptById(t.department);
+      if(d&&d.freeText){const lbl=otherLabels[t.department];return lbl?{...t,assignee:lbl}:t;}
+      if(d&&d.roster){
+        const lst=roleListFor(p,t.department);
+        if(!lst.length||lst.includes(t.assignee))return t;
+        return{...t,assignee:lst[0]};
+      }
+      return t;
+    });
+    const haveDept=new Set(oldTasksForProj.map(t=>t.department));
+    const newDeptIds=activeDepartments.filter(id=>!haveDept.has(id));
+    if(newDeptIds.length){
+      const added=scheduleNewDepts(p,newDeptIds,est,otherLabels,oldTasksForProj);
+      tasks=tasks.concat(added);
+      if(added.length)toast('Added '+added.length+' phase'+(added.length>1?'s':'')+' — other dates unchanged');
+    }
+    const dropped=oldTasksForProj.filter(t=>!activeDepartments.includes(t.department));
+    if(dropped.length){
+      if(confirm('Remove '+dropped.length+' phase'+(dropped.length>1?'s':'')+' for the departments you unticked?')){
+        const kill=new Set(dropped.map(t=>t.id));
+        tasks=tasks.filter(t=>!kill.has(t.id));
+      }
+    }
+  }
+  saveState({projects:ST.projects.map(x=>x.id===p.id?p:x),tasks});
+  toast('Saved');
+}
+
 /* ===================== KEYBOARD ===================== */
 document.addEventListener('keydown',ev=>{
   const typing=ev.target.matches('input,textarea,select');
@@ -2366,7 +3117,7 @@ document.getElementById('sb-all').addEventListener('click',()=>{
 const gScroll=document.getElementById('gantt-scroll');
 const hdrWrap=document.getElementById('hdr-wrap');
 const sideRows=document.getElementById('side-rows');
-gScroll.addEventListener('scroll',()=>{hdrWrap.scrollLeft=gScroll.scrollLeft;sideRows.scrollTop=gScroll.scrollTop;});
+gScroll.addEventListener('scroll',()=>{hdrWrap.scrollLeft=gScroll.scrollLeft;sideRows.scrollTop=gScroll.scrollTop;if(LENS==='project')queueLabelReposition();});
 
 /* Sidebar resize */
 function setSideW(w){SIDE_W=Math.max(180,Math.min(480,Math.round(w)));document.getElementById('sidebar').style.width=SIDE_W+'px';}
@@ -2549,12 +3300,13 @@ ST={projects:[],tasks:[]};
   }
   rebuildStaff();
   EXPANDED=new Set(ST.projects.map(p=>p.id));
-  render();
+  applyRoute();
   setTimeout(scrollToToday,80);
   /* Poll every 45s so other people's changes appear (skips while dragging or editing) */
   setInterval(async()=>{
     if(DRAG||PENDING_SYNC)return;
     if([...document.querySelectorAll('.overlay')].some(o=>!o.classList.contains('hidden')))return;
+    if(document.activeElement&&document.activeElement.closest&&document.activeElement.closest('#page'))return;
     try{
       const fresh=await spLoad();
       let dirty=false;
@@ -2563,7 +3315,7 @@ ST={projects:[],tasks:[]};
         const fp=await spLoadStaff();
         if(JSON.stringify(fp)!==JSON.stringify(PEOPLE)){PEOPLE=fp;rebuildStaff();localStorage.setItem(PEOPLE_KEY,JSON.stringify(PEOPLE));dirty=true;}
       }
-      if(dirty)render();
+      if(dirty){if(ROUTE.view==='project')renderProjectPage();else render();}
       setSync('ok','synced '+stamp());
     }catch(e){}
   },45000);
