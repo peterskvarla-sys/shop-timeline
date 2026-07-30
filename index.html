@@ -667,6 +667,14 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 .cal-mon{position:sticky;top:0;z-index:6}
 #t-tint.on{background:var(--acc);color:#fff;border-color:var(--acc)}
 
+
+/* ============ REV44: SORT GROUP HEADERS ============ */
+.sb-row.grp-head{background:#EDF2F7;border-bottom:1px solid #CBD6E4;border-top:1px solid #CBD6E4;
+  padding-left:12px;gap:8px;cursor:default}
+.sb-row.grp-head .sb-name{font-size:11px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:#475569}
+.sb-row.grp-head .sb-count{color:#94A3B8}
+.grp-pill{position:static!important;transform:none!important;font-size:10px;padding:2px 9px}
+
 /* ============ PRINT ============ */
 @media print{
   @page{size:landscape;margin:7mm 9mm}
@@ -907,7 +915,7 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 <script src="msal-browser.min.js"></script>
 <script>
 'use strict';
-const APP_REV=43; // bump this ONE number on every release; used everywhere the rev shows up
+const APP_REV=44; // bump this ONE number on every release; used everywhere the rev shows up
 
 /* ===================== CONSTANTS ===================== */
 const DATA_KEY='shopTimeline_v1';
@@ -1459,7 +1467,8 @@ function savePeople(np){
 /* Legacy shim (import of old exports) */
 function saveStaff(st){savePeople(rostersToPeople(st));}
 function saveUI(){
-  try{localStorage.setItem('shopTimelineTint',TINT?'1':'0');}catch(e){}localStorage.setItem(UI_KEY,JSON.stringify({collapsedDepts:[...COLLAPSED],colorMode:COLOR_MODE,sideW:SIDE_W,showStatus:[...SHOW_STATUS]}));}
+  try{localStorage.setItem('shopTimelineTint',TINT?'1':'0');
+    localStorage.setItem('shopTimelineGroup',GROUP_BY||'');}catch(e){}localStorage.setItem(UI_KEY,JSON.stringify({collapsedDepts:[...COLLAPSED],colorMode:COLOR_MODE,sideW:SIDE_W,showStatus:[...SHOW_STATUS]}));}
 
 /* ===================== SEARCH FILTER ===================== */
 let FILTER='';
@@ -1637,21 +1646,40 @@ function projCompare(a,b){
   return (a.deadline||'').localeCompare(b.deadline||'');
 }
 function currentProjOrder(){return [...ST.projects].sort(projCompare);}
-function sortProjectsBy(cmp,label){
+function sortProjectsBy(cmp,label,groupBy){
   const arr=[...ST.projects].sort(cmp);
   const idx={};arr.forEach((p,i)=>idx[p.id]=i);
+  GROUP_BY=groupBy||null;
+  saveUI();
   saveState({projects:ST.projects.map(p=>({...p,sortIndex:idx[p.id]})),tasks:ST.tasks});
   toast('Sorted by '+label);
 }
-document.getElementById('sort-deadline').addEventListener('click',()=>sortProjectsBy((a,b)=>String(a.deadline||'9999').localeCompare(String(b.deadline||'9999')),'due date'));
-document.getElementById('sort-client').addEventListener('click',()=>sortProjectsBy((a,b)=>String(a.client||'').localeCompare(String(b.client||''))||String(a.deadline||'9999').localeCompare(String(b.deadline||'9999')),'client'));
-document.getElementById('sort-pm').addEventListener('click',()=>sortProjectsBy((a,b)=>String(roleList(a.projectManager)[0]||'').localeCompare(String(roleList(b.projectManager)[0]||''))||String(a.deadline||'9999').localeCompare(String(b.deadline||'9999')),'project manager'));
+
+/* What a project is filed under for the current grouping, and how that reads as a heading. */
+function groupKeyOf(p){
+  if(GROUP_BY==='client')return (p.client||'').trim()||'\u0000';
+  if(GROUP_BY==='pm')return (roleList(p.projectManager)[0]||'').trim()||'\u0000';
+  if(GROUP_BY==='status')return projectStatus(p);
+  return null;
+}
+function groupLabelOf(k){
+  if(k==='\u0000')return GROUP_BY==='pm'?'No project manager':'No client';
+  if(GROUP_BY==='status')return STATUS_LBL[k]||k;
+  return k;
+}
+document.getElementById('sort-deadline').addEventListener('click',()=>sortProjectsBy((a,b)=>String(a.deadline||'9999').localeCompare(String(b.deadline||'9999')),'due date',null));
+document.getElementById('sort-client').addEventListener('click',()=>sortProjectsBy((a,b)=>String(a.client||'').localeCompare(String(b.client||''))||String(a.deadline||'9999').localeCompare(String(b.deadline||'9999')),'client','client'));
+document.getElementById('sort-pm').addEventListener('click',()=>sortProjectsBy((a,b)=>String(roleList(a.projectManager)[0]||'').localeCompare(String(roleList(b.projectManager)[0]||''))||String(a.deadline||'9999').localeCompare(String(b.deadline||'9999')),'project manager','pm'));
 document.getElementById('sort-status').addEventListener('click',()=>sortProjectsBy((a,b)=>{
-  const o={'estimating':1,'approved':2,'in-production':3,'installing':4,'on-hold':5,'complete':6,'invoiced':7,'called-off':8};
+  /* Rank by the live status list so a new status can never fall to an unsorted tail. */
+  const o={};ALL_STATUSES.forEach((v,i)=>o[v]=i+1);
   return (o[projectStatus(a)]||99)-(o[projectStatus(b)]||99)||String(a.deadline||'9999').localeCompare(String(b.deadline||'9999'));
-},'status'));
+},'status','status'));
 
 function reorderProject(dragId,beforeId){
+  /* A hand-placed project no longer belongs to its group, so the headings stop meaning
+     anything. Clear the grouping rather than show a heading that lies. */
+  if(GROUP_BY){GROUP_BY=null;saveUI();}
   const order=currentProjOrder().map(p=>p.id);
   const from=order.indexOf(dragId);if(from<0)return;
   order.splice(from,1);
@@ -1676,7 +1704,18 @@ function buildRows(){
   const rows=[];
   if(LENS==='project'){
     const projs=currentProjOrder().filter(p=>SHOW_STATUS.has(projectStatus(p)));
+    let lastKey=null;
     for(const p of projs){
+      if(GROUP_BY){
+        const k=groupKeyOf(p);
+        if(k!==lastKey){
+          lastKey=k;
+          rows.push({kind:'groupHead',key:'G'+GROUP_BY+k,groupKey:k,
+            label:groupLabelOf(k),
+            count:projs.filter(x=>groupKeyOf(x)===k).length,
+            st:GROUP_BY==='status'?k:null});
+        }
+      }
       rows.push({kind:'projHead',key:'P'+p.id,projectId:p.id,lanes:1});
       if(EXPANDED.has(p.id))
         /* Project Management spans the whole job, so a bar for it says nothing the summary
@@ -1693,7 +1732,7 @@ function buildRows(){
     }
   }
   let y=0;
-  for(const r of rows){r.height=r.kind==='deptHead'?HEAD_H:rowH(r.lanes||1);r.top=y;y+=r.height;}
+  for(const r of rows){r.height=(r.kind==='deptHead'||r.kind==='groupHead')?HEAD_H:rowH(r.lanes||1);r.top=y;y+=r.height;}
   return {rows,totalH:y};
 }
 function rowAtY(y){for(let i=ROWS.length-1;i>=0;i--)if(y>=ROWS[i].top)return ROWS[i];return ROWS[0];}
@@ -1779,6 +1818,12 @@ function renderSidebar(){
       if(a&&a!=='—'&&a!==nm.textContent&&!(dd&&dd.freeText)){
         const sub=document.createElement('span');sub.className='sb-sub';sub.textContent=a;row.appendChild(sub);
       }
+    }else if(r.kind==='groupHead'){
+      row.className='sb-row grp-head';
+      if(r.st){const pl=document.createElement('span');pl.className='sum-pill grp-pill';
+        pl.dataset.st=r.st;pl.textContent=r.label;row.appendChild(pl);}
+      else{const nm=document.createElement('span');nm.className='sb-name';nm.textContent=r.label;row.appendChild(nm);}
+      const ct=document.createElement('span');ct.className='sb-count';ct.textContent=r.count;row.appendChild(ct);
     }else if(r.kind==='deptHead'){
       row.className='sb-row dept-head';
       const ch=document.createElement('span');ch.className='sb-chev'+(COLLAPSED.has(r.secId)?'':' open');ch.textContent='▶';row.appendChild(ch);
@@ -1819,7 +1864,7 @@ function renderGantt(){
   const rowFrag=document.createDocumentFragment();
   for(const r of ROWS){
     const rd=document.createElement('div');
-    rd.className='g-row'+(r.kind==='deptHead'?' dept-band':'')+((r.kind==='projTask'||r.kind==='deptLane')?' clickable':'');
+    rd.className='g-row'+((r.kind==='deptHead'||r.kind==='groupHead')?' dept-band':'')+((r.kind==='projTask'||r.kind==='deptLane')?' clickable':'');
     rd.dataset.key=r.key;
     if(r.secId)rd.dataset.secid=r.secId;
     rd.style.top=r.top+'px';rd.style.height=r.height+'px';rd.style.width=totalW+'px';
@@ -3192,7 +3237,8 @@ let NPV_TODOS=[];        /* draft tasks   {id,title,who,due,priority,dept} */
 let NPV_LINES=[];        /* named phase lines {id,name,dept,who} */
 let NPV_MODE='gantt';    /* 'gantt' | 'calendar' */
 let NPV_LIVE=false;      /* true when the chart mirrors a saved project instead of a draft */
-let TINT=true;           /* month hue + week saturation behind the charts */
+let TINT=true;
+let GROUP_BY=null;       /* 'client' | 'pm' | 'status' — drives the sidebar group headers */           /* month hue + week saturation behind the charts */
 let PP_TAB='setup';      /* setup | team | depts | events */
 let PP_FORM=null;        /* new-project values, kept out of the DOM so tabs can't lose them */
 let PP_KEEP=false;       /* set when a redraw must not wipe the draft */
@@ -4181,7 +4227,8 @@ function savePageProject(){
   toast('Saved');
 }
 
-try{const tv=localStorage.getItem('shopTimelineTint');if(tv!==null)TINT=(tv==='1');}catch(e){}
+try{const tv=localStorage.getItem('shopTimelineTint');if(tv!==null)TINT=(tv==='1');
+  const gv=localStorage.getItem('shopTimelineGroup');if(gv)GROUP_BY=gv;}catch(e){}
 
 /* ===================== KEYBOARD ===================== */
 document.addEventListener('keydown',ev=>{
