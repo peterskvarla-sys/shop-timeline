@@ -568,6 +568,105 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 
 .dr-row.ln,.dr-hd.ln{grid-template-columns:minmax(0,1fr) 128px 108px 24px}
 
+
+/* ============ REV42: PROJECT PAGE REBUILD ============ */
+.pg.split{max-width:none}
+.pg2{max-width:none;padding:16px 26px 90px}
+.pg-top{display:flex;align-items:center;gap:11px;margin-bottom:12px}
+.pg-back{background:var(--acc);border:none;color:#fff;border-radius:7px;padding:7px 14px;font-size:12.5px;
+  font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:7px;flex-shrink:0}
+.pg-back:hover{filter:brightness(1.1)}
+.pg-back kbd{font-family:var(--mono);font-size:10px;font-weight:700;border:1px solid rgba(255,255,255,.55);
+  border-radius:3px;padding:0 4px;opacity:.85}
+.pg-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.pg-name{border:none;border-bottom:2px solid transparent;background:transparent;font-family:inherit;
+  font-size:19px;font-weight:700;color:#16202E;padding:2px 0;outline:none;min-width:220px;flex:1}
+.pg-name:hover{border-bottom-color:#DCE5F0}
+.pg-name:focus{border-bottom-color:var(--acc)}
+.pg-name.err{border-bottom-color:#CE4242}
+.pg-code{font-size:12px;font-family:var(--mono);color:#94A3B8;flex-shrink:0}
+.pg-cols2{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:16px;align-items:start;margin-top:14px}
+.pg-tabs{display:flex;gap:2px;margin-bottom:-1px;flex-wrap:wrap}
+.pg-tab{background:none;border:1px solid transparent;border-bottom:none;border-radius:7px 7px 0 0;
+  font-family:inherit;font-size:12px;padding:7px 14px;color:#5B6B85;cursor:pointer}
+.pg-tab:hover{color:var(--acc)}
+.pg-tab.on{background:#fff;border-color:#E2E8F0;color:#16202E;font-weight:700}
+.pg-tab .n{color:#94A3B8;font-weight:400;margin-left:4px}
+.pg-panel{background:#fff;border:1px solid #E2E8F0;border-radius:0 9px 9px 9px;padding:14px;min-height:210px}
+.pg-panel .pg-sec:first-child{margin-top:0}
+.pg-side{background:#fff;border:1px solid #E2E8F0;border-radius:9px;overflow:hidden}
+.pg-side-hd{display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:1px solid #E2E8F0;background:#F7FAFD}
+.pg-side-hd .t{flex:1;font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#7488A3}
+.pg-side-hd .a{font-size:11px;font-weight:700;color:var(--acc);cursor:pointer;background:none;border:none;font-family:inherit}
+.pg-side-body{max-height:340px;overflow-y:auto}
+.pg-2col{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.pg-4col{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.pg.split .pg-roles{grid-template-columns:repeat(2,minmax(0,1fr))}
+.pg-depts{column-count:4;column-gap:20px}
+@media(max-width:1250px){.pg-depts{column-count:3}.pg-cols2{grid-template-columns:1fr}}
+@media(max-width:900px){.pg-depts{column-count:2}.pg-4col{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.npv-full{margin:0}
+.pg-hint{font-size:11.5px;color:#94A3B8;margin-top:10px;line-height:1.5}
+.pg-auto{font-size:11px;color:#94A3B8;display:flex;align-items:center;gap:5px}
+.pg-auto b{color:#1AA59C;font-weight:700}
+
+
+/* ---- bar options popover ---- */
+.bp{position:absolute;z-index:40;width:390px;max-width:calc(100vw - 40px);background:#fff;
+  border:1px solid #CBD6E4;border-radius:9px;box-shadow:0 10px 30px -8px rgba(15,23,42,.3);padding:12px}
+.bp-hd{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.bp-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.bp-dept{flex:1;font-size:9.5px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:#7488A3;
+  overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.bp-x{background:none;border:none;color:#B4C0D0;font-size:16px;line-height:1;cursor:pointer;padding:0 2px}
+.bp-x:hover{color:#CE4242}
+.bp-f{margin-bottom:9px}
+.bp-f label{display:block;font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#94A3B8;margin-bottom:4px}
+.bp-f input,.bp-f select{width:100%;border:1px solid #E2E8F0;border-radius:5px;padding:6px 8px;
+  font-size:12px;font-family:inherit;background:#fff;color:#1E293B;outline:none;box-sizing:border-box}
+.bp-f input:focus,.bp-f select:focus{border-color:var(--acc)}
+.bp-f input[readonly]{background:#F7FAFD;color:#7488A3}
+.bp-grid{display:grid;grid-template-columns:1.2fr 1fr 1fr 58px;gap:7px}
+.bp-acts{display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid #EDF2F7;padding-top:10px;margin-top:2px}
+.bp-btn{background:#fff;border:1px solid #CBD6E4;border-radius:6px;padding:5px 10px;font-size:11px;
+  font-weight:600;color:#33415A;cursor:pointer;font-family:inherit}
+.bp-btn:hover{border-color:var(--acc);color:var(--acc)}
+.bp-btn.dngr{color:#CE4242;border-color:#EBC4C4}
+.bp-btn.dngr:hover{background:#FCEBEB;border-color:#CE4242}
+.bp-note{font-size:10.5px;color:#94A3B8;margin-top:8px;line-height:1.45}
+.npv-bar.sel{box-shadow:0 0 0 2px #16202E,0 0 0 4px rgba(255,255,255,.9)}
+.npv-body.picking .npv-bar:not(.sel){opacity:.4}
+
+
+/* ============ REV43 ============ */
+.job-bar[data-st="forecast"]{filter:grayscale(1) brightness(1.06);opacity:.72}
+.job-bar[data-st="forecast"] .sum-pill{background:#E2E8F0;color:#5F6B7A}
+.mr-pill[data-st="forecast"]{background:#E2E8F0;color:#5F6B7A}
+.npv-web.off{background:none}
+
+/* the popover escapes the chart now, so it is positioned from the page */
+.bp{position:fixed}
+
+/* chart takes a share of the window rather than a fixed strip */
+#npv-scroll{max-height:calc(100vh - 300px);overflow-y:auto}
+.npv-in{min-height:100%}
+
+/* calendar: roughly square cells, Google-ish */
+.cal-wk{grid-auto-rows:auto;padding-bottom:5px;align-content:start}
+.cal-dn{grid-row:1;font-family:var(--mono);font-size:10px;color:#64748B;padding:4px 0 3px 6px;z-index:1}
+.cal-band{margin:1px 3px;height:16px;font-size:9px}
+.cal-col.we{background:repeating-linear-gradient(45deg,rgba(100,116,139,.10) 0 4px,transparent 4px 8px)}
+.cal-tint .cal-col{background-blend-mode:multiply}
+.npv-subs{display:flex;gap:0;border:1px solid #CBD6E4;border-radius:6px;overflow:hidden;margin-left:6px}
+.npv-subs button{background:#fff;border:none;padding:3px 10px;font-size:10.5px;font-weight:600;color:#7488A3;cursor:pointer;font-family:inherit}
+.npv-subs button.on{background:#5B6B85;color:#fff}
+
+
+.cal-wk{min-height:var(--calh,90px)}
+.cal-dow{position:sticky;top:0;z-index:5}
+.cal-mon{position:sticky;top:0;z-index:6}
+#t-tint.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+
 /* ============ PRINT ============ */
 @media print{
   @page{size:landscape;margin:7mm 9mm}
@@ -590,6 +689,7 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
     <span class="tb-rev">REV <span id="tb-rev-num"></span></span>
   </div>
   <button id="btn-today" class="t-btn" title="Jump to today (T)">Today</button>
+  <button id="t-tint" class="t-btn" title="Month and week background tint">Tint</button>
   <div class="tog-grp">
     <button id="btn-days" class="t-btn active" title="Day scale (D)">Days</button>
     <button id="btn-weeks" class="t-btn" title="Week scale (W)">Weeks</button>
@@ -807,7 +907,7 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 <script src="msal-browser.min.js"></script>
 <script>
 'use strict';
-const APP_REV=41; // bump this ONE number on every release; used everywhere the rev shows up
+const APP_REV=43; // bump this ONE number on every release; used everywhere the rev shows up
 
 /* ===================== CONSTANTS ===================== */
 const DATA_KEY='shopTimeline_v1';
@@ -1098,7 +1198,7 @@ function projectStatus(p){
   if(started(['tdg']))return 'in-design';
   return 'estimating';
 }
-const STATUS_LBL={'estimating':'Estimating','in-design':'In Design','in-fabrication':'In Fabrication','on-hold':'On Hold','complete':'Complete'};
+const STATUS_LBL={'forecast':'Forecast','estimating':'Estimating','in-design':'In Design','in-fabrication':'In Fabrication','on-hold':'On Hold','complete':'Complete'};
 /* Retired statuses -> where they land. Applied once on load, in migrate(). */
 const STATUS_MIGRATE={'approved':'in-fabrication','in-production':'in-fabrication','installing':'in-fabrication','invoiced':'complete','called-off':'complete'};
 
@@ -1358,7 +1458,8 @@ function savePeople(np){
 }
 /* Legacy shim (import of old exports) */
 function saveStaff(st){savePeople(rostersToPeople(st));}
-function saveUI(){localStorage.setItem(UI_KEY,JSON.stringify({collapsedDepts:[...COLLAPSED],colorMode:COLOR_MODE,sideW:SIDE_W,showStatus:[...SHOW_STATUS]}));}
+function saveUI(){
+  try{localStorage.setItem('shopTimelineTint',TINT?'1':'0');}catch(e){}localStorage.setItem(UI_KEY,JSON.stringify({collapsedDepts:[...COLLAPSED],colorMode:COLOR_MODE,sideW:SIDE_W,showStatus:[...SHOW_STATUS]}));}
 
 /* ===================== SEARCH FILTER ===================== */
 let FILTER='';
@@ -1375,7 +1476,7 @@ function taskMatch(t){
 }
 /* Dim (don't remove) non-matching rows/bars so layout stays put */
 let SPOT=new Set(); /* spotlighted project ids — everything else dims */
-const ALL_STATUSES=['estimating','in-design','in-fabrication','on-hold','complete'];
+const ALL_STATUSES=['forecast','estimating','in-design','in-fabrication','on-hold','complete'];
 function defaultShowStatus(){return new Set(ALL_STATUSES);}
 let SHOW_STATUS=defaultShowStatus();
 function visTasks(){return ST.tasks.filter(t=>{const p=ST.projects.find(x=>x.id===t.projectId);return !p||SHOW_STATUS.has(projectStatus(p));});}
@@ -1578,7 +1679,9 @@ function buildRows(){
     for(const p of projs){
       rows.push({kind:'projHead',key:'P'+p.id,projectId:p.id,lanes:1});
       if(EXPANDED.has(p.id))
-        for(const t of tasksOf(p.id))
+        /* Project Management spans the whole job, so a bar for it says nothing the summary
+           row doesn't already. It stays out of this lens and lives in the Departments lens. */
+        for(const t of tasksOf(p.id).filter(t=>t.department!=='pm'))
           rows.push({kind:'projTask',key:'T'+t.id,projectId:p.id,taskId:t.id,dept:t.department,lanes:1});
     }
   } else {
@@ -1871,7 +1974,7 @@ function buildCanvasBgInto(canvas,totalW,DW_){
     const x=Math.max(0,d2x(wk)),ex=Math.min(totalW,d2x(wk)+7*DW_);
     if(ex>x){const bg=document.createElement('div');bg.className='bg-col';
       bg.style.left=x+'px';bg.style.width=(ex-x)+'px';bg.style.height=TOTAL_H+'px';
-      bg.style.background=cellBg(wk.getMonth(),isoWeek(wk)%2);bgFrag.appendChild(bg);}
+      bg.style.background=TINT?cellBg(wk.getMonth(),isoWeek(wk)%2):'#fff';bgFrag.appendChild(bg);}
     wk=addDays(wk,7);
   }
   /* Grey out weekends + holidays all the way down the column */
@@ -2205,7 +2308,10 @@ function buildDeptChecklist(p,boxId){
   const addItem=(d,indent,full)=>{
     const item=document.createElement('div');item.className='dept-item'+(indent?' indent':'')+(full?' dept-full':'');
     const ck=document.createElement('input');ck.type='checkbox';ck.dataset.dept=d.id;
-    const active=p?(p.activeDepartments||[]).includes(d.id):['pm','td','fab','finish','install'].includes(d.id);
+    const D=(!p&&PP_FORM)?PP_FORM:null;
+    const active=p?(p.activeDepartments||[]).includes(d.id)
+                 :(D?D.activeDepartments.includes(d.id)
+                    :['pm','td','fab','finish','install'].includes(d.id));
     ck.checked=active;
     if(d.id==='pm'){ck.checked=true;ck.disabled=true;}
     const nm=document.createElement('span');nm.className='dname';nm.textContent=d.freeText?'Other':d.name;
@@ -2214,14 +2320,15 @@ function buildDeptChecklist(p,boxId){
       const txt=document.createElement('input');txt.type='text';txt.className='dother';txt.dataset.dept=d.id;
       txt.placeholder='process name';
       const existing=p?ST.tasks.find(t=>t.projectId===p.id&&t.department===d.id):null;
-      txt.value=existing?(existing.assignee||''):'';
+      txt.value=existing?(existing.assignee||''):((D&&D.otherLabels[d.id])||'');
       txt.disabled=!ck.checked;
       item.appendChild(txt);
     }
     if(d.id!=='pm'){
       const days=document.createElement('input');days.type='number';days.className='ddays';days.min='1';
       const existing=p?ST.tasks.find(t=>t.projectId===p.id&&t.department===d.id):null;
-      days.value=existing?(existing.estimatedDays||d.est||1):(d.est||1);
+      days.value=existing?(existing.estimatedDays||d.est||1)
+                        :((D&&D.est[d.id])||d.est||1);
       days.disabled=!ck.checked;
       const lbl=document.createElement('span');lbl.className='dlbl';lbl.textContent='days';
       ck.addEventListener('change',()=>{
@@ -2695,10 +2802,12 @@ function applyRoute(){
 window.addEventListener('hashchange',applyRoute);
 
 function ppProject(){
-  if(ROUTE.creating)return{id:null,name:'',client:'',jobCode:'',
-    deadline:fmtDate(addDays(today(),42)),status:'auto',
-    projectManager:'',drafter:'',leadFab:'',fabricators:'',metalFab:'',
-    activeDepartments:['pm','td','fab','finish','install']};
+  /* While creating, the project IS the draft — so every tab renders from the same place
+     it writes to, and switching tabs can't blank a field that was already filled in. */
+  if(ROUTE.creating){
+    if(!PP_FORM)ppFormInit();
+    return{id:null,...PP_FORM};
+  }
   return ST.projects.find(p=>p.id===ROUTE.id)||null;
 }
 
@@ -2707,121 +2816,262 @@ const PP_ROLES=[['pp-r-pm','Project manager','projectManagers','projectManager']
                 ['pp-r-lf','Lead fabricator','leadFabs','leadFab'],
                 ['pp-r-fb','Fabricators','leadFabs','fabricators']];
 
+function ppColor(p){return p&&p.id?projColor(p.id):'#94A3B8';}
+
+const PP_TABS=[['setup','Setup'],['team','Team'],['depts','Departments'],['events','Events']];
+
 function renderProjectPage(){
+  const isNew=ROUTE.creating;
+  /* Clear the draft BEFORE anything reads it, or a second new project inherits the first. */
+  if(isNew&&!PP_KEEP){
+    NPV_MANUAL={};NPV_TASKS=[];NPV_ALL=[];NPV_ORDER=[];NPV_ORDER_DIRTY=false;
+    NPV_EVENTS=[];NPV_TODOS=[];NPV_LINES=[];NPV_MODE='gantt';
+    PP_TAB='setup';ppFormInit();
+  }
+  PP_KEEP=false;
   const p=ppProject();
   if(!p){goTimeline();return;}
-  const isNew=ROUTE.creating;
+  NPV_LIVE=!isNew;
   const st=isNew?'estimating':projectStatus(p);
-  const wd=isNew?null:workdaysUntil(p.deadline);
-  const nPh=isNew?0:tasksOf(p.id).filter(t=>!t.__ghost&&t.department!=='pm').length;
-  const crumb=isNew?'New project':[p.jobCode,p.client].filter(Boolean).join(' · ')||'No job code';
 
-  let h='<div class="pg'+(isNew?' split':'')+'">';
-  h+='<div class="pg-top"><button class="pg-back" id="pp-back">&larr; Timeline</button>'
-   + '<span class="pg-crumb">'+esc(crumb)+'</span>'
-   + (isNew?'':'<span class="sum-pill" data-st="'+esc(st)+'">'+esc(STATUS_LBL[st]||st)+'</span>')
+  let h='<div class="pg pg2 split">';
+
+  /* header */
+  h+='<div class="pg-top">'
+   + '<button class="pg-back" id="pp-back"><i></i>&larr; Timeline <kbd>esc</kbd></button>'
+   + '<span class="pg-dot" style="background:'+ppColor(p)+'"></span>'
+   + '<input class="pg-name" id="pp-name" placeholder="Project name" value="'+esc(p.name||'')+'">'
+   + (isNew?'':'<span class="pg-code">'+esc(p.jobCode||'')+'</span>')
+   + (isNew?'<span class="pg-code">New project</span>'
+          :'<span class="sum-pill" data-st="'+esc(st)+'">'+esc(STATUS_LBL[st]||st)+'</span>')
    + '</div>';
-  h+='<input class="pg-title" id="pp-name" placeholder="Project name" value="'+esc(p.name||'')+'">';
 
-  if(isNew)h+='<div class="pg-cols"><div class="pg-left">';
-  h+='<div class="pg-f4">'
-   + '<label>Client<input id="pp-client" value="'+esc(p.client||'')+'"></label>'
-   + '<label>Job code<input id="pp-code" value="'+esc(p.jobCode||'')+'"></label>'
-   + '<label>Install date<input id="pp-deadline" type="date" value="'+esc(p.deadline||'')+'"></label>'
-   + '<label>Status<select id="pp-status"><option value="auto">Auto</option>'
-   + ALL_STATUSES.map(v=>'<option value="'+v+'"'+((p.status||'auto')===v?' selected':'')+'>'+esc(STATUS_LBL[v])+'</option>').join('')
-   + '</select></label></div>';
+  /* full-width chart */
+  h+='<div class="npv npv-full">'
+   + '<div class="npv-hd"><span class="npv-ttl" id="npv-nums"></span>'
+   + '<div class="npv-modes"><button id="npv-m-g">Gantt</button><button id="npv-m-c">Calendar</button></div>'
+   + '<div class="npv-subs"><button id="npv-tint">Tint</button></div>'
+   + '<button class="npv-btn" id="npv-reset" disabled>Reset</button></div>'
+   + '<div class="npv-leg" id="npv-leg"></div>'
+   + '<div class="npv-scroll" id="npv-scroll"><div class="npv-in">'
+   + '<div class="npv-axis" id="npv-axis"></div><div class="npv-body" id="npv-body"></div>'
+   + '</div></div><div class="npv-foot" id="npv-foot"></div></div>';
 
-  if(!isNew){
-    h+='<div class="pg-met">'
-     + '<div><div class="mk">Installs</div><div class="mv">'+(p.deadline?esc(fmtNice(p.deadline)):'&mdash;')+'</div></div>'
-     + '<div><div class="mk">Workdays left</div><div class="mv'+(wd!=null&&wd<0?' warn':'')+'">'+(wd==null?'&mdash;':wd)+'</div></div>'
-     + '<div><div class="mk">Phases</div><div class="mv">'+nPh+'</div></div>'
-     + '<div><div class="mk">Phase now</div><div class="mv" style="font-size:14px;font-weight:600;padding-top:4px">'+esc(phaseNow(p))+'</div></div>'
+  /* two columns */
+  h+='<div class="pg-cols2"><div class="pg-left">'
+   + '<div class="pg-tabs">'
+   + PP_TABS.map(t=>'<button class="pg-tab'+(PP_TAB===t[0]?' on':'')+'" data-tab="'+t[0]+'">'+esc(t[1])+'</button>').join('')
+   + '</div><div class="pg-panel" id="pp-panel"></div>'
+   + '<div class="pg-hint" id="pp-hint"></div>'
+   + '</div>';
+
+  h+='<div class="pg-right"><div class="pg-side">'
+   + '<div class="pg-side-hd"><span class="t" id="pp-side-hd">Events &amp; tasks</span>'
+   + '<button class="a" id="pp-side-add">+ Add</button></div>'
+   + '<div class="pg-side-body" id="npv-side"></div></div></div>';
+
+  h+='</div>';
+
+  /* footer */
+  h+='<div class="pg-foot">'
+   + (isNew?'':'<span class="pg-auto"><b>&#10003;</b> Changes save automatically</span>')
+   + '<span class="sp"></span>'
+   + (isNew?'':'<button class="btn btn-danger" id="pp-del">Delete project</button>')
+   + '<button class="btn btn-ghost" id="pp-cancel">'+(isNew?'Cancel':'Done')+'</button>'
+   + (isNew?'<button class="btn btn-primary" id="pp-save">Create project</button>':'')
+   + '</div></div>';
+
+  document.getElementById('page').innerHTML=h;
+
+  /* draft state is only reset when starting a brand new project */
+  const nums=document.getElementById('npv-nums');
+  if(nums)nums.textContent='Schedule';
+
+  renderPPTab();
+
+  document.getElementById('pp-back').addEventListener('click',goTimeline);
+  document.getElementById('pp-cancel').addEventListener('click',goTimeline);
+  const sv=document.getElementById('pp-save');
+  if(sv)sv.addEventListener('click',savePageProject);
+  const del=document.getElementById('pp-del');
+  if(del)del.addEventListener('click',()=>{
+    if(!confirm('Delete "'+(p.name||'')+'" and everything on it?'))return;
+    saveState({projects:ST.projects.filter(x=>x.id!==p.id),
+      tasks:ST.tasks.filter(t=>t.projectId!==p.id),
+      todos:(ST.todos||[]).filter(t=>t.projectId!==p.id)});
+    goTimeline();
+  });
+  document.querySelectorAll('#page .pg-tab').forEach(b=>b.addEventListener('click',()=>{
+    if(ROUTE.creating)ppFormSync();
+    PP_TAB=b.dataset.tab;
+    document.querySelectorAll('#page .pg-tab').forEach(x=>x.classList.toggle('on',x===b));
+    renderPPTab();
+  }));
+  document.getElementById('pp-side-add').addEventListener('click',()=>{
+    if(ROUTE.creating)ppFormSync();
+    PP_TAB='events';
+    document.querySelectorAll('#page .pg-tab').forEach(x=>x.classList.toggle('on',x.dataset.tab==='events'));
+    renderPPTab();
+    const ae=document.getElementById('pp-add-ev');if(ae)ae.click();
+  });
+
+  const nm=document.getElementById('pp-name');
+  nm.addEventListener('change',()=>{
+    nm.classList.remove('err');
+    if(!isNew)ppCommitField('name',nm.value.trim());
+  });
+
+  const rst=document.getElementById('npv-reset');
+  if(rst)rst.addEventListener('click',()=>{NPV_MANUAL={};NPV_ORDER=[];NPV_ORDER_DIRTY=false;npvRebuild();});
+  const mg=document.getElementById('npv-m-g'),mc=document.getElementById('npv-m-c');
+  if(mg)mg.addEventListener('click',()=>{NPV_MODE='gantt';npvRender();});
+  if(mc)mc.addEventListener('click',()=>{NPV_MODE='calendar';npvRender();});
+  const tg=document.getElementById('npv-tint');
+  if(tg)tg.addEventListener('click',()=>{TINT=!TINT;saveUI();npvRender();render();});
+  if(!NPV_RESIZE_BOUND){window.addEventListener('resize',()=>{if(ROUTE.view==='project')npvQueue();});NPV_RESIZE_BOUND=true;}
+
+  npvRebuild();
+  if(isNew)setTimeout(()=>{const n=document.getElementById('pp-name');if(n)n.focus();},40);
+}
+
+/* One field at a time, straight to state. Existing projects have no save button. */
+function ppCommitField(field,val){
+  const p=ppProject();
+  if(!p||ROUTE.creating)return;
+  if(p[field]===val)return;
+  PP_QUIET=true;
+  try{saveState({projects:ST.projects.map(x=>x.id===p.id?{...x,[field]:val}:x),tasks:ST.tasks});}
+  finally{PP_QUIET=false;}
+  npvRebuild();
+}
+
+/* Ticking a department on a saved project schedules it around the dates already there;
+   unticking asks first, because it deletes work. */
+function ppCommitDepts(){
+  const p=ppProject();
+  if(!p||ROUTE.creating)return;
+  const act=[],est={},ol={};
+  const box=document.getElementById('pp-depts');
+  if(!box)return;
+  box.querySelectorAll('input[type=checkbox]').forEach(ck=>{
+    if(!ck.checked)return;
+    act.push(ck.dataset.dept);
+    const dd=ck.parentElement.querySelector('.ddays');
+    if(dd)est[ck.dataset.dept]=Math.max(1,parseInt(dd.value,10)||1);
+  });
+  box.querySelectorAll('.dother').forEach(i=>{ol[i.dataset.dept]=i.value.trim();});
+
+  const mine=ST.tasks.filter(t=>t.projectId===p.id);
+  const have=new Set(mine.map(t=>t.department));
+  const added=act.filter(d=>!have.has(d));
+  const gone=mine.filter(t=>act.indexOf(t.department)<0);
+  let tasks=ST.tasks;
+  const np={...p,activeDepartments:act};
+
+  if(added.length){
+    const made=scheduleNewDepts(np,added,est,ol,mine);
+    tasks=tasks.concat(made);
+    if(made.length)toast('Added '+made.length+' phase'+(made.length>1?'s':'')+' — other dates unchanged');
+  }
+  if(gone.length){
+    if(confirm('Remove '+gone.length+' phase'+(gone.length>1?'s':'')+' for the departments you unticked?')){
+      const kill=new Set(gone.map(t=>t.id));
+      tasks=tasks.filter(t=>!kill.has(t.id));
+    }else{
+      for(const t of gone)if(act.indexOf(t.department)<0)act.push(t.department);
+      np.activeDepartments=act;
+    }
+  }
+  PP_QUIET=true;
+  try{saveState({projects:ST.projects.map(x=>x.id===p.id?np:x),tasks});}finally{PP_QUIET=false;}
+  npvRebuild();
+}
+
+function renderPPTab(){
+  const box=document.getElementById('pp-panel');
+  if(!box)return;
+  const p=ppProject();
+  if(!p)return;
+  const isNew=ROUTE.creating;
+  let h='';
+
+  if(PP_TAB==='setup'){
+    h='<div class="pg-f4">'
+     + '<label>Client<input id="pp-client" value="'+esc(p.client||'')+'"></label>'
+     + '<label>Job code<input id="pp-code" value="'+esc(p.jobCode||'')+'"></label>'
+     + '<label>Install date<input id="pp-deadline" type="date" value="'+esc(p.deadline||'')+'"></label>'
+     + '<label>Status<select id="pp-status"><option value="auto">Auto</option>'
+     + ALL_STATUSES.map(v=>'<option value="'+v+'"'+((p.status||'auto')===v?' selected':'')+'>'+esc(STATUS_LBL[v])+'</option>').join('')
+     + '</select></label></div>';
+    if(!isNew){
+      const wd=workdaysUntil(p.deadline);
+      h+='<div class="pg-met">'
+       + '<div><div class="mk">Installs</div><div class="mv">'+(p.deadline?esc(fmtNice(p.deadline)):'&mdash;')+'</div></div>'
+       + '<div><div class="mk">Workdays left</div><div class="mv'+(wd!=null&&wd<0?' warn':'')+'">'+(wd==null?'&mdash;':wd)+'</div></div>'
+       + '<div><div class="mk">Phases</div><div class="mv">'+tasksOf(p.id).filter(t=>t.department!=='pm').length+'</div></div>'
+       + '<div><div class="mk">Running now</div><div class="mv" style="font-size:14px;padding-top:5px">'+esc(phaseNow(p))+'</div></div>'
+       + '</div>';
+    }
+  }
+  else if(PP_TAB==='team'){
+    h='<div class="pg-roles">'
+     + PP_ROLES.map(r=>'<div><span class="rl">'+esc(r[1])+'</span><div class="pg-rbox" id="'+r[0]+'"></div></div>').join('')
      + '</div>';
   }
-
-  h+='<div class="pg-sec">Team</div><div class="pg-roles">'
-   + PP_ROLES.map(r=>'<div><span class="rl">'+esc(r[1])+'</span><div class="pg-rbox" id="'+r[0]+'"></div></div>').join('')
-   + '</div>';
-
-  h+='<div class="pg-sec">Departments</div><div class="pg-depts" id="pp-depts"></div>';
-
-  if(isNew){
-    h+='<div class="pg-sec">Phase lines</div><div id="pp-lines"></div>'
-     + '<button class="dr-add" id="pp-add-ln">+ Add a named line</button>'
-     + '<div class="pg-sec">Events</div><div id="pp-events"></div>'
+  else if(PP_TAB==='depts'){
+    h='<div class="pg-depts" id="pp-depts"></div>'
+     + '<div class="pg-sec">Phases</div><div id="pp-lines"></div>'
+     + '<button class="dr-add" id="pp-add-ln">+ Split a department into named phases</button>';
+  }
+  else{
+    h='<div class="pg-sec" style="margin-top:0">Events</div><div id="pp-events"></div>'
      + '<button class="dr-add" id="pp-add-ev">+ Add an event</button>'
      + '<div class="pg-sec">Tasks</div><div id="pp-todos"></div>'
      + '<button class="dr-add" id="pp-add-tk">+ Add a task</button>';
   }
+  box.innerHTML=h;
 
-  if(!isNew){
-    h+='<div class="pg-sec">Phases</div>'
-     + '<div class="ph-hd"><span>Department</span><span>Assignee</span><span>Start</span><span>End</span><span>Days</span><span></span></div>'
-     + '<div id="pp-phases"></div>';
+  if(PP_TAB==='setup'){
+    ['pp-client','pp-code','pp-deadline','pp-status'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(!el)return;
+      el.addEventListener('change',()=>{
+        if(isNew){npvQueue();return;}
+        const map={'pp-client':'client','pp-code':'jobCode','pp-deadline':'deadline','pp-status':'status'};
+        ppCommitField(map[id],el.value);
+      });
+      if(isNew)el.addEventListener('input',npvQueue);
+    });
   }
-
-  if(isNew){
-    h+='</div><div class="pg-right"><div class="npv">'
-     + '<div class="npv-hd"><span class="npv-ttl">Schedule preview</span>'
-     + '<div class="npv-modes"><button id="npv-m-g">Gantt</button>'
-     + '<button id="npv-m-c">Calendar</button></div>'
-     + '<button class="npv-btn" id="npv-reset" disabled>Reset</button></div>'
-     + '<div class="npv-leg" id="npv-leg"></div>'
-     + '<div class="npv-scroll" id="npv-scroll"><div class="npv-in">'
-     + '<div class="npv-axis" id="npv-axis"></div>'
-     + '<div class="npv-body" id="npv-body"></div>'
-     + '</div></div><div class="npv-foot" id="npv-foot"></div></div>'
-     + '<div class="npv-side"><div class="npv-side-hd" id="npv-side-hd">Events &amp; tasks</div>'
-     + '<div class="npv-side-body" id="npv-side"></div></div>'
-     + '<div class="npv-tip">Drag a bar\'s left edge to change how long it takes, or its body '
-     + 'to pin it somewhere specific. Drag a department name to reorder the rows.</div>'
-     + '</div></div>';
+  if(PP_TAB==='team'){
+    for(const r of PP_ROLES)
+      fillRoleChecks(r[0],STAFF[r[2]]||[],(isNew&&PP_FORM?PP_FORM[r[3]]:p[r[3]])||'');
+    box.addEventListener('change',()=>{
+      if(isNew){npvQueue();return;}
+      const patch={};
+      for(const r of PP_ROLES)patch[r[3]]=roleChecked(r[0]);
+      PP_QUIET=true;
+      try{saveState({projects:ST.projects.map(x=>x.id===p.id?{...x,...patch}:x),tasks:ST.tasks});}
+      finally{PP_QUIET=false;}
+      npvRebuild();
+    });
   }
-  h+='<div class="pg-foot">'
-   + (isNew?'':'<label class="pg-regen"><input type="checkbox" id="pp-regen"> Regenerate every date from the install date</label>')
-   + '<span class="sp"></span>'
-   + (isNew?'':'<button class="btn btn-danger" id="pp-del">Delete project</button>')
-   + '<button class="btn btn-ghost" id="pp-cancel">Cancel</button>'
-   + '<button class="btn btn-primary" id="pp-save">'+(isNew?'Create project':'Save changes')+'</button>'
-   + '</div>'
-   + '<div class="pg-hint" id="pp-hint"></div>';
-
-  h+='</div>';
-  document.getElementById('page').innerHTML=h;
-
-  for(const r of PP_ROLES)fillRoleChecks(r[0],STAFF[r[2]]||[],p[r[3]]||'');
-  buildDeptChecklist(isNew?null:p,'pp-depts');
-  document.getElementById('pp-hint').textContent=isNew
-    ? 'Phases are scheduled backward from the install date, skipping weekends and major holidays.'
-    : 'Edit a phase row and it saves as soon as you leave the field. Newly ticked departments are scheduled around the dates you already have.';
-  if(!isNew)renderPhaseRows(p);
-
-  document.getElementById('pp-back').addEventListener('click',goTimeline);
-  document.getElementById('pp-cancel').addEventListener('click',goTimeline);
-  document.getElementById('pp-save').addEventListener('click',savePageProject);
-  const del=document.getElementById('pp-del');
-  if(del)del.addEventListener('click',()=>{
-    if(!confirm('Delete "'+(p.name||'')+'" and all its phases?'))return;
-    saveState({projects:ST.projects.filter(x=>x.id!==p.id),tasks:ST.tasks.filter(t=>t.projectId!==p.id)});
-    goTimeline();
-  });
-  if(isNew){
-    NPV_MANUAL={};NPV_TASKS=[];NPV_ORDER=[];NPV_ORDER_DIRTY=false;
-    NPV_EVENTS=[];NPV_TODOS=[];NPV_LINES=[];NPV_MODE='gantt';
-    const left=document.querySelector('#page .pg-left');
-    if(left){left.addEventListener('change',npvQueue);left.addEventListener('input',npvQueue);}
-    const rst=document.getElementById('npv-reset');
-    if(rst)rst.addEventListener('click',()=>{NPV_MANUAL={};NPV_ORDER=[];NPV_ORDER_DIRTY=false;npvRebuild();});
-    const mg=document.getElementById('npv-m-g'),mc=document.getElementById('npv-m-c');
-    if(mg)mg.addEventListener('click',()=>{NPV_MODE='gantt';npvRender();});
-    if(mc)mc.addEventListener('click',()=>{NPV_MODE='calendar';npvRender();});
+  if(PP_TAB==='depts'){
+    buildDeptChecklist(isNew?null:p,'pp-depts');
+    renderDraftLines();
     const al=document.getElementById('pp-add-ln');
     if(al)al.addEventListener('click',()=>{
       NPV_LINES.push({id:genId(),name:'',dept:(NPV_ORDER.find(d=>d!=='pm')||NPV_ORDER[0]||''),who:''});
       renderDraftLines();npvRebuild();
     });
+    box.addEventListener('change',ev=>{
+      if(ev.target.closest('#pp-lines'))return;
+      if(isNew){npvQueue();return;}
+      ppCommitDepts();
+    });
+  }
+  if(PP_TAB==='events'){
+    renderDraftEvents();renderDraftTodos();
     const ae=document.getElementById('pp-add-ev');
     if(ae)ae.addEventListener('click',()=>{
       NPV_EVENTS.push({id:genId(),name:'',date:'',dept:(NPV_ORDER[0]||'')});
@@ -2832,11 +3082,12 @@ function renderProjectPage(){
       NPV_TODOS.push({id:genId(),title:'',who:[],due:'',priority:'medium',dept:(NPV_ORDER[0]||'')});
       renderDraftTodos();npvRender();
     });
-    renderDraftLines();renderDraftEvents();renderDraftTodos();
-    if(!NPV_RESIZE_BOUND){window.addEventListener('resize',()=>{if(ROUTE.creating)npvQueue();});NPV_RESIZE_BOUND=true;}
-    npvRebuild();
-    setTimeout(()=>{const n=document.getElementById('pp-name');if(n)n.focus();},40);
   }
+
+  const hint=document.getElementById('pp-hint');
+  if(hint)hint.textContent=isNew
+    ? 'Phases are scheduled backward from the install date, skipping weekends and major holidays.'
+    : 'Click any bar in the chart to rename it, move it, or add an event or task to it.';
 }
 
 function renderPhaseRows(p){
@@ -2901,6 +3152,8 @@ function commitPhase(id,field,val){
       n.endDate=val;if(n.startDate&&val<n.startDate)n.startDate=val;
     }else if(field==='estimatedDays'){
       n.estimatedDays=Math.max(1,parseInt(val,10)||1);
+    }else if(field==='label'){
+      n.label=String(val||'').trim();
     }
     return n;
   });
@@ -2930,13 +3183,19 @@ function ppRefreshMetrics(p){
    and are marked with an inset outline. Save uses exactly these bars, so what you see
    on screen is what lands in SharePoint. */
 let NPV_RESIZE_BOUND=false;
-let NPV_TASKS=[];
+let NPV_ALL=[];          /* every generated row, Project Management included */
+let NPV_TASKS=[];        /* the rows actually drawn */
 let NPV_MANUAL={};
 let NPV_ORDER=[];        /* department ids, top-to-bottom display order */
 let NPV_EVENTS=[];       /* draft events  {id,name,date,dept} */
 let NPV_TODOS=[];        /* draft tasks   {id,title,who,due,priority,dept} */
 let NPV_LINES=[];        /* named phase lines {id,name,dept,who} */
 let NPV_MODE='gantt';    /* 'gantt' | 'calendar' */
+let NPV_LIVE=false;      /* true when the chart mirrors a saved project instead of a draft */
+let TINT=true;           /* month hue + week saturation behind the charts */
+let PP_TAB='setup';      /* setup | team | depts | events */
+let PP_FORM=null;        /* new-project values, kept out of the DOM so tabs can't lose them */
+let PP_KEEP=false;       /* set when a redraw must not wipe the draft */
 let NPV_ORDER_DIRTY=false;
 const NPV_ROWH=34;      /* must match .npv-row height in the stylesheet */
 let NPV_GEO=null;
@@ -2947,24 +3206,49 @@ function npvKey(t){return t.department+'::'+(t.label||'')+'::'+(Array.isArray(t.
 function wdCount(a,b){let n=0,c=new Date(a);while(c<=b){if(isWorking(c))n++;c=addDays(c,1);}return Math.max(1,n);}
 
 /* Read the left-hand form without saving anything. */
-function readPageDraft(){
-  const activeDepartments=[],est={};
-  document.querySelectorAll('#pp-depts input[type=checkbox]').forEach(ck=>{
-    if(!ck.checked)return;
-    activeDepartments.push(ck.dataset.dept);
-    const dd=ck.parentElement.querySelector('.ddays');
-    if(dd)est[ck.dataset.dept]=Math.max(1,parseInt(dd.value,10)||1);
-  });
-  const otherLabels={};
-  document.querySelectorAll('#pp-depts .dother').forEach(i=>{otherLabels[i.dataset.dept]=i.value.trim();});
-  const g=id=>{const el=document.getElementById(id);return el?el.value:'';};
-  return{base:{id:'__preview__',name:g('pp-name').trim(),client:g('pp-client').trim(),
-    jobCode:g('pp-code').trim(),deadline:g('pp-deadline'),status:g('pp-status'),
-    projectManager:roleChecked('pp-r-pm'),drafter:roleChecked('pp-r-dr'),
-    leadFab:roleChecked('pp-r-lf'),fabricators:roleChecked('pp-r-fb'),
-    activeDepartments},est,otherLabels};
+function ppFormInit(){
+  PP_FORM={name:'',client:'',jobCode:'',deadline:fmtDate(addDays(today(),42)),status:'auto',
+    projectManager:'',drafter:'',leadFab:'',fabricators:'',
+    activeDepartments:['pm','td','fab','finish','install'],est:{},otherLabels:{}};
+}
+/* Pull whatever is currently on screen into the draft. Only one tab is mounted at a time,
+   so anything missing keeps its previous value rather than being wiped. */
+function ppFormSync(){
+  if(!PP_FORM)return;
+  const g=id=>{const e=document.getElementById(id);return e?e.value:null;};
+  const nm=g('pp-name');       if(nm!==null)PP_FORM.name=nm.trim();
+  const cl=g('pp-client');     if(cl!==null)PP_FORM.client=cl.trim();
+  const jc=g('pp-code');       if(jc!==null)PP_FORM.jobCode=jc.trim();
+  const dl=g('pp-deadline');   if(dl!==null)PP_FORM.deadline=dl;
+  const stt=g('pp-status');    if(stt!==null)PP_FORM.status=stt;
+  if(document.getElementById('pp-r-pm')){
+    PP_FORM.projectManager=roleChecked('pp-r-pm');
+    PP_FORM.drafter=roleChecked('pp-r-dr');
+    PP_FORM.leadFab=roleChecked('pp-r-lf');
+    PP_FORM.fabricators=roleChecked('pp-r-fb');
+  }
+  const dbox=document.getElementById('pp-depts');
+  if(dbox){
+    const act=[],est={},ol={};
+    dbox.querySelectorAll('input[type=checkbox]').forEach(ck=>{
+      if(!ck.checked)return;
+      act.push(ck.dataset.dept);
+      const dd=ck.parentElement.querySelector('.ddays');
+      if(dd)est[ck.dataset.dept]=Math.max(1,parseInt(dd.value,10)||1);
+    });
+    dbox.querySelectorAll('.dother').forEach(i=>{ol[i.dataset.dept]=i.value.trim();});
+    PP_FORM.activeDepartments=act;PP_FORM.est=est;PP_FORM.otherLabels=ol;
+  }
 }
 
+function readPageDraft(){
+  if(!PP_FORM)ppFormInit();
+  ppFormSync();
+  return{base:{id:'__preview__',name:PP_FORM.name,client:PP_FORM.client,jobCode:PP_FORM.jobCode,
+    deadline:PP_FORM.deadline,status:PP_FORM.status,projectManager:PP_FORM.projectManager,
+    drafter:PP_FORM.drafter,leadFab:PP_FORM.leadFab,fabricators:PP_FORM.fabricators,
+    activeDepartments:PP_FORM.activeDepartments},est:PP_FORM.est,otherLabels:PP_FORM.otherLabels};
+}
 
 /* Department display order. Defaults to the same top-to-bottom order the rest of the app
    uses (DEPTS order), NOT the order the scheduler happens to emit — that one runs backward
@@ -3036,6 +3320,18 @@ function npvMoveDept(dept,targetDept){
 }
 
 function npvRebuild(){
+  /* An existing project draws its real rows; only a new one runs the scheduler. */
+  if(NPV_LIVE){
+    const pj=ppProject();
+    if(!pj){NPV_TASKS=[];npvRender();return;}
+    const live=tasksOf(pj.id).filter(t=>!t.__ghost);
+    NPV_ALL=live;
+    const shown=live.filter(t=>t.department!=='pm');
+    npvSyncOrder(shown);
+    NPV_TASKS=npvSortTasks(shown);
+    npvRender();
+    return;
+  }
   const d=readPageDraft();
   if(!d.base.deadline||!d.base.activeDepartments.length){NPV_TASKS=[];npvRender();return;}
   let tasks=generateSchedule(d.base,d.est,d.otherLabels);
@@ -3044,8 +3340,12 @@ function npvRebuild(){
     return m?{...t,startDate:m.startDate,endDate:m.endDate,__manual:true}:t;
   });
   tasks=applyPhaseLines(tasks);
-  npvSyncOrder(tasks);
-  NPV_TASKS=npvSortTasks(tasks);
+  NPV_ALL=tasks;
+  /* PM spans the whole job, so a bar for it repeats what the summary row already says.
+     It is still generated and still saved — it just isn't drawn. */
+  const shown=tasks.filter(t=>t.department!=='pm');
+  npvSyncOrder(shown);
+  NPV_TASKS=npvSortTasks(shown);
   npvRender();
 }
 function npvQueue(){if(NPV_RAF)return;NPV_RAF=requestAnimationFrame(()=>{NPV_RAF=null;npvRebuild();});}
@@ -3060,6 +3360,8 @@ function npvRender(){
   const mg=document.getElementById('npv-m-g'),mc=document.getElementById('npv-m-c');
   if(mg)mg.classList.toggle('on',NPV_MODE==='gantt');
   if(mc)mc.classList.toggle('on',NPV_MODE==='calendar');
+  const tg2=document.getElementById('npv-tint');
+  if(tg2)tg2.classList.toggle('on',TINT);
   renderSideList();
   npvRenderLegend();
   if(NPV_LINES.length)renderDraftLines();
@@ -3184,6 +3486,20 @@ function npvRender(){
   npvPaintFooter(dl);
   npvBindDrag();
   npvBindReorder();
+  host.addEventListener('mousedown',ev=>{
+    const tg=ev.target;
+    if(!tg||!tg.closest)return;
+    if(!tg.closest('.npv-bar')&&!tg.closest('#bar-pop'))ppClosePop();
+  });
+  if(!BP_DOC_BOUND){
+    document.addEventListener('mousedown',ev=>{
+      if(!document.getElementById('bar-pop'))return;
+      const tg=ev.target;
+      if(tg&&tg.closest&&(tg.closest('#bar-pop')||tg.closest('.npv-bar')))return;
+      ppClosePop();
+    },true);
+    BP_DOC_BOUND=true;
+  }
 }
 
 
@@ -3296,18 +3612,35 @@ function renderSideList(){
   const box=document.getElementById('npv-side');
   if(!box)return;
   const rows=[];
+  if(NPV_LIVE){
+    for(const mk of npvMarkers())
+      rows.push({k:mk.k,d:mk.date,nm:mk.nm,
+        mt:mk.k==='tk'&&mk.pr&&mk.pr!=='medium'?PRIO_LBL[mk.pr]:''});
+    rows.sort((a,b)=>String(a.d||'9999').localeCompare(String(b.d||'9999')));
+    const hd0=document.getElementById('pp-side-hd');
+    if(hd0)hd0.textContent='Events & tasks'+(rows.length?' ('+rows.length+')':'');
+    box.innerHTML=rows.length
+      ? rows.map(r=>ppSideRow(r)).join('')
+      : '<div class="npv-side-empty">Nothing on this job yet.</div>';
+    return;
+  }
   for(const e of NPV_EVENTS)if(e.name||e.date)rows.push({k:'ev',d:e.date,nm:e.name||'Untitled event',
     mt:e.dept?(deptById(e.dept)||{}).name||'':''});
   for(const t of NPV_TODOS)if(t.title||t.due)rows.push({k:'tk',d:t.due,nm:t.title||'Untitled task',
     mt:[(t.who&&t.who[0])||'',t.priority&&t.priority!=='medium'?PRIO_LBL[t.priority]:''].filter(Boolean).join(' · ')});
   rows.sort((a,b)=>String(a.d||'9999').localeCompare(String(b.d||'9999')));
-  const hd=document.getElementById('npv-side-hd');
+  const hd=document.getElementById('pp-side-hd')||document.getElementById('npv-side-hd');
   if(hd)hd.textContent='Events & tasks'+(rows.length?' ('+rows.length+')':'');
   if(!rows.length){box.innerHTML='<div class="npv-side-empty">Nothing added yet.</div>';return;}
-  box.innerHTML=rows.map(r=>'<div class="npv-item"><span class="ic '+r.k+'"></span>'
-    + '<span class="nm">'+esc(r.nm)+'</span>'
-    + (r.mt?'<span class="mt">'+esc(r.mt)+'</span>':'')
-    + '<span class="dt">'+(r.d?esc(fmtNice(r.d)):'No date')+'</span></div>').join('');
+  box.innerHTML=rows.map(r=>ppSideRow(r)).join('');
+}
+
+function ppSideRow(r){
+  const late=r.k==='tk'&&r.d&&parseDate(r.d)<today();
+  return '<div class="npv-item"><span class="ic '+r.k+(late?' late':'')+'"></span>'
+   + '<span class="nm">'+esc(r.nm)+'</span>'
+   + (r.mt?'<span class="mt">'+esc(r.mt)+'</span>':'')
+   + '<span class="dt'+(late?' late':'')+'">'+(r.d?esc(fmtNice(r.d)):'No date')+'</span></div>';
 }
 
 /* ---------- markers on the gantt preview ---------- */
@@ -3326,6 +3659,17 @@ function npvRenderLegend(){
 
 function npvMarkers(){
   const out=[];
+  if(NPV_LIVE){
+    const pj=ppProject();
+    if(!pj)return out;
+    for(const t of NPV_TASKS)
+      for(const n of (t.ticketNodes||[]))
+        if(n.date)out.push({k:'ev',date:n.date,dept:t.department,nm:n.target||'Event',pr:''});
+    for(const td of (ST.todos||[]))
+      if(td.projectId===pj.id&&td.due)
+        out.push({k:'tk',date:td.due,dept:td.dept||'',nm:td.title||'Task',pr:td.priority||'medium'});
+    return out;
+  }
   for(const e of NPV_EVENTS)if(e.date)out.push({k:'ev',date:e.date,dept:e.dept||'',nm:e.name||'Event',pr:''});
   for(const t of NPV_TODOS)if(t.due)out.push({k:'tk',date:t.due,dept:t.dept||'',nm:t.title||'Task',pr:t.priority||'medium'});
   return out;
@@ -3345,16 +3689,35 @@ function npvPaintCalendar(lo,hi,dl){
   const marks=npvMarkers();
   if(!NPV_TASKS.length){host.innerHTML='<div class="cal-empty">Nothing scheduled yet.</div>';return;}
 
-  let h='<div class="cal">';
-  let c=addDays(lo,-lo.getDay());     /* back up to the Sunday of the first week */
+  /* Only the weeks the job actually touches. The chart pads its range for dragging, and
+     those empty weeks cost a lot of height once cells are square. */
+  let lo2=parseDate(NPV_TASKS[0].startDate), hi2=lo2;
+  for(const t of NPV_TASKS){
+    const a=parseDate(t.startDate),b=parseDate(t.endDate);
+    if(a<lo2)lo2=a; if(b>hi2)hi2=b;
+  }
+  for(const mk of marks){
+    const d0=parseDate(mk.date);
+    if(d0<lo2)lo2=d0; if(d0>hi2)hi2=d0;
+  }
+  if(dl&&dl>hi2)hi2=dl;
+  /* Deliberately not stretched to today. On a job three months out that would add a dozen
+     empty week rows, and the Gantt already shows where today sits. */
+
+  const scroller=document.getElementById('npv-scroll');
+  const availW=Math.max(280,(scroller?scroller.clientWidth:900)-26);
+  const cellH=Math.max(64,Math.min(150,Math.round(availW/7)));
+
+  let h='<div class="cal" style="--calh:'+cellH+'px">';
+  let c=addDays(lo2,-lo2.getDay());   /* back up to the Sunday of the first week */
   let lastKey=null, first=true;
 
-  while(c<=hi){
+  while(c<=hi2){
     const wEnd=addDays(c,6);
 
     /* A month header goes in ahead of the week that contains its first day. */
     let hdr=null;
-    if(first){hdr=new Date(lo.getFullYear(),lo.getMonth(),1);first=false;}
+    if(first){hdr=new Date(lo2.getFullYear(),lo2.getMonth(),1);first=false;}
     else{for(let i=0;i<7;i++){const d=addDays(c,i);if(d.getDate()===1){hdr=d;break;}}}
     if(hdr){
       const k=hdr.getFullYear()+'-'+hdr.getMonth();
@@ -3386,7 +3749,8 @@ function npvPaintCalendar(lo,hi,dl){
       const cls=['cal-col'];
       if(!isWorking(d))cls.push('we');
       if(d.getTime()===td.getTime())cls.push('tod');
-      h+='<div class="'+cls.join(' ')+'" style="grid-column:'+(i+1)+'"></div>';
+      const tintBg=(TINT&&isWorking(d))?';background:'+cellBg(d.getMonth(),isoWeek(d)%2):'';
+      h+='<div class="'+cls.join(' ')+'" style="grid-column:'+(i+1)+tintBg+'"></div>';
     }
     for(let i=0;i<7;i++){
       const d=addDays(c,i);
@@ -3470,6 +3834,180 @@ function npvBindReorder(){
   });
 }
 
+
+/* ===================== REV42: BAR OPTIONS POPOVER ===================== */
+let BP_ID=null;
+let BP_DOC_BOUND=false;
+
+function ppClosePop(){
+  const el=document.getElementById('bar-pop');
+  if(!el)return false;
+  el.remove();
+  window.removeEventListener('scroll',ppClosePop,true);
+  BP_ID=null;
+  const body=document.getElementById('npv-body');
+  if(body){body.classList.remove('picking');
+    body.querySelectorAll('.npv-bar.sel').forEach(b=>b.classList.remove('sel'));}
+  return true;
+}
+
+function ppOpenPop(idx,barEl){
+  ppClosePop();
+  const t=NPV_TASKS[idx];
+  if(!t)return;
+  BP_ID=t.id;
+  const live=NPV_LIVE;
+  const d=deptById(t.department)||{};
+  const body=document.getElementById('npv-body');
+  body.classList.add('picking');
+  barEl.classList.add('sel');
+
+  const roster=d.roster?(STAFF[d.roster]||[]):null;
+  const who=Array.isArray(t.assignee)?t.assignee.join(', '):(t.assignee||'');
+  const whoField=(roster&&roster.length)
+    ? '<select id="bp-who"><option value="">&mdash;</option>'
+      + [...new Set([...roster,...(who?[who]:[])])].map(n=>'<option'+(n===who?' selected':'')+'>'+esc(n)+'</option>').join('')
+      + '</select>'
+    : '<input id="bp-who" value="'+esc(who)+'" placeholder="&mdash;">';
+
+  const el=document.createElement('div');
+  el.className='bp';el.id='bar-pop';
+  el.innerHTML='<div class="bp-hd"><span class="bp-dot" style="background:'+(DEPT_COLORS[t.department]||'#8A98AE')+'"></span>'
+   + '<span class="bp-dept">'+esc(d.name||t.department)+'</span>'
+   + '<button class="bp-x" id="bp-x" title="Close">&times;</button></div>'
+   + '<div class="bp-f"><label>Name</label><input id="bp-name" value="'+esc(t.label||'')+'" placeholder="'+esc(d.name||t.department)+'"></div>'
+   + '<div class="bp-grid">'
+   +   '<div class="bp-f"><label>Who</label>'+whoField+'</div>'
+   +   '<div class="bp-f"><label>Start</label><input id="bp-s" type="date" value="'+esc(t.startDate||'')+'"'+(live?'':' readonly')+'></div>'
+   +   '<div class="bp-f"><label>End</label><input id="bp-e" type="date" value="'+esc(t.endDate||'')+'"'+(live?'':' readonly')+'></div>'
+   +   '<div class="bp-f"><label>Days</label><input id="bp-d" type="number" min="1" value="'+(t.estimatedDays||1)+'"></div>'
+   + '</div>'
+   + '<div class="bp-acts">'
+   +   '<button class="bp-btn" id="bp-add-ph">+ Phase</button>'
+   +   '<button class="bp-btn" id="bp-add-ev">+ Event</button>'
+   +   '<button class="bp-btn" id="bp-add-tk">+ Task</button>'
+   +   (live?'<button class="bp-btn" id="bp-pin">'+(t.pinned?'Unpin':'Pin')+'</button>':'')
+   +   '<span style="flex:1"></span>'
+   +   '<button class="bp-btn dngr" id="bp-del">Delete</button>'
+   + '</div>'
+   + (live?'':'<div class="bp-note">Dates come from the scheduler on a new project. Drag the bar to change them.</div>');
+
+  /* Mounted on the page, not inside the scrolling chart, so it can overhang the edges
+     instead of being clipped by them. Positioned from the bar's on-screen box. */
+  const r=barEl.getBoundingClientRect();
+  const vw=window.innerWidth||1200, vh=window.innerHeight||800;
+  const W=390, H=300;
+  let left=r.left, top=r.bottom+8;
+  if(left+W>vw-12)left=Math.max(12,vw-W-12);
+  if(left<12)left=12;
+  if(top+H>vh-12)top=r.top-H-8;
+  if(top<12)top=12;
+  el.style.left=Math.round(left)+'px';
+  el.style.top=Math.round(top)+'px';
+  document.body.appendChild(el);
+
+  document.getElementById('bp-x').addEventListener('click',ppClosePop);
+  el.addEventListener('mousedown',ev=>ev.stopPropagation());
+  /* Scrolling would leave it stranded away from its bar. */
+  window.addEventListener('scroll',ppClosePop,true);
+
+  const nameEl=document.getElementById('bp-name');
+  nameEl.addEventListener('change',()=>ppPopName(t,nameEl.value.trim()));
+  document.getElementById('bp-who').addEventListener('change',e=>ppPopWho(t,e.target.value));
+  document.getElementById('bp-d').addEventListener('change',e=>ppPopDays(t,e.target.value));
+  if(live){
+    document.getElementById('bp-s').addEventListener('change',e=>{commitPhase(t.id,'startDate',e.target.value);npvRebuild();});
+    document.getElementById('bp-e').addEventListener('change',e=>{commitPhase(t.id,'endDate',e.target.value);npvRebuild();});
+    const pn=document.getElementById('bp-pin');
+    if(pn)pn.addEventListener('click',()=>{
+      PP_QUIET=true;
+      try{saveState({projects:ST.projects,tasks:ST.tasks.map(x=>x.id===t.id?{...x,pinned:!x.pinned}:x)});}
+      finally{PP_QUIET=false;}
+      ppClosePop();npvRebuild();
+    });
+  }
+  document.getElementById('bp-add-ph').addEventListener('click',()=>ppPopAddPhase(t));
+  document.getElementById('bp-add-ev').addEventListener('click',()=>ppPopAddMarker(t,'ev'));
+  document.getElementById('bp-add-tk').addEventListener('click',()=>ppPopAddMarker(t,'tk'));
+  document.getElementById('bp-del').addEventListener('click',()=>ppPopDelete(t));
+  setTimeout(()=>nameEl.focus(),30);
+}
+
+/* On a saved project the popover writes to state. On a new one it writes to the draft,
+   because NPV_TASKS is regenerated from the scheduler on every keystroke. */
+function ppDraftLineFor(t){
+  let l=NPV_LINES.find(x=>x.dept===t.department&&(x.name||'').trim()===(t.label||'').trim());
+  if(!l&&t.label)l=NPV_LINES.find(x=>x.dept===t.department);
+  if(!l){l={id:genId(),name:'',dept:t.department,who:''};NPV_LINES.push(l);}
+  return l;
+}
+function ppPopName(t,v){
+  if(NPV_LIVE){commitPhase(t.id,'label',v);npvRebuild();return;}
+  ppDraftLineFor(t).name=v;
+  renderDraftLines();npvRebuild();ppClosePop();
+}
+function ppPopWho(t,v){
+  if(NPV_LIVE){commitPhase(t.id,'assignee',v);npvRebuild();return;}
+  ppDraftLineFor(t).who=v;
+  renderDraftLines();npvRebuild();ppClosePop();
+}
+function ppPopDays(t,v){
+  const n=Math.max(1,parseInt(v,10)||1);
+  if(NPV_LIVE){commitPhase(t.id,'estimatedDays',n);npvRebuild();return;}
+  const ck=document.querySelector('#pp-depts input[data-dept="'+t.department+'"]');
+  const dd=ck?ck.parentElement.querySelector('.ddays'):null;
+  if(dd){dd.value=n;ppFormSync();}
+  else if(PP_FORM){PP_FORM.est[t.department]=n;}
+  npvRebuild();ppClosePop();
+}
+function ppPopAddPhase(t){
+  if(NPV_LIVE){
+    const clone={...t,id:genId(),label:'',ticketNodes:[]};
+    PP_QUIET=true;
+    try{saveState({projects:ST.projects,tasks:[...ST.tasks,clone]});}finally{PP_QUIET=false;}
+    ppClosePop();npvRebuild();
+    toast('Added a phase to '+((deptById(t.department)||{}).name||t.department));
+    return;
+  }
+  if(!NPV_LINES.some(l=>l.dept===t.department))
+    NPV_LINES.push({id:genId(),name:phaseLabel(t),dept:t.department,who:(t.assignee||'')});
+  NPV_LINES.push({id:genId(),name:'',dept:t.department,who:''});
+  ppClosePop();
+  ppGoTab('depts');
+}
+function ppPopAddMarker(t,kind){
+  const seed=t.endDate||t.startDate||'';
+  if(kind==='ev')NPV_EVENTS.push({id:genId(),name:'',date:seed,dept:t.department});
+  else NPV_TODOS.push({id:genId(),title:'',who:[],due:seed,priority:'medium',dept:t.department});
+  ppClosePop();
+  ppGoTab('events');
+}
+function ppPopDelete(t){
+  const nm=phaseLabel(t);
+  if(!confirm('Delete "'+nm+'"?'))return;
+  if(NPV_LIVE){
+    PP_QUIET=true;
+    try{saveState({projects:ST.projects,tasks:ST.tasks.filter(x=>x.id!==t.id)});}finally{PP_QUIET=false;}
+    ppClosePop();npvRebuild();return;
+  }
+  const l=NPV_LINES.find(x=>x.dept===t.department&&(x.name||'').trim()===(t.label||'').trim());
+  if(l&&t.label){NPV_LINES=NPV_LINES.filter(x=>x.id!==l.id);renderDraftLines();}
+  else{
+    const ck=document.querySelector('#pp-depts input[data-dept="'+t.department+'"]');
+    if(ck){ck.checked=false;ppFormSync();}
+    else if(PP_FORM)PP_FORM.activeDepartments=PP_FORM.activeDepartments.filter(d=>d!==t.department);
+  }
+  ppClosePop();npvRebuild();
+}
+function ppGoTab(tab){
+  if(ROUTE.creating)ppFormSync();
+  PP_TAB=tab;
+  document.querySelectorAll('#page .pg-tab').forEach(x=>x.classList.toggle('on',x.dataset.tab===tab));
+  renderPPTab();
+  if(tab==='events'){renderDraftEvents();renderDraftTodos();}
+  npvRender();
+}
+
 function npvBindDrag(){
   const host=document.getElementById('npv-body');
   host.querySelectorAll('.npv-bar').forEach(bar=>{
@@ -3499,7 +4037,14 @@ function npvBindDrag(){
         document.removeEventListener('mousemove',mv);
         document.removeEventListener('mouseup',up);
         bar.classList.remove('dragging');
-        if(!days){npvRender();return;}
+        if(!days){
+          /* a click, not a drag */
+          const keep=bar;
+          npvRender();
+          const again=document.querySelector('#npv-body .npv-bar[data-i="'+i+'"]');
+          ppOpenPop(i,again||keep);
+          return;
+        }
         if(resize){
           let ns=addDays(s0,days);
           if(ns>e0)ns=new Date(e0);
@@ -3520,33 +4065,27 @@ function npvBindDrag(){
 }
 
 function savePageProject(){
-  const nameEl=document.getElementById('pp-name'),name=nameEl.value.trim();
-  const dlEl=document.getElementById('pp-deadline'),deadline=dlEl.value;
-  let ok=true;
-  nameEl.classList.remove('err');dlEl.classList.remove('err');
-  if(!name){nameEl.classList.add('err');ok=false;}
-  if(!deadline){dlEl.classList.add('err');ok=false;}
-  if(!ok){toast('Give it a name and an install date.','err');return;}
-
-  const activeDepartments=[],est={};
-  document.querySelectorAll('#pp-depts input[type=checkbox]').forEach(ck=>{
-    if(!ck.checked)return;
-    activeDepartments.push(ck.dataset.dept);
-    const dd=ck.parentElement.querySelector('.ddays');
-    if(dd)est[ck.dataset.dept]=Math.max(1,parseInt(dd.value,10)||1);
-  });
-  const otherLabels={};
-  document.querySelectorAll('#pp-depts .dother').forEach(inp=>{otherLabels[inp.dataset.dept]=inp.value.trim();});
-
-  const base={name,
-    client:document.getElementById('pp-client').value.trim(),
-    jobCode:document.getElementById('pp-code').value.trim(),
-    deadline,status:document.getElementById('pp-status').value,
-    projectManager:roleChecked('pp-r-pm'),
-    drafter:roleChecked('pp-r-dr'),
-    leadFab:roleChecked('pp-r-lf'),
-    fabricators:roleChecked('pp-r-fb'),
-    activeDepartments};
+  /* Read from the persisted draft, not the DOM — only one tab is mounted at a time. */
+  ppFormSync();
+  const F=PP_FORM||{};
+  const name=(F.name||'').trim(), deadline=F.deadline||'';
+  const nameEl=document.getElementById('pp-name');
+  if(nameEl)nameEl.classList.remove('err');
+  if(!name||!deadline){
+    if(!name&&nameEl){nameEl.classList.add('err');nameEl.focus();}
+    if(!deadline){
+      ppGoTab('setup');
+      const dl2=document.getElementById('pp-deadline');
+      if(dl2){dl2.classList.add('err');dl2.focus();}
+    }
+    toast('Give it a name and an install date.','err');
+    return;
+  }
+  const activeDepartments=(F.activeDepartments||[]).slice();
+  const est=F.est||{}, otherLabels=F.otherLabels||{};
+  const base={name,client:F.client||'',jobCode:F.jobCode||'',deadline,status:F.status||'auto',
+    projectManager:F.projectManager||'',drafter:F.drafter||'',
+    leadFab:F.leadFab||'',fabricators:F.fabricators||'',activeDepartments};
 
   if(ROUTE.creating){
     /* Flush the preview synchronously. The rebuild is normally queued on rAF, so a PM who
@@ -3557,14 +4096,18 @@ function savePageProject(){
        table read the same way the preview did. */
     if(NPV_ORDER.length){
       const ranked=NPV_ORDER.filter(d=>base.activeDepartments.indexOf(d)>=0);
-      base.activeDepartments=ranked.concat(base.activeDepartments.filter(d=>ranked.indexOf(d)<0));
+      const rest=base.activeDepartments.filter(d=>ranked.indexOf(d)<0);
+      /* NPV_ORDER no longer carries Project Management, so pin it to the front rather than
+         letting it fall to the tail of the saved order. */
+      const all=ranked.concat(rest).filter(d=>d!=='pm');
+      base.activeDepartments=(base.activeDepartments.indexOf('pm')>=0?['pm']:[]).concat(all);
     }
     const p={id:genId(),...base,createdAt:fmtDate(today())};
     const si=sortIndexForNew(p.deadline);if(si!=null)p.sortIndex=si;
     /* Save exactly the bars shown in the preview, drags included, rather than
        re-running the scheduler and silently discarding manual placements. */
-    const tasks=(NPV_TASKS&&NPV_TASKS.length)
-      ? NPV_TASKS.map(t=>{const n={...t,id:genId(),projectId:p.id,ticketNodes:[]};delete n.__manual;return n;})
+    const tasks=(NPV_ALL&&NPV_ALL.length)
+      ? NPV_ALL.map(t=>{const n={...t,id:genId(),projectId:p.id,ticketNodes:[]};delete n.__manual;return n;})
       : generateSchedule(p,est,otherLabels);
     /* Events become ticket nodes on the phase they point at, which is the store the app
        already syncs. A draft event names a department; phases only get real ids here, so
@@ -3638,13 +4181,22 @@ function savePageProject(){
   toast('Saved');
 }
 
+try{const tv=localStorage.getItem('shopTimelineTint');if(tv!==null)TINT=(tv==='1');}catch(e){}
+
 /* ===================== KEYBOARD ===================== */
 document.addEventListener('keydown',ev=>{
-  const typing=ev.target.matches('input,textarea,select');
+  /* ev.target is the document for programmatic events, which has no matches(). */
+  const typing=!!(ev.target&&ev.target.matches&&ev.target.matches('input,textarea,select'));
   if(ev.key==='Escape'){
     const se=document.getElementById('t-search');
     if(ev.target===se&&se.value){se.value='';FILTER='';applyFilter();return;}
     if(ev.target===se){se.blur();return;}
+    if(ROUTE.view==='project'){
+      /* Popover first, then the page. One Escape per layer. */
+      if(ppClosePop()){ev.preventDefault();return;}
+      if(typing){ev.target.blur();return;}
+      ev.preventDefault();goTimeline();return;
+    }
     closeProjModal();closeTaskModal();
     document.getElementById('staff-overlay').classList.add('hidden');
     document.getElementById('print-overlay').classList.add('hidden');
@@ -3677,6 +4229,12 @@ function scrollTodayLeft(){
   sc.scrollLeft=Math.max(0,d2x(today())-dw()*1.5);
 }
 document.getElementById('btn-today').addEventListener('click',scrollTodayLeft);
+const tintBtn=document.getElementById('t-tint');
+tintBtn.classList.toggle('on',TINT);
+tintBtn.addEventListener('click',()=>{
+  TINT=!TINT;tintBtn.classList.toggle('on',TINT);saveUI();
+  render();if(ROUTE.view==='project')npvRender();
+});
 document.getElementById('btn-days').addEventListener('click',()=>{if(VIEW==='days')return;VIEW='days';
   document.getElementById('btn-days').classList.add('active');document.getElementById('btn-weeks').classList.remove('active');
   render();scrollToToday();});
@@ -3922,7 +4480,7 @@ ST={projects:[],tasks:[],todos:[]};
         const fp=await spLoadStaff();
         if(JSON.stringify(fp)!==JSON.stringify(PEOPLE)){PEOPLE=fp;rebuildStaff();localStorage.setItem(PEOPLE_KEY,JSON.stringify(PEOPLE));dirty=true;}
       }
-      if(dirty){if(ROUTE.view==='project')renderProjectPage();else render();}
+      if(dirty){if(ROUTE.view==='project'){PP_KEEP=true;renderProjectPage();}else render();}
       setSync('ok','synced '+stamp());
     }catch(e){}
   },45000);
