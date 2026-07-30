@@ -314,10 +314,10 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 
 /* ============ REV31: ON HOLD / CALLED OFF BAR TREATMENT ============ */
 .job-bar[data-st="on-hold"]{opacity:.55;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.45) 0 5px,transparent 5px 11px)}
-.job-bar[data-st="called-off"]{opacity:.35;filter:grayscale(.85)}
+.job-bar[data-st="complete"] .sum-pill{background:#F1F5F9;color:#64748B}
 .job-bar[data-st="on-hold"] .sum-pill{background:#FFEDD5;color:#9A3412}
-.job-bar[data-st="invoiced"] .sum-pill{background:#DCFCE7;color:#166534}
-.job-bar[data-st="called-off"] .sum-pill{background:#E2E8F0;color:#64748B;text-decoration:line-through}
+.job-bar[data-st="in-design"] .sum-pill{background:#EDE9FE;color:#5B21B6}
+.job-bar[data-st="in-fabrication"] .sum-pill{background:#E1F5EE;color:#0F6E56}
 
 /* ============ REV31: MEETING SHEET ============ */
 .meet-modal{max-width:1150px;width:94vw}
@@ -332,14 +332,11 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 .mr-name{display:block;font-weight:700}
 .mr-sub{display:block;font-family:var(--mono);font-size:9px;color:#8B99AD}
 .mr-pill{display:inline-block;font-family:var(--mono);font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 7px;border-radius:9px;background:#EEF2F7;color:#33415A;white-space:nowrap}
-.mr-pill[data-st="in-production"]{background:#E1F5EE;color:#0F6E56}
-.mr-pill[data-st="installing"]{background:#CFF0E3;color:#085041}
+.mr-pill[data-st="in-fabrication"]{background:#E1F5EE;color:#0F6E56}
+.mr-pill[data-st="in-design"]{background:#EDE9FE;color:#5B21B6}
 .mr-pill[data-st="estimating"]{background:#EEEDFE;color:#534AB7}
-.mr-pill[data-st="approved"]{background:#E6F1FB;color:#185FA5}
 .mr-pill[data-st="on-hold"]{background:#FFEDD5;color:#9A3412}
-.mr-pill[data-st="invoiced"]{background:#DCFCE7;color:#166534}
 .mr-pill[data-st="complete"]{background:#F1F5F9;color:#64748B}
-.mr-pill[data-st="called-off"]{background:#E2E8F0;color:#64748B;text-decoration:line-through}
 .mr-phase{color:#33415A}
 .meet-mini{position:relative;height:9px;background:#EEF2F7;border-radius:3px;overflow:hidden;margin-top:3px}
 .mm-fill{position:absolute;left:0;top:0;bottom:0;border-radius:3px}
@@ -527,6 +524,49 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 .npv-item .mt{font-size:10.5px;color:#94A3B8;white-space:nowrap}
 .npv-item .dt{font-size:10.5px;color:#33415A;white-space:nowrap;font-weight:700}
 .npv-side-empty{padding:20px 14px;text-align:center;font-size:12px;color:#B4C0D0;font-style:italic}
+
+
+/* ============ REV41 ============ */
+.npv-row{height:34px}
+.npv-bar{height:24px;top:5px;font-size:10.5px}
+.npv-ev{top:12px}
+.npv-tk{top:11.5px}
+.npv-web{position:absolute;top:0;bottom:0;background:rgba(100,116,139,.10);z-index:1;pointer-events:none}
+.npv-leg{display:flex;flex-wrap:wrap;gap:5px 14px;padding:8px 12px;border-bottom:1px solid #E2E8F0;background:#fff}
+.npv-leg .lg{display:flex;align-items:center;gap:6px;font-size:10.5px;font-weight:600;color:#5B6B85;white-space:nowrap}
+.npv-leg .lg i{width:11px;height:11px;border-radius:3px;flex-shrink:0;display:block}
+.npv-leg .lg i.ev{background:#3F4E66;transform:rotate(45deg);border-radius:1px;width:9px;height:9px}
+.npv-leg .lg i.tk{background:#fff;border:2px solid #3B7FD6;border-radius:50%;box-sizing:border-box}
+.npv-leg-empty{font-size:11px;color:#B4C0D0;font-style:italic}
+/* the footer follows you down the form instead of hiding at the bottom of it */
+.pg-foot{position:sticky;bottom:0;z-index:20;background:var(--paper);
+  margin:30px -30px 0;padding:14px 30px;border-top:1px solid #CBD6E4;
+  box-shadow:0 -6px 14px -8px rgba(15,23,42,.22)}
+.pg:not(.split) .pg-foot{margin-left:-26px;margin-right:-26px;padding-left:26px;padding-right:26px}
+
+
+/* ============ REV41: CALENDAR IN THE IN-HOUSE FORMAT ============ */
+.cal{background:#fff}
+.cal-mon{background:#16202E;color:#fff;font-size:10px;font-weight:700;letter-spacing:.15em;padding:4px 9px;text-transform:uppercase}
+.cal-dow{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));background:#EDF2F7;border-bottom:1px solid #16202E}
+.cal-dow span{font-size:8px;font-weight:700;letter-spacing:.09em;text-align:center;padding:3px 0;color:#475569;border-right:1px solid #CBD6E4}
+.cal-dow span:last-child{border-right:none}
+.cal-wk{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));grid-auto-rows:17px;
+  border-bottom:1px solid #16202E;position:relative;padding-bottom:4px}
+.cal-col{grid-row:1/-1;border-right:1px solid #E8EDF3;z-index:0}
+.cal-col:last-of-type{border-right:none}
+.cal-col.we{background:repeating-linear-gradient(45deg,rgba(100,116,139,.11) 0 4px,transparent 4px 8px)}
+.cal-col.tod{background:#FFF3F3;box-shadow:inset 0 0 0 1.5px #CE4242}
+.cal-dn{grid-row:1;font-family:var(--mono);font-size:8.5px;color:#64748B;padding:3px 0 3px 5px;z-index:1;min-height:17px}
+.cal-band{margin:1px 2px;border-radius:2px;font-size:8.5px;font-weight:700;text-transform:uppercase;
+  color:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;white-space:nowrap;
+  z-index:2;padding:0 5px;letter-spacing:.03em;text-overflow:ellipsis}
+.cal-band.ev{background:#16324F!important;border-radius:0}
+.cal-band.tk{background:#fff!important;color:#1D4ED8;border:1.5px solid #3B7FD6}
+.cal-empty{padding:34px 18px;text-align:center;font-size:12.5px;color:#B4C0D0;font-style:italic}
+
+
+.dr-row.ln,.dr-hd.ln{grid-template-columns:minmax(0,1fr) 128px 108px 24px}
 
 /* ============ PRINT ============ */
 @media print{
@@ -767,7 +807,7 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 <script src="msal-browser.min.js"></script>
 <script>
 'use strict';
-const APP_REV=39; // bump this ONE number on every release; used everywhere the rev shows up
+const APP_REV=41; // bump this ONE number on every release; used everywhere the rev shows up
 
 /* ===================== CONSTANTS ===================== */
 const DATA_KEY='shopTimeline_v1';
@@ -792,10 +832,15 @@ const DEPTS=[
   {id:'other',     name:'Other (Digital Fab)', freeText:true, est:3, grp:'dfab'},
   /* 3 · MAIN SHOP FAB */
   {id:'fab',       name:'Main Shop Fab', roster:'leadFabs', est:10, grp:'shop'},
-  {id:'metal',     name:'Metal Shop',    est:5, grp:'metal'},
-  {id:'softgoods', name:'Soft Goods',    est:5, grp:'shop'},
-  {id:'electrical',name:'Electrical',    est:5, grp:'electrical'},
   {id:'othshop',   name:'Other (Shop)',  freeText:true, est:3, grp:'shop'},
+  /* 4 · METAL SHOP */
+  {id:'metal',     name:'Metal Shop',    est:5, grp:'metal'},
+  /* 5 · UNIT 7 — runs parallel to Main Shop Fab. softgoods and electrical keep their ids
+     so existing SharePoint rows carry over untouched; only their group changed. */
+  {id:'softgoods', name:'Soft Goods',    est:5, grp:'unit7'},
+  {id:'vinyl',     name:'Vinyl Application', est:3, grp:'unit7'},
+  {id:'electrical',name:'Electrical',    est:5, grp:'unit7'},
+  {id:'othunit7',  name:'Other (Unit 7)', freeText:true, est:3, grp:'unit7'},
   /* 4 · FINISHING — legacy id 'finish' kept so existing SharePoint tasks migrate cleanly */
   {id:'prefinish', name:'Pre-Finishing', est:3, grp:'finish'},
   {id:'finish',    name:'Painting',      est:5, grp:'finish'},
@@ -811,7 +856,7 @@ const GROUPS=[
   {id:'dfab',      label:'Digital Fabrication'},
   {id:'shop',      label:'Main Shop Fab'},
   {id:'metal',     label:'Metal Shop'},
-  {id:'electrical',label:'Electrical'},
+  {id:'unit7',     label:'Unit 7'},
   {id:'finish',    label:'Finishing'},
   {id:'install',   label:'Installation'},
 ];
@@ -836,9 +881,17 @@ const PCOLS=['#3B7FD6','#E27035','#2D9C56','#9050C3','#1AA59C','#C09018','#C0448
 const INSTALL_RED='#CE4242';
 function isInstall(t){return t.department==='install';}
 function crewOf(t){const a=t.assignee;if(Array.isArray(a))return a;if(typeof a==='string'&&a.trim().startsWith('['))return safeArr(a);return (a&&a!=='Installation')?[a]:[];}
+/* A phase can carry its own name. Blank falls back to the department, so every existing
+   row behaves exactly as before. */
+function phaseLabel(t){
+  if(t.label&&String(t.label).trim())return String(t.label).trim();
+  const d=deptById(t.department);
+  if(d&&d.freeText)return t.assignee||'Other';
+  return d?d.name:t.department;
+}
 function assigneeText(t){return isInstall(t)?(crewOf(t).join(', ')||'Crew TBD'):(t.assignee||'');}
 /* Stable identity colors per department for "Team" color mode */
-const DEPT_COLORS={pm:'#5B7C99',td:'#9050C3',othoffice:'#8A98AE',print:'#C04485',cnc:'#E27035',beamsaw:'#C09018','3dprint':'#2D9C56',laser:'#CE4242',other:'#7A8BA3',fab:'#3B7FD6',metal:'#8B5E3C',softgoods:'#C75D8A',electrical:'#D9A21B',othshop:'#93A08F',prefinish:'#3FA9BC',finish:'#1AA59C',othfinish:'#9AA6B5',install:'#6366F1'};
+const DEPT_COLORS={pm:'#5B7C99',vinyl:'#E0518C',othunit7:'#8E9BB0',td:'#9050C3',othoffice:'#8A98AE',print:'#C04485',cnc:'#E27035',beamsaw:'#C09018','3dprint':'#2D9C56',laser:'#CE4242',other:'#7A8BA3',fab:'#3B7FD6',metal:'#8B5E3C',softgoods:'#C75D8A',electrical:'#D9A21B',othshop:'#93A08F',prefinish:'#3FA9BC',finish:'#1AA59C',othfinish:'#9AA6B5',install:'#6366F1'};
 const TN_TARGETS=['Client Approval','Shop Drawings',...DEPTS.filter(d=>d.id!=='pm').map(d=>d.name)];
 
 /* ===================== STATE ===================== */
@@ -948,7 +1001,7 @@ function generateSchedule(p,est,otherLabels){
   const PHASES=[
     ['install'],
     grpDepts('finish'),
-    [...grpDepts('shop'),...grpDepts('metal'),...grpDepts('electrical')],
+    [...grpDepts('shop'),...grpDepts('metal'),...grpDepts('unit7')],
     grpDepts('dfab'),
     grpDepts('tdg'),
   ];
@@ -982,7 +1035,7 @@ function scheduleNewDepts(p,newDeptIds,est,otherLabels,existingTasks){
   const PHASES=[
     ['install'],
     grpDepts('finish'),
-    [...grpDepts('shop'),...grpDepts('metal'),...grpDepts('electrical')],
+    [...grpDepts('shop'),...grpDepts('metal'),...grpDepts('unit7')],
     grpDepts('dfab'),
     grpDepts('tdg'),
   ];
@@ -1030,18 +1083,24 @@ function scheduleNewDepts(p,newDeptIds,est,otherLabels,existingTasks){
 }
 
 /* ===================== STATUS ===================== */
+const FAB_GRPS=['dfab','shop','metal','unit7','finish','install'];
 function projectStatus(p){
-  if(p.status&&p.status!=='auto')return p.status;
+  if(p.status&&p.status!=='auto')return STATUS_MIGRATE[p.status]||p.status;
   const ts=ST.tasks.filter(t=>t.projectId===p.id);
   const t=today();
   const inst=ts.find(x=>x.department==='install');
   if(inst&&t>parseDate(inst.endDate))return 'complete';
-  if(inst&&t>=parseDate(inst.startDate))return 'installing';
-  const pf=ts.filter(x=>{const d=deptById(x.department);return d&&['dfab','shop','metal','electrical'].includes(d.grp);});
-  if(pf.length&&t.getTime()>=Math.min(...pf.map(x=>parseDate(x.startDate).getTime())))return 'in-production';
+  const started=g=>{
+    const m=ts.filter(x=>{const d=deptById(x.department);return d&&g.includes(d.grp);});
+    return m.length&&t.getTime()>=Math.min(...m.map(x=>parseDate(x.startDate).getTime()));
+  };
+  if(started(FAB_GRPS))return 'in-fabrication';
+  if(started(['tdg']))return 'in-design';
   return 'estimating';
 }
-const STATUS_LBL={'estimating':'Estimating','approved':'Approved','in-production':'In Production','installing':'Installing','on-hold':'On Hold','complete':'Complete','invoiced':'Invoiced','called-off':'Called Off'};
+const STATUS_LBL={'estimating':'Estimating','in-design':'In Design','in-fabrication':'In Fabrication','on-hold':'On Hold','complete':'Complete'};
+/* Retired statuses -> where they land. Applied once on load, in migrate(). */
+const STATUS_MIGRATE={'approved':'in-fabrication','in-production':'in-fabrication','installing':'in-fabrication','invoiced':'complete','called-off':'complete'};
 
 /* ===================== DATA LAYER ===================== */
 function seed(){
@@ -1065,6 +1124,8 @@ function seed(){
 
 function migrate(d){
   d.todos=d.todos||[];
+  /* Retired statuses fold into the new five. */
+  d.projects=d.projects.map(p=>STATUS_MIGRATE[p.status]?{...p,status:STATUS_MIGRATE[p.status]}:p);
   /* vacuum dept removed → folds into 'other' with its name preserved */
   d.tasks=d.tasks.map(t=>t.department==='vacuum'?{...t,department:'other',assignee:'Vacuum Former'}:t);
   d.projects=d.projects.map(p=>({...p,activeDepartments:(p.activeDepartments||[]).map(x=>x==='vacuum'?'other':x)}));
@@ -1149,8 +1210,8 @@ function safeArr(s){if(Array.isArray(s))return s;try{const a=JSON.parse(s);retur
 
 function projToFields(p){const f={Title:p.name||'',client:p.client||'',jobCode:p.jobCode||'',deadline:p.deadline||null,status:p.status||'auto',projectManager:p.projectManager||'',drafter:p.drafter||'',leadFab:p.leadFab||'',fabricators:p.fabricators||'',metalFab:p.metalFab||'',activeDepartments:JSON.stringify(p.activeDepartments||[]),appId:p.id,createdAt:p.createdAt||null};if(p.sortIndex!=null)f.sortIndex=p.sortIndex;return f;}
 function fieldsToProj(f){return{id:f.appId,name:f.Title||'',client:f.client||'',jobCode:f.jobCode||'',deadline:isoDay(f.deadline),status:f.status||'auto',projectManager:f.projectManager||'',drafter:f.drafter||'',leadFab:f.leadFab||'',fabricators:f.fabricators||'',metalFab:f.metalFab||'',activeDepartments:safeArr(f.activeDepartments),sortIndex:f.sortIndex==null?null:Number(f.sortIndex),createdAt:isoDay(f.createdAt)};}
-function taskToFields(t){const d=deptById(t.department);return{Title:(d?d.name:t.department)||'Task',projectId:t.projectId,department:t.department,assignee:Array.isArray(t.assignee)?JSON.stringify(t.assignee):(t.assignee||''),startDate:t.startDate||null,endDate:t.endDate||null,estimatedDays:t.estimatedDays||1,ticketNodes:JSON.stringify(t.ticketNodes||[]),notes:t.notes||'',pinned:!!t.pinned,appId:t.id};}
-function fieldsToTask(f){const a=(f.department==='install'&&typeof f.assignee==='string'&&f.assignee.trim().startsWith('['))?safeArr(f.assignee):(f.assignee||'');return{id:f.appId,projectId:f.projectId,department:f.department,assignee:a,startDate:isoDay(f.startDate),endDate:isoDay(f.endDate),estimatedDays:Number(f.estimatedDays)||1,ticketNodes:safeArr(f.ticketNodes),notes:f.notes||'',pinned:!!f.pinned};}
+function taskToFields(t){const d=deptById(t.department);return{Title:(d?d.name:t.department)||'Task',projectId:t.projectId,department:t.department,assignee:Array.isArray(t.assignee)?JSON.stringify(t.assignee):(t.assignee||''),startDate:t.startDate||null,endDate:t.endDate||null,estimatedDays:t.estimatedDays||1,ticketNodes:JSON.stringify(t.ticketNodes||[]),notes:t.notes||'',pinned:!!t.pinned,label:t.label||'',appId:t.id};}
+function fieldsToTask(f){const a=(f.department==='install'&&typeof f.assignee==='string'&&f.assignee.trim().startsWith('['))?safeArr(f.assignee):(f.assignee||'');return{id:f.appId,projectId:f.projectId,department:f.department,assignee:a,startDate:isoDay(f.startDate),endDate:isoDay(f.endDate),estimatedDays:Number(f.estimatedDays)||1,ticketNodes:safeArr(f.ticketNodes),notes:f.notes||'',pinned:!!f.pinned,label:f.label||''};}
 function personToFields(p){return{Title:p.name||'',depts:JSON.stringify(p.depts||[]),ooo:JSON.stringify(p.ooo||[]),appId:p.id};}
 function fieldsToPerson(f){return{id:f.appId,name:f.Title||'',depts:safeArr(f.depts),ooo:safeArr(f.ooo)};}
 
@@ -1314,8 +1375,8 @@ function taskMatch(t){
 }
 /* Dim (don't remove) non-matching rows/bars so layout stays put */
 let SPOT=new Set(); /* spotlighted project ids — everything else dims */
-const ALL_STATUSES=['estimating','approved','in-production','installing','on-hold','complete','invoiced','called-off'];
-function defaultShowStatus(){return new Set(ALL_STATUSES.filter(s=>s!=='called-off'));}
+const ALL_STATUSES=['estimating','in-design','in-fabrication','on-hold','complete'];
+function defaultShowStatus(){return new Set(ALL_STATUSES);}
 let SHOW_STATUS=defaultShowStatus();
 function visTasks(){return ST.tasks.filter(t=>{const p=ST.projects.find(x=>x.id===t.projectId);return !p||SHOW_STATUS.has(projectStatus(p));});}
 function applyFilter(){
@@ -1378,7 +1439,7 @@ function personColor(rosterKey,name){const arr=STAFF[rosterKey]||[];const i=arr.
 function entityColor(t){
   const d=deptById(t.department);
   if(!d)return '#9CA3AF';
-  if(d.freeText)return hashColor(t.assignee||'Other');
+  if(d.freeText)return DEPT_COLORS[t.department]||hashColor(t.assignee||'Other');
   if(LENS==='dept'&&d.roster)return personColor(d.roster,t.assignee);
   return DEPT_COLORS[t.department]||'#9CA3AF';
 }
@@ -1386,7 +1447,7 @@ function barColor(t){if(isInstall(t))return INSTALL_RED;return COLOR_MODE==='ent
 /* Lane identity color for sidebar dots in the dept lens */
 function laneColor(dept,assignee){
   const d=deptById(dept);
-  if(d&&d.freeText)return hashColor(assignee||'Other');
+  if(d&&d.freeText)return DEPT_COLORS[dept]||hashColor(assignee||'Other');
   if(d&&d.roster)return personColor(d.roster,assignee);
   return DEPT_COLORS[dept]||'#9CA3AF';
 }
@@ -1609,7 +1670,7 @@ function renderSidebar(){
       row.className='sb-row task-row';
       const dd=deptById(t.department);
       const nm=document.createElement('span');nm.className='sb-name';
-      nm.textContent=(dd&&dd.freeText)?(t.assignee||'Other'):(dd?.name||t.department);
+      nm.textContent=phaseLabel(t);
       row.appendChild(nm);
       const a=assigneeText(t);
       if(a&&a!=='—'&&a!==nm.textContent&&!(dd&&dd.freeText)){
@@ -1762,6 +1823,8 @@ function renderGantt(){
     }
   }
   canvas.appendChild(barFrag);
+  /* Diamonds are children of the bars, so label placement has to settle after this. */
+  repositionBarLabels();
 }
 
 function buildHeaderInto(hdr,DW_){
@@ -1835,29 +1898,59 @@ function buildCanvasBgInto(canvas,totalW,DW_){
    keeps it at its left end. Scrolling past today carries the labels along the left edge
    so they stay readable out in the future. */
 let TODAY_X=null;
-const LBL_MIN=170;   /* keep at least this much label visible before giving up */
+const LBL_MIN=170;        /* project summary bars — long names, need more room */
+const LBL_MIN_TASK=130;   /* phase bars — department names are shorter */
 
-function labelLeftFor(barX,barW){
-  if(TODAY_X==null||barW<LBL_MIN+24)return 10;
+/* base = the bar's natural left inset, which differs by status (the coloured edge strip
+   on in-production bars takes a few px) and by whether a pin icon is present. */
+function labelLeftFor(barX,barW,base,minLbl){
+  base=(base===undefined)?10:base;
+  minLbl=(minLbl===undefined)?LBL_MIN:minLbl;
+  if(TODAY_X==null||barW<minLbl+base+14)return base;
   const sc=document.getElementById('gantt-scroll');
   const anchor=Math.max(TODAY_X,(sc?sc.scrollLeft:0)+8);
-  return Math.max(10,Math.min(Math.round(anchor-barX+6),Math.round(barW-LBL_MIN)));
+  return Math.max(base,Math.min(Math.round(anchor-barX+6),Math.round(barW-minLbl)));
 }
 
-function repositionSummaryLabels(){
-  const bars=document.querySelectorAll('#gantt-canvas .job-bar.summary');
+/* Ticket-node diamonds sit above the label at z-index 13, so a label starting underneath
+   one gets sliced in half ("Technic<>esign"). Step the label clear of any diamond it
+   would begin inside. */
+function dodgeTickNodes(bar,left){
+  const nodes=bar.querySelectorAll('.tick-node');
+  if(!nodes.length)return left;
+  let out=left,moved=true,guard=0;
+  while(moved&&guard++<8){
+    moved=false;
+    for(const n of nodes){
+      const nl=parseFloat(n.style.left)||0;
+      if(out>nl-16&&out<nl+16){out=nl+18;moved=true;}
+    }
+  }
+  return out;
+}
+
+/* Runs after every bar and diamond is in the DOM, so it can see both. */
+function repositionBarLabels(){
+  const bars=document.querySelectorAll('#gantt-canvas .job-bar');
   for(const bar of bars){
     const lbl=bar.querySelector('.bar-lbl');
     if(!lbl)continue;
     const bx=parseFloat(bar.style.left)||0,bw=parseFloat(bar.style.width)||0;
-    lbl.style.left=labelLeftFor(bx,bw)+'px';
+    const base=Number(lbl.dataset.base)||10;
+    const min=Number(lbl.dataset.min)||LBL_MIN;
+    let lx=labelLeftFor(bx,bw,base,min);
+    lx=dodgeTickNodes(bar,lx);
+    /* never let the dodge push the text off the end of its own bar */
+    lx=Math.max(base,Math.min(lx,Math.max(base,Math.round(bw-40))));
+    lbl.style.left=lx+'px';
   }
 }
+function repositionSummaryLabels(){repositionBarLabels();}
 
 let LBL_RAF=null;
 function queueLabelReposition(){
   if(LBL_RAF)return;
-  LBL_RAF=requestAnimationFrame(()=>{LBL_RAF=null;repositionSummaryLabels();});
+  LBL_RAF=requestAnimationFrame(()=>{LBL_RAF=null;repositionBarLabels();});
 }
 
 function makeSummaryBar(p,s,e,row){
@@ -1872,7 +1965,8 @@ function makeSummaryBar(p,s,e,row){
   if(st==='estimating'){const ov=document.createElement('div');ov.className='bar-stripe';bar.appendChild(ov);}
   if(st==='in-production'||st==='installing'){const ed=document.createElement('div');ed.className='bar-edge';bar.appendChild(ed);}
   const lbl=document.createElement('div');lbl.className='bar-lbl';
-  lbl.style.left=labelLeftFor(x,w)+'px';lbl.style.right='10px';
+  lbl.dataset.base='10';lbl.dataset.min=String(LBL_MIN);
+  lbl.style.left=labelLeftFor(x,w,10,LBL_MIN)+'px';lbl.style.right='10px';
   const who=[
     p.projectManager&&('<span class="role-tag">PM</span>'+esc(p.projectManager)),
     p.drafter&&('<span class="role-tag">D</span>'+esc(p.drafter)),
@@ -1904,12 +1998,14 @@ function makeTaskBar(t,row,lane,labelMode){
   if(st==='estimating'){const ov=document.createElement('div');ov.className='bar-stripe';bar.appendChild(ov);}
   if(st==='in-production'||st==='installing'){const ed=document.createElement('div');ed.className='bar-edge';bar.appendChild(ed);}
   const lbl=document.createElement('div');lbl.className='bar-lbl';
-  lbl.style.left=((st==='in-production'||st==='installing')?11:8)+'px';
+  const lblBase=(st==='in-production'||st==='installing')?11:8;
+  lbl.dataset.base=String(lblBase);lbl.dataset.min=String(LBL_MIN_TASK);
+  lbl.style.left=labelLeftFor(x,w,lblBase,LBL_MIN_TASK)+'px';
   lbl.style.right=(t.pinned?18:7)+'px';
   if(t.__ghost){bar.classList.add('is-ghost');lbl.textContent='Install · '+(p?p.name:'?');}
   else if(labelMode==='proj')lbl.textContent=p?p.name+(p.jobCode?' · '+p.jobCode:''):'?';
   else if(isInstall(t))lbl.textContent='Install — '+assigneeText(t);
-  else{const dd=deptById(t.department);lbl.textContent=(dd&&dd.freeText)?(t.assignee||'Other'):(dd?.name||t.department);}
+  else lbl.textContent=phaseLabel(t);
   bar.appendChild(lbl);
   if(t.pinned){const pin=document.createElement('div');pin.className='bar-pin';pin.textContent='📌';bar.appendChild(pin);}
   if(CONFLICTS.has(t.id)){const wn=document.createElement('div');wn.className='bar-warn';wn.textContent='⚠';bar.appendChild(wn);}
@@ -2652,7 +2748,9 @@ function renderProjectPage(){
   h+='<div class="pg-sec">Departments</div><div class="pg-depts" id="pp-depts"></div>';
 
   if(isNew){
-    h+='<div class="pg-sec">Events</div><div id="pp-events"></div>'
+    h+='<div class="pg-sec">Phase lines</div><div id="pp-lines"></div>'
+     + '<button class="dr-add" id="pp-add-ln">+ Add a named line</button>'
+     + '<div class="pg-sec">Events</div><div id="pp-events"></div>'
      + '<button class="dr-add" id="pp-add-ev">+ Add an event</button>'
      + '<div class="pg-sec">Tasks</div><div id="pp-todos"></div>'
      + '<button class="dr-add" id="pp-add-tk">+ Add a task</button>';
@@ -2670,6 +2768,7 @@ function renderProjectPage(){
      + '<div class="npv-modes"><button id="npv-m-g">Gantt</button>'
      + '<button id="npv-m-c">Calendar</button></div>'
      + '<button class="npv-btn" id="npv-reset" disabled>Reset</button></div>'
+     + '<div class="npv-leg" id="npv-leg"></div>'
      + '<div class="npv-scroll" id="npv-scroll"><div class="npv-in">'
      + '<div class="npv-axis" id="npv-axis"></div>'
      + '<div class="npv-body" id="npv-body"></div>'
@@ -2710,7 +2809,7 @@ function renderProjectPage(){
   });
   if(isNew){
     NPV_MANUAL={};NPV_TASKS=[];NPV_ORDER=[];NPV_ORDER_DIRTY=false;
-    NPV_EVENTS=[];NPV_TODOS=[];NPV_MODE='gantt';
+    NPV_EVENTS=[];NPV_TODOS=[];NPV_LINES=[];NPV_MODE='gantt';
     const left=document.querySelector('#page .pg-left');
     if(left){left.addEventListener('change',npvQueue);left.addEventListener('input',npvQueue);}
     const rst=document.getElementById('npv-reset');
@@ -2718,6 +2817,11 @@ function renderProjectPage(){
     const mg=document.getElementById('npv-m-g'),mc=document.getElementById('npv-m-c');
     if(mg)mg.addEventListener('click',()=>{NPV_MODE='gantt';npvRender();});
     if(mc)mc.addEventListener('click',()=>{NPV_MODE='calendar';npvRender();});
+    const al=document.getElementById('pp-add-ln');
+    if(al)al.addEventListener('click',()=>{
+      NPV_LINES.push({id:genId(),name:'',dept:(NPV_ORDER.find(d=>d!=='pm')||NPV_ORDER[0]||''),who:''});
+      renderDraftLines();npvRebuild();
+    });
     const ae=document.getElementById('pp-add-ev');
     if(ae)ae.addEventListener('click',()=>{
       NPV_EVENTS.push({id:genId(),name:'',date:'',dept:(NPV_ORDER[0]||'')});
@@ -2728,7 +2832,7 @@ function renderProjectPage(){
       NPV_TODOS.push({id:genId(),title:'',who:[],due:'',priority:'medium',dept:(NPV_ORDER[0]||'')});
       renderDraftTodos();npvRender();
     });
-    renderDraftEvents();renderDraftTodos();
+    renderDraftLines();renderDraftEvents();renderDraftTodos();
     if(!NPV_RESIZE_BOUND){window.addEventListener('resize',()=>{if(ROUTE.creating)npvQueue();});NPV_RESIZE_BOUND=true;}
     npvRebuild();
     setTimeout(()=>{const n=document.getElementById('pp-name');if(n)n.focus();},40);
@@ -2743,7 +2847,7 @@ function renderPhaseRows(p){
   let h='';
   for(const t of ts){
     const d=deptById(t.department);
-    const nm=d?(d.freeText?(t.assignee||d.name):d.name):t.department;
+    const nm=phaseLabel(t);
     const col=DEPT_COLORS[t.department]||'#8A98AE';
     const roster=d&&d.roster?(STAFF[d.roster]||[]):null;
     let asHtml;
@@ -2831,14 +2935,15 @@ let NPV_MANUAL={};
 let NPV_ORDER=[];        /* department ids, top-to-bottom display order */
 let NPV_EVENTS=[];       /* draft events  {id,name,date,dept} */
 let NPV_TODOS=[];        /* draft tasks   {id,title,who,due,priority,dept} */
+let NPV_LINES=[];        /* named phase lines {id,name,dept,who} */
 let NPV_MODE='gantt';    /* 'gantt' | 'calendar' */
 let NPV_ORDER_DIRTY=false;
-const NPV_ROWH=28;      /* must match .npv-row height in the stylesheet */
+const NPV_ROWH=34;      /* must match .npv-row height in the stylesheet */
 let NPV_GEO=null;
 let NPV_RAF=null;
 const NPV_GUT=150, NPV_PADL=3, NPV_PADR=6;   /* must match .npv-gut width in the stylesheet */
 
-function npvKey(t){return t.department+'::'+(Array.isArray(t.assignee)?t.assignee.join(','):(t.assignee||''));}
+function npvKey(t){return t.department+'::'+(t.label||'')+'::'+(Array.isArray(t.assignee)?t.assignee.join(','):(t.assignee||''));}
 function wdCount(a,b){let n=0,c=new Date(a);while(c<=b){if(isWorking(c))n++;c=addDays(c,1);}return Math.max(1,n);}
 
 /* Read the left-hand form without saving anything. */
@@ -2886,10 +2991,39 @@ function npvSyncOrder(tasks){
   }
   NPV_ORDER=kept;
 }
+/* A department with named lines renders as those lines instead of one generic bar.
+   They share the department's window and colour; only the name and person differ. */
+function applyPhaseLines(tasks){
+  const byDept={};
+  for(const l of NPV_LINES){
+    if(!l.dept||!(l.name||'').trim())continue;
+    (byDept[l.dept]=byDept[l.dept]||[]).push(l);
+  }
+  if(!Object.keys(byDept).length)return tasks;
+  const out=[],expanded={};
+  for(const t of tasks){
+    const lines=byDept[t.department];
+    if(!lines){out.push(t);continue;}
+    if(expanded[t.department])continue;
+    expanded[t.department]=true;
+    for(const l of lines){
+      out.push({...t,id:t.id+'::'+l.id,label:l.name.trim(),
+        assignee:l.who?l.who:(deptById(t.department)||{}).roster?t.assignee:''});
+    }
+  }
+  return out;
+}
+
 function npvSortTasks(tasks){
   const ix=d=>{const i=NPV_ORDER.indexOf(d);return i>=0?i:1000+(DEPT_IDX[d]??999);};
+  const lineIx=t=>{
+    if(!t.label)return -1;
+    const i=NPV_LINES.findIndex(l=>(l.name||'').trim()===t.label&&l.dept===t.department);
+    return i<0?999:i;
+  };
   return tasks.slice().sort((a,b)=>
     ix(a.department)-ix(b.department)
+    || lineIx(a)-lineIx(b)
     || String(assigneeText(a)).localeCompare(String(assigneeText(b))));
 }
 function npvMoveDept(dept,targetDept){
@@ -2909,6 +3043,7 @@ function npvRebuild(){
     const m=NPV_MANUAL[npvKey(t)];
     return m?{...t,startDate:m.startDate,endDate:m.endDate,__manual:true}:t;
   });
+  tasks=applyPhaseLines(tasks);
   npvSyncOrder(tasks);
   NPV_TASKS=npvSortTasks(tasks);
   npvRender();
@@ -2926,6 +3061,8 @@ function npvRender(){
   if(mg)mg.classList.toggle('on',NPV_MODE==='gantt');
   if(mc)mc.classList.toggle('on',NPV_MODE==='calendar');
   renderSideList();
+  npvRenderLegend();
+  if(NPV_LINES.length)renderDraftLines();
 
   if(!NPV_TASKS.length){
     host.innerHTML='<div class="npv-empty">Pick an install date and tick a department to see the schedule.</div>';
@@ -2943,16 +3080,20 @@ function npvRender(){
   const td=today();
   if(td<lo)lo=td;
   if(td>hi)hi=td;
-  /* Generous headroom on BOTH sides. With only two days past the deadline there was
-     effectively no canvas right of installation, so bars could only be dragged left.
-     Pad by 15% of the span, never less than 10 days. */
-  const pad=Math.max(10,Math.round((diffDays(lo,hi)+1)*0.15));
-  lo=addDays(lo,-pad);hi=addDays(hi,pad);
+  /* Two different spans. The visible one is tight, so the project fills the panel and the
+     days stay wide enough to grab. The canvas is longer, giving somewhere to drag a bar
+     past the install date; that extra room sits off to the right and is scrolled into,
+     not stared at. */
+  const PAD_VIEW=3, PAD_DRAG=28;
+  lo=addDays(lo,-PAD_VIEW);
+  const hiView=addDays(hi,PAD_VIEW);
+  hi=addDays(hi,PAD_DRAG);
+  const spanFit=Math.max(1,diffDays(lo,hiView)+1);
   const span=Math.max(1,diffDays(lo,hi)+1);
   const scroll=document.getElementById('npv-scroll');
   const avail=Math.max(240,(scroll?scroll.clientWidth:560)-NPV_GUT-8);
-  const dwv=Math.max(7,Math.floor(avail/span));
-  NPV_GEO={lo,hi,span,dw:dwv};
+  const dwv=Math.max(7,Math.floor(avail/spanFit));
+  NPV_GEO={lo,hi,span,dw:dwv,spanFit};
   const x=dt=>NPV_GUT+diffDays(lo,dt)*dwv;
   const innerW=NPV_GUT+span*dwv;
 
@@ -2992,7 +3133,7 @@ function npvRender(){
   let h='';
   NPV_TASKS.forEach((t,i)=>{
     const d=deptById(t.department);
-    const nm=d?(d.freeText?(t.assignee||d.name):d.name):t.department;
+    const nm=phaseLabel(t);
     const who=Array.isArray(t.assignee)?t.assignee.join(', '):(t.assignee||'');
     const gut=(d&&d.roster&&who&&who!=='—')?nm+' · '+who:nm;
     const a=parseDate(t.startDate),b=parseDate(t.endDate);
@@ -3029,6 +3170,12 @@ function npvRender(){
     const cls=mk.k==='ev'?'npv-ev':('npv-tk'+(mk.pr==='high'||mk.pr==='urgent'?' hi':''));
     h+='<div class="'+cls+'" style="left:'+left+'px;top:'+top+'px" title="'+esc(mk.nm+' · '+fmtNice(mk.date))+'"></div>';
   }
+  /* Weekend columns run the full height of the body so weeks read as blocks. */
+  {let c2=new Date(lo);
+   while(c2<=hi){
+     if(!isWorking(c2))h+='<div class="npv-web" style="left:'+x(c2)+'px;width:'+dwv+'px"></div>';
+     c2=addDays(c2,1);
+   }}
   h+='<div class="npv-today" style="left:'+(x(td)+Math.floor(dwv/2))+'px"></div>';
   h+='<div class="npv-dl" style="left:'+(x(dl)+dwv)+'px"></div>';
   host.innerHTML=h;
@@ -3047,6 +3194,45 @@ function deptOptions(sel){
     '<option value="'+d.id+'"'+(d.id===sel?' selected':'')+'>'+esc(d.name)+'</option>').join('');
 }
 function allPeople(){return PEOPLE.map(p=>p.name).sort((a,b)=>a.localeCompare(b));}
+
+/* Only departments actually on this job — a line pointing at an unticked department
+   would silently produce nothing. */
+function activeDeptOptions(sel){
+  const ids=NPV_ORDER.length?NPV_ORDER:DEPTS.map(d=>d.id);
+  return ids.map(id=>'<option value="'+id+'"'+(id===sel?' selected':'')+'>'
+    +esc((deptById(id)||{}).name||id)+'</option>').join('');
+}
+
+function renderDraftLines(){
+  const box=document.getElementById('pp-lines');
+  if(!box)return;
+  if(!NPV_LINES.length){
+    box.innerHTML='<div class="dr-none">One bar per department. Add lines to split a department '
+      +'into named pieces &mdash; "Madison Fa\u00e7ade | Initial Designs", "5th Ave Windows | Initial Designs".</div>';
+    return;
+  }
+  const ppl=allPeople();
+  let h='<div class="dr-hd ln"><span>Line</span><span>Department</span><span>Who</span><span></span></div>';
+  for(const l of NPV_LINES){
+    h+='<div class="dr-row ln" data-id="'+esc(l.id)+'">'
+     + '<input data-f="name" value="'+esc(l.name||'')+'" placeholder="Madison Fa\u00e7ade | Initial Designs">'
+     + '<select data-f="dept">'+activeDeptOptions(l.dept)+'</select>'
+     + '<select data-f="who"><option value="">&mdash;</option>'
+     +   ppl.map(n=>'<option'+(n===l.who?' selected':'')+'>'+esc(n)+'</option>').join('')
+     + '</select>'
+     + '<button class="dr-del" title="Remove">&times;</button></div>';
+  }
+  box.innerHTML=h;
+  box.querySelectorAll('.dr-row').forEach(r=>{
+    const l=NPV_LINES.find(x=>x.id===r.dataset.id);
+    r.querySelectorAll('[data-f]').forEach(i=>i.addEventListener('change',()=>{
+      l[i.dataset.f]=i.value;npvRebuild();
+    }));
+    r.querySelector('.dr-del').addEventListener('click',()=>{
+      NPV_LINES=NPV_LINES.filter(x=>x.id!==l.id);renderDraftLines();npvRebuild();
+    });
+  });
+}
 
 function renderDraftEvents(){
   const box=document.getElementById('pp-events');
@@ -3125,6 +3311,19 @@ function renderSideList(){
 }
 
 /* ---------- markers on the gantt preview ---------- */
+/* One swatch per department actually on this job, plus the two marker shapes. */
+function npvRenderLegend(){
+  const box=document.getElementById('npv-leg');
+  if(!box)return;
+  const seen=[];
+  for(const t of NPV_TASKS)if(seen.indexOf(t.department)<0)seen.push(t.department);
+  let h=seen.map(d=>'<span class="lg"><i style="background:'+(DEPT_COLORS[d]||'#8A98AE')+'"></i>'
+    +esc((deptById(d)||{}).name||d)+'</span>').join('');
+  if(NPV_EVENTS.some(e=>e.date))h+='<span class="lg"><i class="ev"></i>Event</span>';
+  if(NPV_TODOS.some(t=>t.due))h+='<span class="lg"><i class="tk"></i>Task</span>';
+  box.innerHTML=h||'<span class="npv-leg-empty">Departments appear here once the schedule has some.</span>';
+}
+
 function npvMarkers(){
   const out=[];
   for(const e of NPV_EVENTS)if(e.date)out.push({k:'ev',date:e.date,dept:e.dept||'',nm:e.name||'Event',pr:''});
@@ -3133,55 +3332,78 @@ function npvMarkers(){
 }
 
 /* ---------- calendar mode ---------- */
-const DOW=['S','M','T','W','T','F','S'];
+const DOW_FULL=['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
+const p2=n=>(n<10?'0':'')+n;
+
+/* Week-row bands, in the shape of the schedules the shop already produces by hand:
+   a black month header, MM/DD in each cell corner, hatched weekends, and bars that span
+   days and clip at week boundaries with their name centred. Each phase, event and task
+   gets its own band row within the week, so nothing overlaps. */
 function npvPaintCalendar(lo,hi,dl){
   const host=document.getElementById('npv-body');
   const td=today();
   const marks=npvMarkers();
-  let h='<div class="npv-cal">';
-  const first=new Date(lo.getFullYear(),lo.getMonth(),1);
-  const lastM=new Date(hi.getFullYear(),hi.getMonth(),1);
-  let m=new Date(first);
-  while(m<=lastM){
-    h+='<div class="npv-mblk"><div class="npv-mttl">'
-     + m.toLocaleDateString('en-US',{month:'long',year:'numeric'})+'</div><div class="npv-cgrid">';
-    for(const d of DOW)h+='<div class="npv-cdow">'+d+'</div>';
-    const gridStart=addDays(new Date(m.getFullYear(),m.getMonth(),1),-new Date(m.getFullYear(),m.getMonth(),1).getDay());
-    const monthEnd=new Date(m.getFullYear(),m.getMonth()+1,0);
-    let c=new Date(gridStart);
-    const total=Math.ceil((diffDays(gridStart,monthEnd)+1)/7)*7;
-    for(let i=0;i<total;i++){
-      const iso=fmtDate(c);
-      const out=c.getMonth()!==m.getMonth()||c<lo||c>hi;
-      const cls=['npv-cell'];
-      if(out)cls.push('out');
-      else{
-        if(!isWorking(c))cls.push('we');
-        if(c.getTime()===td.getTime())cls.push('tod');
-        else if(dl&&c.getTime()===dl.getTime())cls.push('dl');
+  if(!NPV_TASKS.length){host.innerHTML='<div class="cal-empty">Nothing scheduled yet.</div>';return;}
+
+  let h='<div class="cal">';
+  let c=addDays(lo,-lo.getDay());     /* back up to the Sunday of the first week */
+  let lastKey=null, first=true;
+
+  while(c<=hi){
+    const wEnd=addDays(c,6);
+
+    /* A month header goes in ahead of the week that contains its first day. */
+    let hdr=null;
+    if(first){hdr=new Date(lo.getFullYear(),lo.getMonth(),1);first=false;}
+    else{for(let i=0;i<7;i++){const d=addDays(c,i);if(d.getDate()===1){hdr=d;break;}}}
+    if(hdr){
+      const k=hdr.getFullYear()+'-'+hdr.getMonth();
+      if(k!==lastKey){
+        h+='<div class="cal-mon">'+hdr.toLocaleDateString('en-US',{month:'long',year:'numeric'})+'</div>'
+         + '<div class="cal-dow">'+DOW_FULL.map(d=>'<span>'+d+'</span>').join('')+'</div>';
+        lastKey=k;
       }
-      h+='<div class="'+cls.join(' ')+'"><div class="npv-cn">'+c.getDate()+'</div>';
-      if(!out){
-        const on=NPV_TASKS.filter(t=>t.startDate<=iso&&iso<=t.endDate);
-        const shown=on.slice(0,3);
-        for(const t of shown)h+='<div class="npv-chip" style="background:'+(DEPT_COLORS[t.department]||'#8A98AE')+'"></div>';
-        if(on.length>shown.length)h+='<div class="npv-more">+'+(on.length-shown.length)+'</div>';
-        const md=marks.filter(x=>x.date===iso);
-        if(md.length){
-          h+='<div class="npv-cmk">'+md.slice(0,6).map(x=>'<i class="'+x.k+'" title="'+esc(x.nm)+'"></i>').join('')+'</div>';
-        }
-      }
-      h+='</div>';
-      c=addDays(c,1);
     }
-    h+='</div></div>';
-    m=new Date(m.getFullYear(),m.getMonth()+1,1);
+
+    /* Everything that touches this week, clipped to it. */
+    const items=[];
+    for(const t of NPV_TASKS){
+      const a=parseDate(t.startDate),b=parseDate(t.endDate);
+      if(b<c||a>wEnd)continue;
+      items.push({s:Math.max(0,diffDays(c,a)),e:Math.min(6,diffDays(c,b)),
+        txt:phaseLabel(t),col:DEPT_COLORS[t.department]||'#8A98AE',kind:'ph'});
+    }
+    for(const mk of marks){
+      const d=parseDate(mk.date);
+      if(d<c||d>wEnd)continue;
+      const i=diffDays(c,d);
+      items.push({s:i,e:i,txt:mk.nm,col:'',kind:mk.k});
+    }
+
+    h+='<div class="cal-wk">';
+    for(let i=0;i<7;i++){
+      const d=addDays(c,i);
+      const cls=['cal-col'];
+      if(!isWorking(d))cls.push('we');
+      if(d.getTime()===td.getTime())cls.push('tod');
+      h+='<div class="'+cls.join(' ')+'" style="grid-column:'+(i+1)+'"></div>';
+    }
+    for(let i=0;i<7;i++){
+      const d=addDays(c,i);
+      h+='<div class="cal-dn" style="grid-column:'+(i+1)+'">'+p2(d.getMonth()+1)+'/'+p2(d.getDate())+'</div>';
+    }
+    items.forEach((it,r)=>{
+      h+='<div class="cal-band '+it.kind+'" title="'+esc(it.txt)+'" style="grid-column:'+(it.s+1)+'/'+(it.e+2)
+        +';grid-row:'+(r+2)+(it.col?';background:'+it.col:'')+'">'+esc(it.txt)+'</div>';
+    });
+    h+='</div>';
+
+    c=addDays(c,7);
   }
   h+='</div>';
   host.innerHTML=h;
   host.style.width='auto';
 }
-
 
 function npvPaintFooter(dl){
   const foot=document.getElementById('npv-foot');
@@ -3498,7 +3720,7 @@ document.getElementById('sb-all').addEventListener('click',()=>{
 const gScroll=document.getElementById('gantt-scroll');
 const hdrWrap=document.getElementById('hdr-wrap');
 const sideRows=document.getElementById('side-rows');
-gScroll.addEventListener('scroll',()=>{hdrWrap.scrollLeft=gScroll.scrollLeft;sideRows.scrollTop=gScroll.scrollTop;if(LENS==='project')queueLabelReposition();});
+gScroll.addEventListener('scroll',()=>{hdrWrap.scrollLeft=gScroll.scrollLeft;sideRows.scrollTop=gScroll.scrollTop;queueLabelReposition();});
 
 /* Sidebar resize */
 function setSideW(w){SIDE_W=Math.max(180,Math.min(480,Math.round(w)));document.getElementById('sidebar').style.width=SIDE_W+'px';}
