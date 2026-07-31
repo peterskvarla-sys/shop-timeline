@@ -551,10 +551,10 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 .cal-dow{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));background:#EDF2F7;border-bottom:1px solid #16202E}
 .cal-dow span{font-size:8px;font-weight:700;letter-spacing:.09em;text-align:center;padding:3px 0;color:#475569;border-right:1px solid #CBD6E4}
 .cal-dow span:last-child{border-right:none}
-.cal-wk{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));grid-auto-rows:17px;
+.cal-wk{position:relative;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));grid-auto-rows:17px;
   border-bottom:1px solid #16202E;position:relative;padding-bottom:4px}
-.cal-col{grid-row:1/-1;border-right:1px solid #E8EDF3;z-index:0}
-.cal-col:last-of-type{border-right:none}
+.cal-col{position:absolute;top:0;bottom:0;width:calc(100%/7);border-right:1px solid #D8E2EF;z-index:0;box-sizing:border-box}
+.cal-col:first-of-type{border-left:1px solid #D8E2EF}
 .cal-col.we{background:repeating-linear-gradient(45deg,rgba(100,116,139,.11) 0 4px,transparent 4px 8px)}
 .cal-col.tod{background:#FFF3F3;box-shadow:inset 0 0 0 1.5px #CE4242}
 .cal-dn{grid-row:1;font-family:var(--mono);font-size:8.5px;color:#64748B;padding:3px 0 3px 5px;z-index:1;min-height:17px}
@@ -653,7 +653,7 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 
 /* calendar: roughly square cells, Google-ish */
 .cal-wk{grid-auto-rows:auto;padding-bottom:5px;align-content:start}
-.cal-dn{grid-row:1;font-family:var(--mono);font-size:10px;color:#64748B;padding:4px 0 3px 6px;z-index:1}
+.cal-dn{grid-row:1;font-family:var(--mono);font-size:10px;color:#64748B;padding:4px 0 3px 6px;z-index:2;position:relative}
 .cal-band{margin:1px 3px;height:16px;font-size:9px}
 .cal-col.we{background:repeating-linear-gradient(45deg,rgba(100,116,139,.10) 0 4px,transparent 4px 8px)}
 .cal-tint .cal-col{background-blend-mode:multiply}
@@ -915,7 +915,7 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 <script src="msal-browser.min.js"></script>
 <script>
 'use strict';
-const APP_REV=44; // bump this ONE number on every release; used everywhere the rev shows up
+const APP_REV=45; // bump this ONE number on every release; used everywhere the rev shows up
 
 /* ===================== CONSTANTS ===================== */
 const DATA_KEY='shopTimeline_v1';
@@ -2972,7 +2972,7 @@ function renderProjectPage(){
   if(mg)mg.addEventListener('click',()=>{NPV_MODE='gantt';npvRender();});
   if(mc)mc.addEventListener('click',()=>{NPV_MODE='calendar';npvRender();});
   const tg=document.getElementById('npv-tint');
-  if(tg)tg.addEventListener('click',()=>{TINT=!TINT;saveUI();npvRender();render();});
+  if(tg)tg.addEventListener('click',()=>{TINT=!TINT;saveUI();npvRender();});
   if(!NPV_RESIZE_BOUND){window.addEventListener('resize',()=>{if(ROUTE.view==='project')npvQueue();});NPV_RESIZE_BOUND=true;}
 
   npvRebuild();
@@ -3796,7 +3796,7 @@ function npvPaintCalendar(lo,hi,dl){
       if(!isWorking(d))cls.push('we');
       if(d.getTime()===td.getTime())cls.push('tod');
       const tintBg=(TINT&&isWorking(d))?';background:'+cellBg(d.getMonth(),isoWeek(d)%2):'';
-      h+='<div class="'+cls.join(' ')+'" style="grid-column:'+(i+1)+tintBg+'"></div>';
+      h+='<div class="'+cls.join(' ')+'" style="left:calc('+i+'*100%/7)'+tintBg+'"></div>';
     }
     for(let i=0;i<7;i++){
       const d=addDays(c,i);
@@ -4280,7 +4280,7 @@ const tintBtn=document.getElementById('t-tint');
 tintBtn.classList.toggle('on',TINT);
 tintBtn.addEventListener('click',()=>{
   TINT=!TINT;tintBtn.classList.toggle('on',TINT);saveUI();
-  render();if(ROUTE.view==='project')npvRender();
+  if(ROUTE.view==='project')npvRender();else render();
 });
 document.getElementById('btn-days').addEventListener('click',()=>{if(VIEW==='days')return;VIEW='days';
   document.getElementById('btn-days').classList.add('active');document.getElementById('btn-weeks').classList.remove('active');
