@@ -675,6 +675,35 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 .sb-row.grp-head .sb-count{color:#94A3B8}
 .grp-pill{position:static!important;transform:none!important;font-size:10px;padding:2px 9px}
 
+/* ============ REV47: SUBTASKS ============ */
+.npv-row.parent .npv-gut{font-weight:700;color:#33415A}
+.npv-tri{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;
+  margin-right:4px;flex-shrink:0;font-size:8px;color:#8CA0BC;cursor:pointer;border-radius:3px;
+  transition:transform .12s ease,background .12s}
+.npv-tri:hover{background:#E7EEF8;color:var(--acc)}
+.npv-row.parent.open .npv-tri{transform:rotate(90deg)}
+.npv-n{margin-left:6px;font-size:9px;font-weight:700;color:#8CA0BC;background:#EDF2F8;
+  border-radius:8px;padding:1px 6px;flex-shrink:0}
+.npv-row.child .npv-gut{padding-left:22px;font-weight:500;color:#5B6B85}
+.npv-elbow{color:#C3CEDC;margin-right:5px;flex-shrink:0;font-size:10px}
+.npv-bar.sum{height:11px;top:7px;border-radius:3px;opacity:.92;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.5)}
+.npv-bar.sum span{font-size:9px;line-height:11px}
+.npv-bar.sum.unlinked{opacity:.5;cursor:pointer;
+  background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.35) 0 3px,transparent 3px 6px)}
+.npv-bar.kid{height:14px;top:5.5px}
+
+/* ============ REV46: TINT ON THE PROJECT-PAGE GANTT ============ */
+/* Only calendar mode painted the month/week tint, so the Tint button looked dead
+   while the Gantt was showing. */
+.npv-tintcol{position:absolute;top:0;bottom:0;pointer-events:none;z-index:0}
+.npv-tintl{position:absolute;left:0;top:0;right:0;bottom:0;pointer-events:none;z-index:0}
+.npv-body .npv-row{z-index:1}
+.npv-body.tinted .npv-row{background:transparent}
+.npv-body.tinted .npv-row:nth-child(odd){background:rgba(255,255,255,.30)}
+.npv-body.tinted .npv-row .npv-gut{background:#fff}
+.npv-body.tinted .npv-row:nth-child(odd) .npv-gut{background:#FCFDFE}
+
 /* ============ PRINT ============ */
 @media print{
   @page{size:landscape;margin:7mm 9mm}
@@ -915,7 +944,7 @@ body.dates-locked .bh-l,body.dates-locked .bh-r,
 <script src="msal-browser.min.js"></script>
 <script>
 'use strict';
-const APP_REV=45; // bump this ONE number on every release; used everywhere the rev shows up
+const APP_REV=47; // bump this ONE number on every release; used everywhere the rev shows up
 
 /* ===================== CONSTANTS ===================== */
 const DATA_KEY='shopTimeline_v1';
@@ -1275,7 +1304,7 @@ let TODOS_OK=false;          /* true once the ShopTimeline_Tasks2 list loads */
 
 async function spInit(){
   PCA=new msal.PublicClientApplication({
-    auth:{clientId:CLIENT_ID,authority:'https://login.microsoftonline.com/'+TENANT_ID,redirectUri:window.location.origin},
+    auth:{clientId:CLIENT_ID,authority:'https://login.microsoftonline.com/'+TENANT_ID,redirectUri:window.location.href.split('#')[0].split('?')[0]},
     cache:{cacheLocation:'sessionStorage'}
   });
   const accts=PCA.getAllAccounts();
@@ -1468,6 +1497,8 @@ function savePeople(np){
 function saveStaff(st){savePeople(rostersToPeople(st));}
 function saveUI(){
   try{localStorage.setItem('shopTimelineTint',TINT?'1':'0');
+    localStorage.setItem('shopTimelineLinkSubs',LINK_SUBS?'1':'0');
+    localStorage.setItem('shopTimelineOpenDepts',JSON.stringify([...NPV_OPEN]));
     localStorage.setItem('shopTimelineGroup',GROUP_BY||'');}catch(e){}localStorage.setItem(UI_KEY,JSON.stringify({collapsedDepts:[...COLLAPSED],colorMode:COLOR_MODE,sideW:SIDE_W,showStatus:[...SHOW_STATUS]}));}
 
 /* ===================== SEARCH FILTER ===================== */
@@ -2895,7 +2926,8 @@ function renderProjectPage(){
   h+='<div class="npv npv-full">'
    + '<div class="npv-hd"><span class="npv-ttl" id="npv-nums"></span>'
    + '<div class="npv-modes"><button id="npv-m-g">Gantt</button><button id="npv-m-c">Calendar</button></div>'
-   + '<div class="npv-subs"><button id="npv-tint">Tint</button></div>'
+   + '<div class="npv-subs"><button id="npv-tint">Tint</button>'
+   + '<button id="npv-link" title="Dragging a department bar moves its subtasks with it">Link</button></div>'
    + '<button class="npv-btn" id="npv-reset" disabled>Reset</button></div>'
    + '<div class="npv-leg" id="npv-leg"></div>'
    + '<div class="npv-scroll" id="npv-scroll"><div class="npv-in">'
@@ -2973,6 +3005,10 @@ function renderProjectPage(){
   if(mc)mc.addEventListener('click',()=>{NPV_MODE='calendar';npvRender();});
   const tg=document.getElementById('npv-tint');
   if(tg)tg.addEventListener('click',()=>{TINT=!TINT;saveUI();npvRender();});
+  const lk=document.getElementById('npv-link');
+  if(lk)lk.addEventListener('click',()=>{LINK_SUBS=!LINK_SUBS;saveUI();npvRender();
+    toast(LINK_SUBS?'Subtasks move with their department'
+                   :'Subtasks stay put — move them one at a time');});
   if(!NPV_RESIZE_BOUND){window.addEventListener('resize',()=>{if(ROUTE.view==='project')npvQueue();});NPV_RESIZE_BOUND=true;}
 
   npvRebuild();
@@ -3119,11 +3155,17 @@ function renderPPTab(){
     renderDraftEvents();renderDraftTodos();
     const ae=document.getElementById('pp-add-ev');
     if(ae)ae.addEventListener('click',()=>{
+      if(NPV_LIVE){const pj=ppProject();
+        if(pj){liveAddEvent(pj,NPV_ORDER[0]||'','');renderDraftEvents();npvRebuild();}
+        return;}
       NPV_EVENTS.push({id:genId(),name:'',date:'',dept:(NPV_ORDER[0]||'')});
       renderDraftEvents();npvRender();
     });
     const at=document.getElementById('pp-add-tk');
     if(at)at.addEventListener('click',()=>{
+      if(NPV_LIVE){const pj=ppProject();
+        if(pj){liveAddTodo(pj,NPV_ORDER[0]||'','');renderDraftTodos();npvRebuild();}
+        return;}
       NPV_TODOS.push({id:genId(),title:'',who:[],due:'',priority:'medium',dept:(NPV_ORDER[0]||'')});
       renderDraftTodos();npvRender();
     });
@@ -3208,6 +3250,22 @@ function commitPhase(id,field,val){
   if(p)ppRefreshMetrics(p);
 }
 
+/* REV46: move or resize a saved phase straight into ST. The project page draws real
+   rows for an existing job, so parking the result in NPV_MANUAL had no effect and the
+   bar snapped back to its stored dates on the next rebuild. */
+function commitPhaseDates(id,s,e,days){
+  const tasks=ST.tasks.map(t=>{
+    if(t.id!==id)return t;
+    const n={...t,startDate:s,endDate:e};
+    if(days)n.estimatedDays=Math.max(1,days);
+    return n;
+  });
+  PP_QUIET=true;
+  try{saveState({projects:ST.projects,tasks});}finally{PP_QUIET=false;}
+  const p=ppProject();
+  if(p)ppRefreshMetrics(p);
+}
+
 function ppRefreshMetrics(p){
   const met=document.querySelectorAll('#page .pg-met .mv');
   if(met.length<4)return;
@@ -3243,6 +3301,9 @@ let PP_TAB='setup';      /* setup | team | depts | events */
 let PP_FORM=null;        /* new-project values, kept out of the DOM so tabs can't lose them */
 let PP_KEEP=false;       /* set when a redraw must not wipe the draft */
 let NPV_ORDER_DIRTY=false;
+let NPV_OPEN=new Set();   /* departments expanded to show their subtasks */
+let NPV_PLAN=[];          /* the row plan actually drawn: parent / child / leaf */
+let LINK_SUBS=true;       /* dragging a department bar carries its subtasks along */
 const NPV_ROWH=34;      /* must match .npv-row height in the stylesheet */
 let NPV_GEO=null;
 let NPV_RAF=null;
@@ -3344,6 +3405,49 @@ function applyPhaseLines(tasks){
   return out;
 }
 
+/* REV47 — the row plan.
+   A department carrying one bar draws one row, exactly as before. A department
+   carrying several draws a parent summary row spanning min(start) to max(end), with
+   its bars nested underneath when it's open. Everything downstream — markers, the
+   reorder drop indicator, drag — reads row positions off this plan rather than
+   assuming one row per task. */
+function npvRowPlan(){
+  const byDept={};
+  NPV_TASKS.forEach((t,i)=>{(byDept[t.department]=byDept[t.department]||[]).push({t:t,i:i});});
+  const plan=[],seen={};
+  for(const t of NPV_TASKS){
+    if(seen[t.department])continue;
+    seen[t.department]=true;
+    const kids=byDept[t.department];
+    if(kids.length<2){plan.push({kind:'leaf',dept:t.department,t:kids[0].t,i:kids[0].i});continue;}
+    let s='',e='';
+    for(const k of kids){
+      if(k.t.startDate&&(!s||k.t.startDate<s))s=k.t.startDate;
+      if(k.t.endDate&&(!e||k.t.endDate>e))e=k.t.endDate;
+    }
+    const open=NPV_OPEN.has(t.department);
+    plan.push({kind:'parent',dept:t.department,kids:kids,open:open,s:s,e:e});
+    if(open)for(const k of kids)plan.push({kind:'child',dept:t.department,t:k.t,i:k.i});
+  }
+  return plan;
+}
+function npvToggleDept(dept){
+  if(NPV_OPEN.has(dept))NPV_OPEN.delete(dept);else NPV_OPEN.add(dept);
+  saveUI();npvRender();
+}
+/* One save for the whole department, not one per subtask. */
+function commitPhaseShift(ids,days){
+  if(!days)return;
+  const set=new Set(ids);
+  const tasks=ST.tasks.map(t=>set.has(t.id)
+    ?{...t,startDate:fmtDate(addDays(parseDate(t.startDate),days)),
+           endDate:fmtDate(addDays(parseDate(t.endDate),days))}:t);
+  PP_QUIET=true;
+  try{saveState({projects:ST.projects,tasks});}finally{PP_QUIET=false;}
+  const p=ppProject();
+  if(p)ppRefreshMetrics(p);
+}
+
 function npvSortTasks(tasks){
   const ix=d=>{const i=NPV_ORDER.indexOf(d);return i>=0?i:1000+(DEPT_IDX[d]??999);};
   const lineIx=t=>{
@@ -3354,6 +3458,9 @@ function npvSortTasks(tasks){
   return tasks.slice().sort((a,b)=>
     ix(a.department)-ix(b.department)
     || lineIx(a)-lineIx(b)
+    /* REV47: subtasks inside a department run in date order. They used to fall through
+       to the assignee name, so a department read alphabetically by who was on it. */
+    || String(a.startDate||'').localeCompare(String(b.startDate||''))
     || String(assigneeText(a)).localeCompare(String(assigneeText(b))));
 }
 function npvMoveDept(dept,targetDept){
@@ -3408,6 +3515,8 @@ function npvRender(){
   if(mc)mc.classList.toggle('on',NPV_MODE==='calendar');
   const tg2=document.getElementById('npv-tint');
   if(tg2)tg2.classList.toggle('on',TINT);
+  const lk2=document.getElementById('npv-link');
+  if(lk2)lk2.classList.toggle('on',LINK_SUBS);
   renderSideList();
   npvRenderLegend();
   if(NPV_LINES.length)renderDraftLines();
@@ -3458,6 +3567,8 @@ function npvRender(){
   let ax='';
   let cur=new Date(lo);
   while(cur<=hi){
+    if(TINT)ax+='<div class="npv-tintcol" style="left:'+x(cur)+'px;width:'+dwv+'px;background:'
+      +cellBg(cur.getMonth(),isoWeek(cur)%2)+'"></div>';
     if(!isWorking(cur))ax+='<div class="npv-we" style="left:'+x(cur)+'px;width:'+dwv+'px"></div>';
     /* Only label a month if there's room before the next one starts, otherwise the
        first-of-month label lands on top of the range-start label and you get "A G". */
@@ -3478,37 +3589,66 @@ function npvRender(){
   axEl.innerHTML=ax;axEl.style.width=innerW+'px';
 
   /* rows */
+  NPV_PLAN=npvRowPlan();
   let h='';
-  NPV_TASKS.forEach((t,i)=>{
-    const d=deptById(t.department);
+  const barFor=(t,i,cls)=>{
     const nm=phaseLabel(t);
-    const who=Array.isArray(t.assignee)?t.assignee.join(', '):(t.assignee||'');
-    const gut=(d&&d.roster&&who&&who!=='—')?nm+' · '+who:nm;
     const a=parseDate(t.startDate),b=parseDate(t.endDate);
     const bx=x(a)+NPV_PADL,bw=Math.max(dwv,(diffDays(a,b)+1)*dwv-NPV_PADR);
     const col=DEPT_COLORS[t.department]||'#8A98AE';
-    h+='<div class="npv-row" style="width:'+innerW+'px">'
-     + '<div class="npv-gut" data-dept="'+esc(t.department)+'" title="'+esc(gut)+' — drag to reorder">'
-     + '<span class="npv-grip">&#9679;&#9679;</span>'+esc(gut)+'</div>'
-     + '<div class="npv-bar'+(t.__manual?' manual':'')+'" data-i="'+i+'" '
+    return '<div class="npv-bar'+(t.__manual?' manual':'')+(cls?' '+cls:'')+'" data-i="'+i+'" '
      + 'style="left:'+bx+'px;width:'+bw+'px;background:'+col+'" '
      + 'title="'+esc(nm+' · '+fmtNice(t.startDate)+' → '+fmtNice(t.endDate)+' · '+(t.estimatedDays||1)+'d')+'">'
      + '<div class="npv-hdl" data-i="'+i+'"></div>'
-     + '<span style="margin-left:5px">'+esc(nm)+'</span></div>'
+     + '<span style="margin-left:5px">'+esc(nm)+'</span></div>';
+  };
+  for(const row of NPV_PLAN){
+    if(row.kind==='parent'){
+      const d=deptById(row.dept)||{};
+      const col=DEPT_COLORS[row.dept]||'#8A98AE';
+      const a=parseDate(row.s),b=parseDate(row.e);
+      const bx=x(a)+NPV_PADL,bw=Math.max(dwv,(diffDays(a,b)+1)*dwv-NPV_PADR);
+      const nm=d.name||row.dept;
+      const tip=nm+' · '+row.kids.length+' subtasks · '+fmtNice(row.s)+' → '+fmtNice(row.e)
+        + (LINK_SUBS?' · drag to move them all':' · subtasks unlinked');
+      h+='<div class="npv-row parent'+(row.open?' open':'')+'" style="width:'+innerW+'px">'
+       + '<div class="npv-gut" data-dept="'+esc(row.dept)+'" title="'+esc(nm)+' — drag to reorder">'
+       + '<span class="npv-tri" data-dept="'+esc(row.dept)+'" title="Show subtasks">&#9654;</span>'
+       + esc(nm)+'<span class="npv-n">'+row.kids.length+'</span></div>'
+       + '<div class="npv-bar sum'+(LINK_SUBS?'':' unlinked')+'" data-dept="'+esc(row.dept)+'" '
+       + 'style="left:'+bx+'px;width:'+bw+'px;background:'+col+'" title="'+esc(tip)+'">'
+       + '<span style="margin-left:5px">'+esc(nm)+'</span></div>'
+       + '</div>';
+      continue;
+    }
+    const t=row.t,i=row.i,d=deptById(t.department);
+    const nm=phaseLabel(t);
+    const who=Array.isArray(t.assignee)?t.assignee.join(', '):(t.assignee||'');
+    const gut=(d&&d.roster&&who&&who!=='—')?nm+' · '+who:nm;
+    const child=row.kind==='child';
+    h+='<div class="npv-row'+(child?' child':'')+'" style="width:'+innerW+'px">'
+     + '<div class="npv-gut" data-dept="'+esc(t.department)+'" title="'+esc(gut)+' — drag to reorder">'
+     + (child?'<span class="npv-elbow">&#9492;</span>'
+             :'<span class="npv-grip">&#9679;&#9679;</span>')
+     + esc(gut)+'</div>'
+     + barFor(t,i,child?'kid':'')
      + '</div>';
-  });
+  }
+
   /* Events and tasks ride the row of their phase. Anything pointing at a department that
      isn't on this job gets one extra row at the bottom so it can never silently vanish. */
   const marks=npvMarkers();
+  /* Row positions come from the plan now — a collapsed department is one row, not one
+     per subtask, and a marker pinned to a task index would drift down the chart. */
   const rowOf={};
-  NPV_TASKS.forEach((t,i)=>{if(rowOf[t.department]===undefined)rowOf[t.department]=i;});
+  NPV_PLAN.forEach((r,i)=>{if(rowOf[r.dept]===undefined)rowOf[r.dept]=i;});
   const orphans=marks.filter(mk=>rowOf[mk.dept]===undefined);
   if(orphans.length){
     h+='<div class="npv-row extra" style="width:'+innerW+'px">'
      + '<div class="npv-gut" title="Events and tasks pointing at a department this job '
      + 'doesn\'t use">Not on a phase</div></div>';
   }
-  const orphanRow=NPV_TASKS.length;
+  const orphanRow=NPV_PLAN.length;
   for(const mk of marks){
     const d=parseDate(mk.date);
     if(d<lo||d>hi)continue;
@@ -3526,6 +3666,19 @@ function npvRender(){
    }}
   h+='<div class="npv-today" style="left:'+(x(td)+Math.floor(dwv/2))+'px"></div>';
   h+='<div class="npv-dl" style="left:'+(x(dl)+dwv)+'px"></div>';
+  /* Tint sits in its own layer appended last so it can't shift the rows' nth-child
+     zebra, and is held under them by z-index rather than document order. */
+  if(TINT){
+    let tl='<div class="npv-tintl">';
+    let c3=new Date(lo);
+    while(c3<=hi){
+      tl+='<div class="npv-tintcol" style="left:'+x(c3)+'px;width:'+dwv+'px;background:'
+        +cellBg(c3.getMonth(),isoWeek(c3)%2)+'"></div>';
+      c3=addDays(c3,1);
+    }
+    h+=tl+'</div>';
+  }
+  host.classList.toggle('tinted',!!TINT);
   host.innerHTML=h;
   host.style.width=innerW+'px';
 
@@ -3549,6 +3702,83 @@ function npvRender(){
 }
 
 
+
+/* ---------- REV46: events and tasks on a SAVED project ----------
+   On a saved job an event is a ticketNode hanging off a phase and a task is a row in
+   ST.todos. The Add buttons used to push into NPV_EVENTS / NPV_TODOS, which only the
+   new-project draft ever reads, so on an existing job a new event or task went
+   straight into a hole: not drawn, not listed, not saved. These write through. */
+function liveEvents(p){
+  const out=[];
+  for(const t of tasksOf(p.id).filter(t=>!t.__ghost))
+    for(const n of (t.ticketNodes||[]))
+      out.push({id:n.id,name:n.target||'',date:n.date||'',dept:t.department});
+  out.sort((a,b)=>String(a.date||'9999').localeCompare(String(b.date||'9999')));
+  return out;
+}
+function liveTodos(p){
+  return (ST.todos||[]).filter(t=>t.projectId===p.id)
+    .sort((a,b)=>String(a.due||'9999').localeCompare(String(b.due||'9999')));
+}
+/* Events need a phase to hang on. Prefer the one asked for, else any non-PM phase. */
+function phaseHostFor(p,dept){
+  const ts=tasksOf(p.id).filter(t=>!t.__ghost);
+  return ts.find(t=>t.department===dept)||ts.find(t=>t.department!=='pm')||ts[0]||null;
+}
+function liveSave(tasks,todos){
+  PP_QUIET=true;
+  try{saveState({projects:ST.projects,tasks:tasks||ST.tasks,
+                 todos:todos!==undefined?todos:(ST.todos||[])});}
+  finally{PP_QUIET=false;}
+}
+function liveAddEvent(p,dept,date){
+  const host=phaseHostFor(p,dept);
+  if(!host){toast('Tick a department first — an event hangs off a phase.','err');return;}
+  const node={id:genId(),date:date||host.endDate||host.startDate||'',target:'',notes:''};
+  liveSave(ST.tasks.map(t=>t.id===host.id
+    ?{...t,ticketNodes:[...(t.ticketNodes||[]),node]}:t));
+}
+function liveCommitEvent(evId,field,val){
+  const p=ppProject();if(!p)return;
+  if(field==='dept'){
+    const from=ST.tasks.find(t=>(t.ticketNodes||[]).some(n=>n.id===evId));
+    const to=phaseHostFor(p,val);
+    if(!from||!to||from.id===to.id)return;
+    const node=(from.ticketNodes||[]).find(n=>n.id===evId);
+    liveSave(ST.tasks.map(t=>{
+      if(t.id===from.id)return{...t,ticketNodes:(t.ticketNodes||[]).filter(n=>n.id!==evId)};
+      if(t.id===to.id)return{...t,ticketNodes:[...(t.ticketNodes||[]),node]};
+      return t;
+    }));
+    return;
+  }
+  const k=(field==='name')?'target':'date';
+  liveSave(ST.tasks.map(t=>(t.ticketNodes||[]).some(n=>n.id===evId)
+    ?{...t,ticketNodes:t.ticketNodes.map(n=>n.id===evId?{...n,[k]:val}:n)}:t));
+}
+function liveDeleteEvent(evId){
+  liveSave(ST.tasks.map(t=>(t.ticketNodes||[]).some(n=>n.id===evId)
+    ?{...t,ticketNodes:t.ticketNodes.filter(n=>n.id!==evId)}:t));
+}
+let TODO_WARNED=false;
+function liveAddTodo(p,dept,due){
+  if(!TODOS_OK&&!TODO_WARNED){TODO_WARNED=true;
+    toast('The ShopTimeline_Tasks2 list does not exist yet — tasks stay in this browser session.','err');}
+  const td={id:genId(),projectId:p.id,dept:dept||'',title:'',who:[],due:due||'',
+    start:'',progress:'notstarted',priority:'medium',notes:'',createdBy:'',
+    completedOn:'',completedBy:'',sortIndex:(ST.todos||[]).length};
+  liveSave(null,[...(ST.todos||[]),td]);
+}
+function liveCommitTodo(id,field,val){
+  liveSave(null,(ST.todos||[]).map(t=>{
+    if(t.id!==id)return t;
+    if(field==='who')return{...t,who:val?[val]:[]};
+    return{...t,[field]:val};
+  }));
+}
+function liveDeleteTodo(id){
+  liveSave(null,(ST.todos||[]).filter(t=>t.id!==id));
+}
 
 /* ---------- draft event / task editors on the left ---------- */
 function deptOptions(sel){
@@ -3599,9 +3829,11 @@ function renderDraftLines(){
 function renderDraftEvents(){
   const box=document.getElementById('pp-events');
   if(!box)return;
-  if(!NPV_EVENTS.length){box.innerHTML='<div class="dr-none">No events yet. Kickoffs, client reviews, sample approvals.</div>';return;}
+  const p=NPV_LIVE?ppProject():null;
+  const rows=p?liveEvents(p):NPV_EVENTS;
+  if(!rows.length){box.innerHTML='<div class="dr-none">No events yet. Kickoffs, client reviews, sample approvals.</div>';return;}
   let h='<div class="dr-hd ev"><span>Event</span><span>Date</span><span>Phase</span><span></span></div>';
-  for(const e of NPV_EVENTS){
+  for(const e of rows){
     h+='<div class="dr-row ev" data-id="'+esc(e.id)+'">'
      + '<input data-f="name" value="'+esc(e.name||'')+'" placeholder="Client review">'
      + '<input data-f="date" type="date" value="'+esc(e.date||'')+'">'
@@ -3610,7 +3842,17 @@ function renderDraftEvents(){
   }
   box.innerHTML=h;
   box.querySelectorAll('.dr-row').forEach(r=>{
-    const e=NPV_EVENTS.find(x=>x.id===r.dataset.id);
+    const id=r.dataset.id;
+    if(p){
+      r.querySelectorAll('[data-f]').forEach(i=>i.addEventListener('change',()=>{
+        liveCommitEvent(id,i.dataset.f,i.value);renderDraftEvents();npvRebuild();
+      }));
+      r.querySelector('.dr-del').addEventListener('click',()=>{
+        liveDeleteEvent(id);renderDraftEvents();npvRebuild();
+      });
+      return;
+    }
+    const e=NPV_EVENTS.find(x=>x.id===id);
     r.querySelectorAll('[data-f]').forEach(i=>i.addEventListener('change',()=>{
       e[i.dataset.f]=i.value;npvRender();
     }));
@@ -3623,10 +3865,12 @@ function renderDraftEvents(){
 function renderDraftTodos(){
   const box=document.getElementById('pp-todos');
   if(!box)return;
-  if(!NPV_TODOS.length){box.innerHTML='<div class="dr-none">No tasks yet. Drawings due, order acrylic, confirm dock time.</div>';return;}
+  const p=NPV_LIVE?ppProject():null;
+  const rows=p?liveTodos(p):NPV_TODOS;
+  if(!rows.length){box.innerHTML='<div class="dr-none">No tasks yet. Drawings due, order acrylic, confirm dock time.</div>';return;}
   const ppl=allPeople();
   let h='<div class="dr-hd tk"><span>Task</span><span>Assigned</span><span>Due</span><span>Priority</span><span></span></div>';
-  for(const t of NPV_TODOS){
+  for(const t of rows){
     const who=(t.who&&t.who[0])||'';
     h+='<div class="dr-row tk" data-id="'+esc(t.id)+'">'
      + '<input data-f="title" value="'+esc(t.title||'')+'" placeholder="Drawings due">'
@@ -3634,14 +3878,24 @@ function renderDraftTodos(){
      +   ppl.map(n=>'<option'+(n===who?' selected':'')+'>'+esc(n)+'</option>').join('')
      + '</select>'
      + '<input data-f="due" type="date" value="'+esc(t.due||'')+'">'
-     + '<select data-f="priority">'+PRIOS.map(p=>
-         '<option value="'+p+'"'+(p===(t.priority||'medium')?' selected':'')+'>'+PRIO_LBL[p]+'</option>').join('')
+     + '<select data-f="priority">'+PRIOS.map(x=>
+         '<option value="'+x+'"'+(x===(t.priority||'medium')?' selected':'')+'>'+PRIO_LBL[x]+'</option>').join('')
      + '</select>'
      + '<button class="dr-del" title="Remove">&times;</button></div>';
   }
   box.innerHTML=h;
   box.querySelectorAll('.dr-row').forEach(r=>{
-    const t=NPV_TODOS.find(x=>x.id===r.dataset.id);
+    const id=r.dataset.id;
+    if(p){
+      r.querySelectorAll('[data-f]').forEach(i=>i.addEventListener('change',()=>{
+        liveCommitTodo(id,i.dataset.f,i.value);renderDraftTodos();npvRebuild();
+      }));
+      r.querySelector('.dr-del').addEventListener('click',()=>{
+        liveDeleteTodo(id);renderDraftTodos();npvRebuild();
+      });
+      return;
+    }
+    const t=NPV_TODOS.find(x=>x.id===id);
     r.querySelectorAll('[data-f]').forEach(i=>i.addEventListener('change',()=>{
       if(i.dataset.f==='who')t.who=i.value?[i.value]:[];
       else t[i.dataset.f]=i.value;
@@ -3659,9 +3913,17 @@ function renderSideList(){
   if(!box)return;
   const rows=[];
   if(NPV_LIVE){
-    for(const mk of npvMarkers())
-      rows.push({k:mk.k,d:mk.date,nm:mk.nm,
-        mt:mk.k==='tk'&&mk.pr&&mk.pr!=='medium'?PRIO_LBL[mk.pr]:''});
+    /* REV46: list everything on the job, not just the dated rows npvMarkers() draws,
+       so a freshly added event or task is visible before it has a date. */
+    const pj0=ppProject();
+    if(pj0){
+      for(const e of liveEvents(pj0))
+        rows.push({k:'ev',d:e.date,nm:e.name||'Untitled event',
+          mt:e.dept?((deptById(e.dept)||{}).name||''):''});
+      for(const t of liveTodos(pj0))
+        rows.push({k:'tk',d:t.due,nm:t.title||'Untitled task',
+          mt:[(t.who&&t.who[0])||'',t.priority&&t.priority!=='medium'?PRIO_LBL[t.priority]:''].filter(Boolean).join(' \u00b7 ')});
+    }
     rows.sort((a,b)=>String(a.d||'9999').localeCompare(String(b.d||'9999')));
     const hd0=document.getElementById('pp-side-hd');
     if(hd0)hd0.textContent='Events & tasks'+(rows.length?' ('+rows.length+')':'');
@@ -3698,8 +3960,9 @@ function npvRenderLegend(){
   for(const t of NPV_TASKS)if(seen.indexOf(t.department)<0)seen.push(t.department);
   let h=seen.map(d=>'<span class="lg"><i style="background:'+(DEPT_COLORS[d]||'#8A98AE')+'"></i>'
     +esc((deptById(d)||{}).name||d)+'</span>').join('');
-  if(NPV_EVENTS.some(e=>e.date))h+='<span class="lg"><i class="ev"></i>Event</span>';
-  if(NPV_TODOS.some(t=>t.due))h+='<span class="lg"><i class="tk"></i>Task</span>';
+  const mks=npvMarkers();
+  if(mks.some(m=>m.k==='ev'))h+='<span class="lg"><i class="ev"></i>Event</span>';
+  if(mks.some(m=>m.k==='tk'))h+='<span class="lg"><i class="tk"></i>Task</span>';
   box.innerHTML=h||'<span class="npv-leg-empty">Departments appear here once the schedule has some.</span>';
 }
 
@@ -3850,15 +4113,15 @@ function npvBindReorder(){
       const rowUnder=cy=>{
         const r=host.getBoundingClientRect();
         const i=Math.floor((cy-r.top)/NPV_ROWH);
-        return Math.max(0,Math.min(NPV_TASKS.length-1,i));
+        return Math.max(0,Math.min(NPV_PLAN.length-1,i));
       };
       const mv=e2=>{
         const i=rowUnder(e2.clientY);
-        const over=NPV_TASKS[i]&&NPV_TASKS[i].department;
+        const over=NPV_PLAN[i]&&NPV_PLAN[i].dept;
         if(!over||over===dept){drop.style.display='none';target=null;return;}
         target=over;
-        const firstRow=NPV_TASKS.findIndex(t=>t.department===over);
-        const lastRow=NPV_TASKS.length-1-[...NPV_TASKS].reverse().findIndex(t=>t.department===over);
+        const firstRow=NPV_PLAN.findIndex(r2=>r2.dept===over);
+        const lastRow=NPV_PLAN.length-1-[...NPV_PLAN].reverse().findIndex(r2=>r2.dept===over);
         const below=NPV_ORDER.indexOf(over)>NPV_ORDER.indexOf(dept);
         drop.style.display='block';
         drop.style.top=((below?lastRow+1:firstRow)*NPV_ROWH-1)+'px';
@@ -3929,7 +4192,7 @@ function ppOpenPop(idx,barEl){
    +   '<div class="bp-f"><label>Days</label><input id="bp-d" type="number" min="1" value="'+(t.estimatedDays||1)+'"></div>'
    + '</div>'
    + '<div class="bp-acts">'
-   +   '<button class="bp-btn" id="bp-add-ph">+ Phase</button>'
+   +   '<button class="bp-btn" id="bp-add-ph">+ Subtask</button>'
    +   '<button class="bp-btn" id="bp-add-ev">+ Event</button>'
    +   '<button class="bp-btn" id="bp-add-tk">+ Task</button>'
    +   (live?'<button class="bp-btn" id="bp-pin">'+(t.pinned?'Unpin':'Pin')+'</button>':'')
@@ -4012,7 +4275,8 @@ function ppPopAddPhase(t){
     PP_QUIET=true;
     try{saveState({projects:ST.projects,tasks:[...ST.tasks,clone]});}finally{PP_QUIET=false;}
     ppClosePop();npvRebuild();
-    toast('Added a phase to '+((deptById(t.department)||{}).name||t.department));
+    NPV_OPEN.add(t.department);saveUI();
+    toast('Added a subtask to '+((deptById(t.department)||{}).name||t.department));
     return;
   }
   if(!NPV_LINES.some(l=>l.dept===t.department))
@@ -4023,6 +4287,11 @@ function ppPopAddPhase(t){
 }
 function ppPopAddMarker(t,kind){
   const seed=t.endDate||t.startDate||'';
+  if(NPV_LIVE){
+    const p=ppProject();
+    if(p){if(kind==='ev')liveAddEvent(p,t.department,seed);else liveAddTodo(p,t.department,seed);}
+    ppClosePop();ppGoTab('events');npvRebuild();return;
+  }
   if(kind==='ev')NPV_EVENTS.push({id:genId(),name:'',date:seed,dept:t.department});
   else NPV_TODOS.push({id:genId(),title:'',who:[],due:seed,priority:'medium',dept:t.department});
   ppClosePop();
@@ -4056,7 +4325,51 @@ function ppGoTab(tab){
 
 function npvBindDrag(){
   const host=document.getElementById('npv-body');
-  host.querySelectorAll('.npv-bar').forEach(bar=>{
+  /* Disclosure triangle. Bound before the bars so a click on it never reaches the
+     gutter's reorder handler. */
+  host.querySelectorAll('.npv-tri').forEach(tri=>{
+    tri.addEventListener('mousedown',ev=>{ev.preventDefault();ev.stopPropagation();});
+    tri.addEventListener('click',ev=>{ev.preventDefault();ev.stopPropagation();
+      npvToggleDept(tri.dataset.dept);});
+  });
+  /* A department summary bar. Dragging it slides every subtask underneath by the same
+     number of days; clicking it opens or closes them. With Link off it only opens. */
+  host.querySelectorAll('.npv-bar.sum').forEach(bar=>{
+    bar.addEventListener('mousedown',ev=>{
+      if(ev.button!==0)return;
+      ev.preventDefault();ev.stopPropagation();
+      const dept=bar.dataset.dept;
+      const row=NPV_PLAN.find(r=>r.kind==='parent'&&r.dept===dept);
+      if(!row){return;}
+      if(!LINK_SUBS||!NPV_GEO||!NPV_LIVE){
+        const up0=()=>{document.removeEventListener('mouseup',up0);npvToggleDept(dept);};
+        document.addEventListener('mouseup',up0);
+        return;
+      }
+      const x0=ev.clientX,dwv=NPV_GEO.dw,left0=parseFloat(bar.style.left)||0;
+      const kidEls=[...host.querySelectorAll('.npv-bar.kid')].filter(b=>{
+        const k=NPV_TASKS[+b.dataset.i];return k&&k.department===dept;});
+      const kidLefts=kidEls.map(b=>parseFloat(b.style.left)||0);
+      bar.classList.add('dragging');
+      let days=0;
+      const mv=e2=>{
+        days=Math.round((e2.clientX-x0)/dwv);
+        bar.style.left=(left0+days*dwv)+'px';
+        kidEls.forEach((b,n)=>{b.style.left=(kidLefts[n]+days*dwv)+'px';});
+      };
+      const up=()=>{
+        document.removeEventListener('mousemove',mv);
+        document.removeEventListener('mouseup',up);
+        bar.classList.remove('dragging');
+        if(!days){npvToggleDept(dept);return;}
+        commitPhaseShift(row.kids.map(k=>k.t.id),days);
+        npvRebuild();
+      };
+      document.addEventListener('mousemove',mv);
+      document.addEventListener('mouseup',up);
+    });
+  });
+  host.querySelectorAll('.npv-bar:not(.sum)').forEach(bar=>{
     bar.addEventListener('mousedown',ev=>{
       if(!NPV_GEO)return;
       ev.preventDefault();
@@ -4095,11 +4408,16 @@ function npvBindDrag(){
           let ns=addDays(s0,days);
           if(ns>e0)ns=new Date(e0);
           const n=wdCount(ns,e0);
+          if(NPV_LIVE){commitPhaseDates(t.id,fmtDate(ns),fmtDate(e0),n);npvRebuild();return;}
           const inp=document.querySelector('#pp-depts input[data-dept="'+t.department+'"]');
           const dd=inp?inp.parentElement.querySelector('.ddays'):null;
           if(dd){dd.value=n;npvRebuild();}
           else npvRender();
         }else{
+          if(NPV_LIVE){
+            commitPhaseDates(t.id,fmtDate(addDays(s0,days)),fmtDate(addDays(e0,days)));
+            npvRebuild();return;
+          }
           NPV_MANUAL[npvKey(t)]={startDate:fmtDate(addDays(s0,days)),endDate:fmtDate(addDays(e0,days))};
           npvRebuild();
         }
@@ -4228,6 +4546,9 @@ function savePageProject(){
 }
 
 try{const tv=localStorage.getItem('shopTimelineTint');if(tv!==null)TINT=(tv==='1');
+  const lv=localStorage.getItem('shopTimelineLinkSubs');if(lv!==null)LINK_SUBS=(lv==='1');
+  const ov=localStorage.getItem('shopTimelineOpenDepts');
+  if(ov)NPV_OPEN=new Set(JSON.parse(ov)||[]);
   const gv=localStorage.getItem('shopTimelineGroup');if(gv)GROUP_BY=gv;}catch(e){}
 
 /* ===================== KEYBOARD ===================== */
@@ -4522,7 +4843,11 @@ ST={projects:[],tasks:[],todos:[]};
     try{
       const fresh=await spLoad();
       let dirty=false;
-      if(JSON.stringify(fresh)!==JSON.stringify({projects:ST.projects,tasks:ST.tasks})){ST=fresh;dirty=true;}
+      /* REV46: todos has to be in the comparison. Without it the two strings never
+         matched, so every 45s tick replaced ST wholesale and re-rendered — and, with
+         ShopTimeline_Tasks2 missing, wiped every session-only task. */
+      if(!TODOS_OK&&(ST.todos||[]).length&&!(fresh.todos||[]).length)fresh.todos=ST.todos;
+      if(JSON.stringify(fresh)!==JSON.stringify({projects:ST.projects,tasks:ST.tasks,todos:ST.todos||[]})){ST=fresh;dirty=true;}
       if(STAFF_OK){
         const fp=await spLoadStaff();
         if(JSON.stringify(fp)!==JSON.stringify(PEOPLE)){PEOPLE=fp;rebuildStaff();localStorage.setItem(PEOPLE_KEY,JSON.stringify(PEOPLE));dirty=true;}
